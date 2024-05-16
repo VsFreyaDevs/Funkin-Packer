@@ -6,10 +6,10 @@ filter: Nearest,Nearest
 repeat: none
 {{#rects}}
 {{{name}}}
-  rotate: {{rotated}}
-  xy: {{frame.x}},{{frame.y}}
-  size: {{frame.w}},{{frame.h}}
-  orig: {{sourceSize.w}},{{sourceSize.h}}
-  offset: 0,0
-  index: -1
+	rotate: {{rotated}}
+	xy: {{frame.x}},{{frame.y}}
+	size: {{frame.w}},{{frame.h}}
+	orig: {{sourceSize.w}},{{sourceSize.h}}
+	offset: 0,0
+	index: -1
 {{/rects}}

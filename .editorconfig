@@ -1,12 +1,14 @@
-[*]
+root=true
+
+[src/*]
 charset=utf-8
-end_of_line=crlf
+end_of_line=lf
 trim_trailing_whitespace=false
 insert_final_newline=false
-indent_style=space
+indent_style=tab
 indent_size=4
 
-[{.babelrc,.stylelintrc,jest.config,.eslintrc,.prettierrc,*.json,*.jsb3,*.jsb2,*.bowerrc}]
-indent_style=space
+[{.babelrc,.eslintrc,jsconfig.json,package.json,.stylelintrc,jest.config,.eslintrc,.prettierrc,*.json,*.jsb3,*.jsb2,*.bowerrc}]
+indent_style=tab
 indent_size=4
 

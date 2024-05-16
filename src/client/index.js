@@ -18,56 +18,56 @@ let layoutRef = null;
 const STORAGE_LANGUAGE_KEY = "language";
 
 function run() {
-    Controller.init();
-    if(PLATFORM === "electron") {
-        injectCss("static/css/index-electron.css");
-    }
-    loadLocalization();
+	Controller.init();
+	if(PLATFORM === "electron") {
+		injectCss("static/css/index-electron.css");
+	}
+	loadLocalization();
 }
 
 function loadLocalization() {
-    for(let i = 1; i < languages.length; i++) {
-        I18.supportedLanguages.push(languages[i].lang);
-    }
-    I18.path = "static/localization";
-    I18.init(Storage.load(STORAGE_LANGUAGE_KEY, false));
+	for(let i = 1; i < languages.length; i++) {
+		I18.supportedLanguages.push(languages[i].lang);
+	}
+	I18.path = "static/localization";
+	I18.init(Storage.load(STORAGE_LANGUAGE_KEY, false));
 
-    app = new APP();
+	app = new APP();
 
-    I18.load(renderLayout);
+	I18.load(renderLayout);
 
-    Observer.on(GLOBAL_EVENT.CHANGE_LANG, setLocale);
+	Observer.on(GLOBAL_EVENT.CHANGE_LANG, setLocale);
 }
 
 function renderLayout() {
-    Controller.updateLocale();
-    const root = createRoot(document.getElementById("root"));
-    if(layoutRef === null)
-        layoutRef = React.createRef();
-    root.render(
-        <React.StrictMode>
-            <MainLayout ref={layoutRef}></MainLayout>
-        </React.StrictMode>
-    );
+	Controller.updateLocale();
+	const root = createRoot(document.getElementById("root"));
+	if(layoutRef === null)
+		layoutRef = React.createRef();
+	root.render(
+		<React.StrictMode>
+			<MainLayout ref={layoutRef}></MainLayout>
+		</React.StrictMode>
+	);
 }
 
 function injectCss(path) {
-    let el = document.createElement("link");
-    el.rel = "stylesheet";
-    el.type = "text/css";
-    el.href = path;
-    document.head.appendChild(el);
+	let el = document.createElement("link");
+	el.rel = "stylesheet";
+	el.type = "text/css";
+	el.href = path;
+	document.head.appendChild(el);
 }
 
 function setLocale(locale) {
-    if(!layoutRef) return;
+	if(!layoutRef) return;
 
-    I18.init(locale);
-    I18.load(() => {
-        Storage.save(STORAGE_LANGUAGE_KEY, I18.currentLocale);
-        Controller.updateLocale();
-        layoutRef.current.forceUpdate();
-    });
+	I18.init(locale);
+	I18.load(() => {
+		Storage.save(STORAGE_LANGUAGE_KEY, I18.currentLocale);
+		Controller.updateLocale();
+		layoutRef.current.forceUpdate();
+	});
 }
 
 window.addEventListener("load", run, false);

@@ -4,86 +4,86 @@ let PACKING_LOGIC = require("maxrects-packer").PACKING_LOGIC;
 import Packer from "./Packer";
 
 const METHOD = {
-    Smart: "Smart",
-    SmartArea: "SmartArea",
-    Square: "Square",
-    SquareArea: "SquareArea",
-    // SmartSquare: "SmartSquare",
-    // SmartSquareArea: "SmartSquareArea"
+	Smart: "Smart",
+	SmartArea: "SmartArea",
+	Square: "Square",
+	SquareArea: "SquareArea",
+	// SmartSquare: "SmartSquare",
+	// SmartSquareArea: "SmartSquareArea"
 };
 
 class MaxRectsPacker extends Packer {
-    constructor(width, height, allowRotate = false, padding = 0) {
-        super();
+	constructor(width, height, allowRotate = false, padding = 0) {
+		super();
 
-        this.binWidth = width;
-        this.binHeight = height;
-        this.allowRotate = allowRotate;
-        this.padding = padding;
-    }
+		this.binWidth = width;
+		this.binHeight = height;
+		this.allowRotate = allowRotate;
+		this.padding = padding;
+	}
 
-    pack(data, method) {
-        let options = {
-            smart: (method === METHOD.Smart || method === METHOD.SmartArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
-            pot: false,
-            square: (method === METHOD.Square || method === METHOD.SquareArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
-            allowRotation: this.allowRotate,
-            logic: (method === METHOD.Smart || method === METHOD.Square || method === METHOD.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
-        };
+	pack(data, method) {
+		let options = {
+			smart: (method === METHOD.Smart || method === METHOD.SmartArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
+			pot: false,
+			square: (method === METHOD.Square || method === METHOD.SquareArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
+			allowRotation: this.allowRotate,
+			logic: (method === METHOD.Smart || method === METHOD.Square || method === METHOD.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
+		};
 
-        let packer = new MaxRectsPackerEngine(this.binWidth, this.binHeight, this.padding, options);
+		let packer = new MaxRectsPackerEngine(this.binWidth, this.binHeight, this.padding, options);
 
-        let input = [];
+		let input = [];
 
-        for (let item of data) {
-            input.push({ width: item.frame.w, height: item.frame.h, data: item });
-        }
+		for (let item of data) {
+			input.push({ width: item.frame.w, height: item.frame.h, data: item });
+		}
 
-        packer.addArray(input);
+		packer.addArray(input);
 
-        let bin = packer.bins[0];
-        let rects = bin.rects;
+		let bin = packer.bins[0];
+		let rects = bin.rects;
 
-        let res = [];
+		let res = [];
 
-        for (let item of rects) {
-            item.data.frame.x = item.x;
-            item.data.frame.y = item.y;
-            if (item.rot) {
-                item.data.rotated = true;
-            }
-            res.push(item.data);
-        }
+		for (let item of rects) {
+			item.data.frame.x = item.x;
+			item.data.frame.y = item.y;
+			if (item.rot) {
+				item.data.rotated = true;
+			}
+			res.push(item.data);
+		}
 
-        return res;
-    }
+		return res;
+	}
 
-    static get type() {
-        return "MaxRectsPacker";
-    }
+	static get type() {
+		return "MaxRectsPacker";
+	}
 
-    static get methods() {
-        return METHOD;
-    }
+	static get methods() {
+		return METHOD;
+	}
 
-    static getMethodProps(id = '') {
-        switch (id) {
-            case METHOD.Smart:
-                return { name: "Smart edge logic", description: "" };
-            case METHOD.SmartArea:
-                return { name: "Smart area logic", description: "" };
-            case METHOD.Square:
-                return { name: "Square edge logic", description: "" };
-            case METHOD.SquareArea:
-                return { name: "Square area logic", description: "" };
-            case METHOD.SmartSquare:
-                return { name: "Smart square edge logic", description: "" };
-            case METHOD.SmartSquareArea:
-                return { name: "Smart square area logic", description: "" };
-            default:
-                throw Error("Unknown method " + id);
-        }
-    }
+	static getMethodProps(id = '') {
+		switch (id) {
+			case METHOD.Smart:
+				return { name: "Smart edge logic", description: "" };
+			case METHOD.SmartArea:
+				return { name: "Smart area logic", description: "" };
+			case METHOD.Square:
+				return { name: "Square edge logic", description: "" };
+			case METHOD.SquareArea:
+				return { name: "Square area logic", description: "" };
+			case METHOD.SmartSquare:
+				return { name: "Smart square edge logic", description: "" };
+			case METHOD.SmartSquareArea:
+				return { name: "Smart square area logic", description: "" };
+			default:
+				throw Error("Unknown method " + id);
+		}
+	}
 }
 
 export default MaxRectsPacker;

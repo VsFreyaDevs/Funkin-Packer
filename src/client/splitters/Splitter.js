@@ -1,26 +1,26 @@
 class Splitter {
-    static check(data) {
-    }
+	static check(data) {
+	}
 
-    static split(data, options) {
-    }
+	static split(data, options) {
+	}
 
-    static get type() {
-        return 'Default';
-    }
+	static get type() {
+		return 'Default';
+	}
 
-    static fixFileName(name) {
-        let validExts = ['png', 'jpg', 'jpeg'];
-        let ext = name.split('.').pop().toLowerCase();
+	static fixFileName(name) {
+		let validExts = ['png', 'jpg', 'jpeg'];
+		let ext = name.split('.').pop().toLowerCase();
 
-        if(validExts.indexOf(ext) < 0) name += '.png';
+		if(validExts.indexOf(ext) < 0) name += '.png';
 
-        return name;
-    }
+		return name;
+	}
 
-    static get inverseRotation() {
-        return false;
-    }
+	static get inverseRotation() {
+		return false;
+	}
 }
 
 export default Splitter;

@@ -1,5 +1,5 @@
 class Project {
-    static init() {}
+	static init() {}
 }
 
 export default Project;

@@ -3,27 +3,27 @@ import FileSaver from 'file-saver';
 
 class Downloader {
 
-    static run(files, fileName) {
+	static run(files, fileName) {
 
-        let zip = new JSZip();
+		let zip = new JSZip();
 
-        // Fix timezone issue
-        const currDate = new Date();
-        const dateWithOffset = new Date(currDate.getTime() - currDate.getTimezoneOffset() * 60000);
-        // replace the default date with dateWithOffset
-        JSZip.defaults.date = dateWithOffset;
+		// Fix timezone issue
+		const currDate = new Date();
+		const dateWithOffset = new Date(currDate.getTime() - currDate.getTimezoneOffset() * 60000);
+		// replace the default date with dateWithOffset
+		JSZip.defaults.date = dateWithOffset;
 
-        for(let file of files) {
-            zip.file(file.name, file.content, {base64: !!file.base64});
-        }
+		for(let file of files) {
+			zip.file(file.name, file.content, {base64: !!file.base64});
+		}
 
-        let ext = fileName.split(".").pop();
-        if(ext !== "zip") fileName = fileName + ".zip";
+		let ext = fileName.split(".").pop();
+		if(ext !== "zip") fileName = fileName + ".zip";
 
-        zip.generateAsync({type:"blob"}).then((content) => {
-            FileSaver.saveAs(content, fileName);
-        });
-    }
+		zip.generateAsync({type:"blob"}).then((content) => {
+			FileSaver.saveAs(content, fileName);
+		});
+	}
 
 }
 

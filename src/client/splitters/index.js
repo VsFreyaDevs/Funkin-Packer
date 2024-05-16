@@ -7,43 +7,43 @@ import Spine from './Spine';
 import Sparrow from './Sparrow';
 
 const list = [
-    Sparrow,
-    Grid,
-    JsonHash,
-    JsonArray,
-    //XML,
-    UIKit,
-    Spine
+	Sparrow,
+	Grid,
+	JsonHash,
+	JsonArray,
+	//XML,
+	UIKit,
+	Spine
 ];
 
 function getSplitterByType(type) {
-    for(let item of list) {
-        if(item.type === type) {
-            return item;
-        }
-    }
-    return null;
+	for(let item of list) {
+		if(item.type === type) {
+			return item;
+		}
+	}
+	return null;
 }
 
 function getSplitterByData(data, cb) {
-    for(let item of list) {
-        if(item.type !== Grid.type) {
-            item.check(data, (checked) => {
-                if(checked) {
-                    if(cb) {
-                        cb(item);
-                        cb = null;
-                    }
-                }
-            });
-        }
-    }
+	for(let item of list) {
+		if(item.type !== Grid.type) {
+			item.check(data, (checked) => {
+				if(checked) {
+					if(cb) {
+						cb(item);
+						cb = null;
+					}
+				}
+			});
+		}
+	}
 
-    return getDefaultSplitter();
+	return getDefaultSplitter();
 }
 
 function getDefaultSplitter() {
-    return Sparrow;
+	return Sparrow;
 }
 
 export { getSplitterByType, getSplitterByData, getDefaultSplitter };
