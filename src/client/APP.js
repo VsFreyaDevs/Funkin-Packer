@@ -157,7 +157,7 @@ class APP {
 
     async doExport() {
         let exporter = this.packOptions.exporter;
-        let textureName = this.packOptions.textureName;
+        let fileName = this.packOptions.fileName;
         let filterClass = getFilterByType(this.packOptions.filter);
         let filter = new filterClass();
 
@@ -166,7 +166,7 @@ class APP {
         let ix = 0;
         for (let item of this.packResult) {
 
-            let fName = textureName + (this.packResult.length > 1 ? "-" + ix : "");
+            let fName = fileName + (this.packResult.length > 1 ? "-" + ix : "");
 
             let buffer = item.renderer.scale(this.packOptions.scale);
 
@@ -197,6 +197,8 @@ class APP {
                 imageName: `${fName}`,
                 imageFile: `${fName}.${this.packOptions.textureFormat}`,
                 imageData: imageData,
+                spritePadding: this.packOptions.spritePadding,
+                borderPadding: this.packOptions.borderPadding,
                 format: pixelFormat,
                 textureFormat: this.packOptions.textureFormat,
                 imageWidth: buffer.width,

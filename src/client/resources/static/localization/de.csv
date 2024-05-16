@@ -142,3 +142,4 @@ CLEAR_STORED_ORDER_TITLE;Clears the order from the repack
 CLEAR_STORED_ORDER;Clear Stored Order
 SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
+UPDATE_FILENAME;Update Filename:

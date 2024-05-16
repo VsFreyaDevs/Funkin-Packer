@@ -1,4 +1,5 @@
 import React from 'react';
+import APP from '../APP';
 
 import {Observer, GLOBAL_EVENT} from '../Observer';
 import I18 from '../utils/I18';
@@ -10,6 +11,7 @@ import ReactDOM from "react-dom";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList.jsx";
 import { cleanPrefix } from '../utils/common';
+import PackProperties from '../ui/PackProperties.jsx';
 
 class SheetSplitter extends React.Component {
     constructor(props) {
@@ -21,7 +23,8 @@ class SheetSplitter extends React.Component {
         this.state = {
             splitter: getDefaultSplitter(),
             textureBack: this.textureBackColors[0],
-            scale: 1
+            scale: 1,
+            updateFileName: APP.i.packOptions.repackUpdateFileName === undefined ? true : APP.i.packOptions.repackUpdateFileName
         };
 
         this.rangeRef = React.createRef();
@@ -31,7 +34,7 @@ class SheetSplitter extends React.Component {
         this.data = null;
         this.frames = null;
 
-        this.textureName = '';
+        this.fileName = '';
         this.dataName = '';
 
         this.buffer = document.createElement('canvas');
@@ -46,6 +49,7 @@ class SheetSplitter extends React.Component {
         this.setBack = this.setBack.bind(this);
         this.changeScale = this.changeScale.bind(this);
         this.handleWheel = this.handleWheel.bind(this);
+        this.onUpdateFileNameChange = this.onUpdateFileNameChange.bind(this);
     }
 
     componentDidMount() {
@@ -93,6 +97,16 @@ class SheetSplitter extends React.Component {
         let files = [];
 
         let disableuntrim = ReactDOM.findDOMNode(this.refs.disableuntrim).checked;
+
+        if(this.state.updateFileName) {
+            var filename = this.fileName;
+            let parts = filename.split(".");
+            if(parts.length > 1) parts.pop();
+            filename = parts.join(".");
+            PackProperties.i.packOptions.fileName = filename;
+            Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, PackProperties.i.getPackOptions());
+            PackProperties.i.refreshPackOptions();
+        }
 
         if(window.sparrowMaxMap == undefined) {
             window.sparrowMaxMap = {};
@@ -186,7 +200,7 @@ class SheetSplitter extends React.Component {
 
         ImagesList.i.loadImagesComplete(images);
 
-        //Downloader.run(files, this.textureName + '.zip');
+        //Downloader.run(files, this.fileName + '.zip');
 
         Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
         Observer.emit(GLOBAL_EVENT.HIDE_SHEET_SPLITTER); // Close the spritesheet splitter
@@ -277,7 +291,7 @@ class SheetSplitter extends React.Component {
             });
         }
 
-        Downloader.run(files, this.textureName + '.zip');
+        Downloader.run(files, this.fileName + '.zip');
 
         Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
     }
@@ -290,10 +304,10 @@ class SheetSplitter extends React.Component {
             loader.load(e.target.files, null, data => {
                 let keys = Object.keys(data);
 
-                this.textureName = keys[0];
+                this.fileName = keys[0];
 
-                this.texture = data[this.textureName];
-                ReactDOM.findDOMNode(this.refs.textureName).textContent = this.textureName;
+                this.texture = data[this.fileName];
+                ReactDOM.findDOMNode(this.refs.fileName).textContent = this.fileName;
 
                 this.updateView();
 
@@ -436,6 +450,14 @@ class SheetSplitter extends React.Component {
         this.updateTextureScale(val);
     }
 
+    onUpdateFileNameChange(e) {
+        let val = e.target.checked;
+        this.setState({updateFileName: val});
+        PackProperties.i.packOptions.repackUpdateFileName = val;
+        PackProperties.i.saveOptions();
+        Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, PackProperties.i.getPackOptions());
+    }
+
     close() {
         Observer.emit(GLOBAL_EVENT.HIDE_SHEET_SPLITTER);
     }
@@ -466,7 +488,7 @@ class SheetSplitter extends React.Component {
                                         </div>
                                     </td>
                                     <td>
-                                        <div className="back-400 border-color-gray color-black sheet-splitter-info-text" ref="textureName">&nbsp;</div>
+                                        <div className="back-400 border-color-gray color-black sheet-splitter-info-text" ref="fileName">&nbsp;</div>
                                     </td>
                                     <td>
                                         <div className="btn back-800 border-color-gray color-white file-upload">
@@ -497,6 +519,12 @@ class SheetSplitter extends React.Component {
                                                 return (<option key={"data-format-" + node.type} defaultValue={node.type}>{node.type}</option>)
                                             })}
                                         </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{I18.f('UPDATE_FILENAME')}</td>
+                                    <td>
+                                        <input ref="updatefilename" type="checkbox" className="border-color-gray" defaultChecked={this.state.updateFileName} onChange={this.onUpdateFileNameChange}/>
                                     </td>
                                 </tr>
                                 <tr>

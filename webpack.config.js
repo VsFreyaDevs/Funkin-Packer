@@ -14,10 +14,10 @@ let devtool = 'eval-source-map';
 let output = 'static/js/index.js';
 let debug = true;
 
-var prod = true;
+var prod = !debug;
 
 var argv = {
-    build: true
+    build: !debug
 }
 
 let PLATFORM = argv.platform || 'web';

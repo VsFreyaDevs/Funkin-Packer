@@ -32,7 +32,7 @@ class PackProperties extends React.Component {
         this.onExporterChanged = this.onExporterChanged.bind(this);
         this.onExporterPropChanged = this.onExporterPropChanged.bind(this);
         this.forceUpdate = this.forceUpdate.bind(this);
-        this.selectSavePath = this.selectSavePath.bind(this);
+        //this.selectSavePath = this.selectSavePath.bind(this);
 
         this.packOptions = this.loadOptions();
         this.loadCustomExporter();
@@ -71,18 +71,17 @@ class PackProperties extends React.Component {
     applyOptionsDefaults(data) {
         if(!data) data = {};
 
-        data.textureName = data.textureName || "texture";
+        data.fileName = data.fileName || "texture";
         data.textureFormat = data.textureFormat || "png";
         data.removeFileExtension = data.removeFileExtension === undefined ? true : data.removeFileExtension;
         data.prependFolderName = data.prependFolderName === undefined ? true : data.prependFolderName;
         data.scale = data.scale || 1;
         data.filter = getFilterByType(data.filter) ? data.filter : filters[0].type;
         data.exporter = getExporterByType(data.exporter) ? data.exporter : exporters[0].type;
-        data.base64Export = data.base64Export === undefined ? false : data.base64Export;
+        data.base64Export = false;//data.base64Export === undefined ? false : data.base64Export;
         //data.tinify = data.tinify === undefined ? false : data.tinify;
         //data.tinifyKey = data.tinifyKey === undefined ? "" : data.tinifyKey;
-        data.fileName = data.fileName || "pack-result";
-        data.savePath = data.savePath || "";
+        //data.savePath = data.savePath || "";
         data.width = data.width === undefined ? 8192 : data.width;
         data.height = data.height === undefined ? 8192 : data.height;
         data.fixedSize = data.fixedSize === undefined ? false : data.fixedSize;
@@ -96,6 +95,7 @@ class PackProperties extends React.Component {
         data.detectIdentical = data.detectIdentical === undefined ? true : data.detectIdentical;
         data.sortExportedRows = data.sortExportedRows === undefined ? true : data.sortExportedRows;
         data.packer = getPackerByType(data.packer) ? data.packer : packers[2].type;
+        data.repackUpdateFileName = data.repackUpdateFileName === undefined ? true : data.repackUpdateFileName;
 
         let methodValid = false;
         let packer = getPackerByType(data.packer);
@@ -126,18 +126,17 @@ class PackProperties extends React.Component {
     updatePackOptions() {
         let data = {};
 
-        data.textureName = ReactDOM.findDOMNode(this.refs.textureName).value;
         data.textureFormat = ReactDOM.findDOMNode(this.refs.textureFormat).value;
         data.removeFileExtension = ReactDOM.findDOMNode(this.refs.removeFileExtension).checked;
         data.prependFolderName = ReactDOM.findDOMNode(this.refs.prependFolderName).checked;
-        data.base64Export = ReactDOM.findDOMNode(this.refs.base64Export).checked;
+        //data.base64Export = ReactDOM.findDOMNode(this.refs.base64Export).checked;
         //data.tinify = ReactDOM.findDOMNode(this.refs.tinify).checked;
         //data.tinifyKey = ReactDOM.findDOMNode(this.refs.tinifyKey).value;
         data.scale = Number(ReactDOM.findDOMNode(this.refs.scale).value);
         data.filter = ReactDOM.findDOMNode(this.refs.filter).value;
         data.exporter = ReactDOM.findDOMNode(this.refs.exporter).value;
         data.fileName = ReactDOM.findDOMNode(this.refs.fileName).value;
-        data.savePath = ReactDOM.findDOMNode(this.refs.savePath).value;
+        //data.savePath = ReactDOM.findDOMNode(this.refs.savePath).value;
         data.width = Number(ReactDOM.findDOMNode(this.refs.width).value) || 0;
         data.height = Number(ReactDOM.findDOMNode(this.refs.height).value) || 0;
         data.fixedSize = ReactDOM.findDOMNode(this.refs.fixedSize).checked;
@@ -157,18 +156,17 @@ class PackProperties extends React.Component {
     }
 
     refreshPackOptions() {
-        ReactDOM.findDOMNode(this.refs.textureName).value = this.packOptions.textureName;
         ReactDOM.findDOMNode(this.refs.textureFormat).value = this.packOptions.textureFormat;
         ReactDOM.findDOMNode(this.refs.removeFileExtension).checked = this.packOptions.removeFileExtension;
         ReactDOM.findDOMNode(this.refs.prependFolderName).checked = this.packOptions.prependFolderName;
-        ReactDOM.findDOMNode(this.refs.base64Export).checked = this.packOptions.base64Export;
+        //ReactDOM.findDOMNode(this.refs.base64Export).checked = this.packOptions.base64Export;
         //ReactDOM.findDOMNode(this.refs.tinify).checked = this.packOptions.tinify;
         //ReactDOM.findDOMNode(this.refs.tinifyKey).value = this.packOptions.tinifyKey;
         ReactDOM.findDOMNode(this.refs.scale).value = Number(this.packOptions.scale);
         ReactDOM.findDOMNode(this.refs.filter).value = this.packOptions.filter;
         ReactDOM.findDOMNode(this.refs.exporter).value = this.packOptions.exporter;
         ReactDOM.findDOMNode(this.refs.fileName).value = this.packOptions.fileName;
-        ReactDOM.findDOMNode(this.refs.savePath).value = this.packOptions.savePath;
+        //ReactDOM.findDOMNode(this.refs.savePath).value = this.packOptions.savePath;
         ReactDOM.findDOMNode(this.refs.width).value = Number(this.packOptions.width) || 0;
         ReactDOM.findDOMNode(this.refs.height).value = Number(this.packOptions.height) || 0;
         ReactDOM.findDOMNode(this.refs.fixedSize).checked = this.packOptions.fixedSize;
@@ -252,13 +250,13 @@ class PackProperties extends React.Component {
         Observer.emit(GLOBAL_EVENT.SHOW_EDIT_CUSTOM_EXPORTER);
     }
 
-    selectSavePath() {
+    /*selectSavePath() {
         let dir = FileSystem.selectFolder();
         if(dir) {
             ReactDOM.findDOMNode(this.refs.savePath).value = dir;
             this.onExporterPropChanged();
         }
-    }
+    }*/
 
     clearOrder() {
         window.__sparrow_order = undefined;
@@ -277,9 +275,9 @@ class PackProperties extends React.Component {
                 <div className="pack-properties-containter">
                     <table>
                         <tbody>
-                            <tr title={I18.f("TEXTURE_NAME_TITLE")}>
-                                <td>{I18.f("TEXTURE_NAME")}</td>
-                                <td><input ref="textureName" type="text" className="border-color-gray" defaultValue={this.packOptions.textureName} onBlur={this.onExporterPropChanged} /></td>
+                            <tr title={I18.f("FILE_NAME_TITLE")} style={{display: PLATFORM === 'web' ? '' : 'none'}}>
+                                <td>{I18.f("FILE_NAME")}</td>
+                                <td><input ref="fileName" className="border-color-gray" type="text" defaultValue={this.packOptions.fileName} onBlur={this.onExporterPropChanged} /></td>
                                 <td></td>
                             </tr>
                             <tr title={I18.f("TEXTURE_FORMAT_TITLE")}>
@@ -302,11 +300,11 @@ class PackProperties extends React.Component {
                                 <td><input ref="prependFolderName" className="border-color-gray" type="checkbox" defaultChecked={this.packOptions.prependFolderName ? "checked" : ""} onChange={this.onExporterPropChanged} /></td>
                                 <td></td>
                             </tr>
-                            <tr title={I18.f("BASE64_EXPORT_TITLE")}>
+                            {/* <tr title={I18.f("BASE64_EXPORT_TITLE")}>
                                 <td>{I18.f("BASE64_EXPORT")}</td>
                                 <td><input ref="base64Export" className="border-color-gray" type="checkbox" defaultChecked={this.packOptions.base64Export ? "checked" : ""} onChange={this.onExporterPropChanged} /></td>
                                 <td></td>
-                            </tr>
+                            </tr> */}
                             {/* <tr title={I18.f("TINIFY_TITLE")}>
                                 <td>{I18.f("TINIFY")}</td>
                                 <td><input ref="tinify" className="border-color-gray" type="checkbox" defaultChecked={this.packOptions.tinify ? "checked" : ""} onChange={this.onExporterPropChanged} /></td>
@@ -346,18 +344,13 @@ class PackProperties extends React.Component {
                                     <div className="edit-btn back-800" ref="editCustomFormat" onClick={this.editCustomExporter}></div>
                                 </td>
                             </tr>
-                            <tr title={I18.f("FILE_NAME_TITLE")} style={{display: PLATFORM === 'web' ? '' : 'none'}}>
-                                <td>{I18.f("FILE_NAME")}</td>
-                                <td><input ref="fileName" className="border-color-gray" type="text" defaultValue={this.packOptions.fileName} onBlur={this.onExporterPropChanged} /></td>
-                                <td></td>
-                            </tr>
-                            <tr title={I18.f("SAVE_PATH_TITLE")} style={{display: PLATFORM === 'electron' ? '' : 'none'}}>
+                           {/*  <tr title={I18.f("SAVE_PATH_TITLE")} style={{display: PLATFORM === 'electron' ? '' : 'none'}}>
                                 <td>{I18.f("SAVE_PATH")}</td>
                                 <td><input ref="savePath" className="border-color-gray" type="text" defaultValue={this.packOptions.savePath} onBlur={this.onExporterPropChanged} /></td>
                                 <td>
                                     <div className="folder-btn back-800" onClick={this.selectSavePath}></div>
                                 </td>
-                            </tr>
+                            </tr> */}
                             <tr>
                                 <td colSpan="3" className="center-align">
                                     <div className="btn back-800 border-color-gray color-white" onClick={this.startExport}>{I18.f("EXPORT")}</div>

@@ -24,8 +24,8 @@ SPRITE_NAME;Sprite name:
 ANIMATION_SPEED;Animation speed:
 TEXTURE_NAME;Texture name:
 TEXTURE_NAME_TITLE;Texture name for export
-TEXTURE_FORMAT;Texture format:
-TEXTURE_FORMAT_TITLE;Texture format for export
+TEXTURE_FORMAT;File format:
+TEXTURE_FORMAT_TITLE;File format for export
 REMOVE_FILE_EXT;Remove file ext:
 REMOVE_FILE_EXT_TITLE;Remove file ext in sprites name
 PREPEND_FOLDER;Prepend folder name:
@@ -143,3 +143,4 @@ CLEAR_STORED_ORDER_TITLE;Clears the order from the repack
 CLEAR_STORED_ORDER;Clear Stored Order
 SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
+UPDATE_FILENAME;Update Filename:
