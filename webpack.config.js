@@ -1,10 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 //const argv = require('optimist').argv;
 
 let entry = [
-    'babel-polyfill',
+    'core-js/stable',
     './src/client/index'
 ];
 
@@ -42,7 +42,11 @@ if (argv.build) {
         outputDir = '../electron/www/';
     }
 
-    plugins.push(new CopyWebpackPlugin([{from: 'src/client/resources', to: outputDir}]));
+    plugins.push(new CopyPlugin({
+        patterns: [
+            {from: 'src/client/resources', to: outputDir}
+        ]
+    }));
 
     devtool = false;
     output = outputDir + 'static/js/index.js';
@@ -50,10 +54,14 @@ if (argv.build) {
 }
 else {
     entry.push('webpack-dev-server/client?http://localhost:4000');
-    plugins.push(new CopyWebpackPlugin([{from: 'src/client/resources', to: './'}]));
+    plugins.push(new CopyPlugin({
+        patterns: [
+            {from: 'src/client/resources', to: ''}
+        ]
+    }));
 }
 
-let config = {
+const config = {
     entry: entry,
     output: {
         path: __dirname + "/dist",

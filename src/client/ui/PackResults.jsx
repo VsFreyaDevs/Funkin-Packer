@@ -8,6 +8,10 @@ class PackResults extends React.Component {
     constructor(props) {
         super(props);
 
+        this.spritesPlayerRef = React.createRef();
+        this.rangeRef = React.createRef();
+        this.wheelRef = React.createRef();
+
         this.textureBackColors = ["grid-back", "white-back", "pink-back", "black-back"];
         this.step = 0.1;
 
@@ -19,9 +23,10 @@ class PackResults extends React.Component {
             playerVisible: false,
             scale: 1
         };
+    }
 
-        this.rangeRef = React.createRef();
-        this.wheelRef = React.createRef();
+    componentDidMount() {
+        this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
 
         this.setBack = this.setBack.bind(this);
         this.changeOutlines = this.changeOutlines.bind(this);
@@ -32,10 +37,6 @@ class PackResults extends React.Component {
 
         Observer.on(GLOBAL_EVENT.PACK_COMPLETE, this.updatePackResult, this);
         Observer.on(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, this.onImagesSelected, this);
-    }
-
-    componentDidMount() {
-        this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
     }
 
     onImagesSelected(data) {
@@ -122,7 +123,7 @@ class PackResults extends React.Component {
                             {views}
                         </div>
                         <div className={!this.state.playerVisible ? "block-hidden" : "block-visible"}>
-                            <SpritesPlayer ref="spritesPlayer" data={this.state.packResult} start={this.state.playerVisible} textureBack={this.state.textureBack} />
+                            <SpritesPlayer ref={this.spritesPlayerRef} data={this.state.packResult} start={this.state.playerVisible} textureBack={this.state.textureBack} />
                         </div>
                     </div>
 

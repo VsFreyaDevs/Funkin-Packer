@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import I18 from './utils/I18';
 import APP from './APP';
@@ -13,7 +13,7 @@ import languages from './resources/static/localization/languages.json';
 import Controller from 'platform/Controller';
 
 let app = null;
-let layout = null;
+let layoutRef = null;
 
 const STORAGE_LANGUAGE_KEY = "language";
 
@@ -41,7 +41,14 @@ function loadLocalization() {
 
 function renderLayout() {
     Controller.updateLocale();
-    layout = ReactDOM.render(React.createElement(MainLayout), document.getElementById("root"));
+    const root = createRoot(document.getElementById("root"));
+    if(layoutRef === null)
+        layoutRef = React.createRef();
+    root.render(
+        <React.StrictMode>
+            <MainLayout ref={layoutRef}></MainLayout>
+        </React.StrictMode>
+    );
 }
 
 function injectCss(path) {
@@ -53,13 +60,13 @@ function injectCss(path) {
 }
 
 function setLocale(locale) {
-    if(!layout) return;
+    if(!layoutRef) return;
 
     I18.init(locale);
     I18.load(() => {
         Storage.save(STORAGE_LANGUAGE_KEY, I18.currentLocale);
         Controller.updateLocale();
-        layout.forceUpdate();
+        layoutRef.current.forceUpdate();
     });
 }
 

@@ -26,7 +26,9 @@ class MainLayout extends React.Component {
             updater: false,
             sheetSplitter: false
         };
+    }
 
+    componentDidMount() {
         this.closeMessage = this.closeMessage.bind(this);
 
         Observer.on(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
