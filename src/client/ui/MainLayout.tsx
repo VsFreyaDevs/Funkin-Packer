@@ -13,6 +13,7 @@ import EditCustomExporter from './EditCustomExporter';
 import SheetSplitter from './SheetSplitter';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
+import TypedObserver from 'TypedObserver';
 
 interface Props {}
 
@@ -42,7 +43,7 @@ class MainLayout extends React.Component<Props, State> {
 	}
 
 	componentDidMount = () => {
-		Observer.on(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
+		TypedObserver.showMessage.on(this.showMessage, this);
 		Observer.on(GLOBAL_EVENT.SHOW_PROCESSING, this.showProcessing, this);
 		Observer.on(GLOBAL_EVENT.HIDE_PROCESSING, this.hideProcessing, this);
 		//Observer.on(GLOBAL_EVENT.SHOW_ABOUT, this.showAbout, this);
@@ -56,7 +57,7 @@ class MainLayout extends React.Component<Props, State> {
 	}
 
 	componentWillUnmount = () => {
-		Observer.off(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
+		TypedObserver.showMessage.off(this.showMessage, this);
 		Observer.off(GLOBAL_EVENT.SHOW_PROCESSING, this.showProcessing, this);
 		Observer.off(GLOBAL_EVENT.HIDE_PROCESSING, this.hideProcessing, this);
 		//Observer.off(GLOBAL_EVENT.SHOW_ABOUT, this.showAbout, this);

@@ -4,6 +4,7 @@ import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from './I18';
 import { LoadedImages } from 'types';
 import CustomImage from '../data/CustomImage';
+import TypedObserver from 'TypedObserver';
 
 class ZipLoader {
 	data: File[];
@@ -35,7 +36,7 @@ class ZipLoader {
 				this.parseZip();
 			},
 			() => {
-				Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("INVALID_ZIP_ERROR"));
+				TypedObserver.showMessage.emit(I18.f("INVALID_ZIP_ERROR"));
 				if (this.onEnd) this.onEnd({});
 			}
 		);

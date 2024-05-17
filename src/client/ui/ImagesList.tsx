@@ -11,24 +11,14 @@ import ItemTreePart, { TreeListItem } from './ItemTree';
 
 import Globals from '../utils/Globals';
 import {smartSortImages} from '../utils/common';
-import { LoadedImages } from 'types';
+import { LoadedImages, SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
 import CustomImage from 'data/CustomImage';
+import { ButtonData } from './MessageBox';
 
 // TODO: make this not use CustomImage.selected + CustomImage.current
 
 let INSTANCE:ImagesList = null;
-
-type SelectedEvent = {
-	isFolder: boolean,
-	path: string,
-	ctrlKey: boolean,
-	shiftKey: boolean
-};
-
-type MapOfImages = {
-	[key: string]: TreeListItem
-}
 
 interface Props {
 }
@@ -67,7 +57,7 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	componentDidMount = () => {
-		Observer.on(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
+		TypedObserver.imageSelected.on(this.handleImageSelected, this);
 		Observer.on(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		//Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
 
@@ -92,7 +82,7 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	componentWillUnmount = () => {
-		Observer.off(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
+		TypedObserver.imageSelected.off(this.handleImageSelected, this);
 		Observer.off(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		//Observer.off(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
 
@@ -262,18 +252,18 @@ class ImagesList extends React.Component<Props, State> {
 	clear = () => {
 		let keys = Object.keys(this.state.images);
 		if(keys.length) {
-			let buttons = [
+			let buttons:ButtonData[] = [
 				{name: "yes", caption: I18.f("YES"), callback: this.doClear},
 				{name: "no", caption: I18.f("NO")}
 			];
 
-			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("CLEAR_WARNING"), buttons);
+			TypedObserver.showMessage.emit(I18.f("CLEAR_WARNING"), buttons);
 		}
 	}
 
 	doClear = () => {
 		TypedObserver.imagesListChanged.emit({});
-		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, []);
+		TypedObserver.imagesListSelectedChanged.emit([]);
 		Globals.didClearImageList();
 		this.setState({images: {}});
 	}
@@ -293,9 +283,6 @@ class ImagesList extends React.Component<Props, State> {
 		for(let key in images) {
 			images[key].selected = false;
 		}
-
-		this.setState({images: this.state.images});
-		this.emitSelectedChanges();
 	}
 
 	getCurrentImage = () => {
@@ -384,7 +371,7 @@ class ImagesList extends React.Component<Props, State> {
 		return ret;
 	}
 
-	handleImageItemSelected = (e: SelectedEvent) => {
+	handleImageSelected = (e: SelectedEvent) => {
 		let path = e.path;
 		let images = this.state.images;
 
@@ -447,7 +434,7 @@ class ImagesList extends React.Component<Props, State> {
 			if(images[key].selected) selected.push(key);
 		}
 
-		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, selected);
+		TypedObserver.imagesListSelectedChanged.emit(selected);
 		//this.imagesTreePartRef.current.setState({selected: selected});
 	}
 

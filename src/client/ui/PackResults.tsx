@@ -4,6 +4,7 @@ import TextureView from './TextureView';
 import SpritesPlayer from './SpritesPlayer';
 import I18 from '../utils/I18';
 import { PackResultsData } from 'types';
+import TypedObserver from 'TypedObserver';
 
 interface Props {}
 
@@ -46,8 +47,8 @@ class PackResults extends React.Component<Props, State> {
 	componentDidMount = () => {
 		this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
 
-		Observer.on(GLOBAL_EVENT.PACK_COMPLETE, this.updatePackResult, this);
-		Observer.on(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, this.onImagesSelected, this);
+		TypedObserver.packComplete.on(this.updatePackResult, this);
+		TypedObserver.imagesListSelectedChanged.on(this.onImagesSelected, this);
 	}
 
 	onImagesSelected = (data: string[]) => {
@@ -56,9 +57,9 @@ class PackResults extends React.Component<Props, State> {
 
 	updatePackResult = (data: PackResultsData[]) => {
 		//console.log(data);
-		Observer.emit(GLOBAL_EVENT.STATS_INFO, {
+		TypedObserver.statsInfoUpdated.emit({
 			packResults: data
-		});
+		})
 		this.setState({packResult: data});
 	}
 
@@ -75,7 +76,7 @@ class PackResults extends React.Component<Props, State> {
 	clearSelection = () => {
 		if(this.state.playerVisible) return;
 
-		Observer.emit(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, null);
+		Observer.emit(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION);
 	}
 
 	handleWheel = (e: WheelEvent) => {

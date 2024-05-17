@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import { PackResultsData } from 'types';
+import TypedObserver from 'TypedObserver';
 
 function formatBytes(bytes: number, decimals: number = 2, si: number = 1024) {
 	if (bytes === 0) return '0 B';
@@ -41,13 +42,13 @@ class StatsInfo extends React.Component<Props, State> {
 	}
 
 	componentDidMount = () => {
-		Observer.on(GLOBAL_EVENT.STATS_INFO, this.updateStatsInfo, this);
-		Observer.on(GLOBAL_EVENT.STATS_INFO_SET_SI, this.setSI, this);
+		TypedObserver.statsInfoUpdated.on(this.updateStatsInfo, this);
+		TypedObserver.siUnitsChanged.on(this.setSI, this);
 	}
 
 	componentWillUnmount = () => {
-		Observer.off(GLOBAL_EVENT.STATS_INFO, this.updateStatsInfo, this);
-		Observer.off(GLOBAL_EVENT.STATS_INFO_SET_SI, this.setSI, this);
+		TypedObserver.statsInfoUpdated.off(this.updateStatsInfo, this);
+		TypedObserver.siUnitsChanged.off(this.setSI, this);
 	}
 
 	updateStatsInfo = (statsInfo: StatsInfoEvent) => {

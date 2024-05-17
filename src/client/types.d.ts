@@ -86,3 +86,10 @@ declare type PackResultsData = {
 declare type MessageBoxData = {
 	description: string;
 };
+
+declare type SelectedEvent = {
+	isFolder: boolean,
+	path: string,
+	ctrlKey: boolean,
+	shiftKey: boolean
+};

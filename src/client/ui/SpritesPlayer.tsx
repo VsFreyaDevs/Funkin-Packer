@@ -3,6 +3,7 @@ import I18 from '../utils/I18';
 import { Observer, GLOBAL_EVENT } from "../Observer";
 import { smartSortImages} from '../utils/common';
 import { PackResultsData, Rect } from 'types';
+import TypedObserver from 'TypedObserver';
 
 interface Props {
 	start?: boolean;
@@ -55,7 +56,7 @@ class SpritesPlayer extends React.Component<Props> {
 	}
 
 	componentDidMount = () => {
-		Observer.on(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, this.onImagesSelected, this);
+		TypedObserver.imagesListSelectedChanged.on(this.onImagesSelected, this);
 
 		if(this.props.start) this.setup();
 		else this.stop();
@@ -65,8 +66,7 @@ class SpritesPlayer extends React.Component<Props> {
 		this.stop();
 	}
 
-	onImagesSelected = (list: string[] = []) => {
-		if(!list) list = [];
+	onImagesSelected = (list: string[]) => {
 		this.selectedImages = list;
 		this.updateCurrentTextures();
 	}

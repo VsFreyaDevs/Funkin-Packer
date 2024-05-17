@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from "../Observer";
 import { PropsWithChildren } from 'react';
 import CustomImage from 'data/CustomImage';
+import TypedObserver from 'TypedObserver';
 
 export interface TreeListItem {
 	isFolder: boolean;
@@ -54,23 +55,13 @@ class ItemTreePart extends React.Component<TreeListItem> {
 	}
 }
 
-interface ItemTreeItemState {
-	selected: boolean;
-	current: boolean;
-}
-
-class ItemTreeItem extends React.Component<TreeListItem, ItemTreeItemState> {
+class ItemTreeItem extends React.Component<TreeListItem> {
 	constructor(props:TreeListItem) {
 		super(props);
-
-		this.state = {
-			selected: false,
-			current: false
-		};
 	}
 
 	onSelect = (e: React.MouseEvent<HTMLDivElement>) => {
-		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
+		TypedObserver.imageSelected.emit({
 			isFolder: false,
 			path: this.props.path,
 			ctrlKey: e.ctrlKey,
@@ -84,7 +75,7 @@ class ItemTreeItem extends React.Component<TreeListItem, ItemTreeItemState> {
 
 	render() {
 		return (
-			<div className={"image-list-item" + (this.state.selected ? " back-400" : "") + (this.state.current ? " image-list-item-current" : "")} onClick={this.onSelect} >
+			<div className={"image-list-item" + (this.props.selected ? " back-400" : "") + (this.props.current ? " image-list-item-current" : "")} onClick={this.onSelect} >
 				<div className="image-list-image-container">
 					<img src={this.props.img.src} className="image-list-image" />
 				</div>
@@ -119,7 +110,7 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeListItem>, Tree
 	}
 
 	handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
+		TypedObserver.imageSelected.emit({
 			isFolder: true,
 			path: this.props.path,
 			ctrlKey: e.ctrlKey,

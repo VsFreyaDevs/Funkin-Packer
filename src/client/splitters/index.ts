@@ -9,6 +9,7 @@ import { isNullOrUndefined } from '../utils/common';
 import { GLOBAL_EVENT, Observer } from '../Observer';
 import Splitter, { SplitterOptions } from './Splitter';
 import { PackOptions, Rect } from 'types';
+import TypedObserver from 'TypedObserver';
 
 const GridSplitter = new Grid();
 
@@ -88,7 +89,7 @@ export class SplitterMaster {
 	}
 
 	finishSplit = () => {
-		Observer.emit(GLOBAL_EVENT.STORED_ORDER_CHANGED, this._storedSplitterOrder);
+		TypedObserver.storedOrderChanged.emit(this._storedSplitterOrder);
 		this._storedSplitterOrder = null;
 	}
 

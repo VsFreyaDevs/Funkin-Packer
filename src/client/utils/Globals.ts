@@ -1,3 +1,4 @@
+import TypedObserver from "TypedObserver";
 import { Observer, GLOBAL_EVENT } from "../Observer";
 
 let INSTANCE:Globals = null;
@@ -14,7 +15,7 @@ class Globals {
 
 		(globalThis as any).Globals = this;
 
-		Observer.on(GLOBAL_EVENT.STORED_ORDER_CHANGED, this.onStoredOrderChanged, this);
+		TypedObserver.storedOrderChanged.on(this.onStoredOrderChanged, this);
 	}
 
 	onStoredOrderChanged = (data:string[]) => {
@@ -35,7 +36,7 @@ class Globals {
 	}
 
 	static clearOrder() {
-		Observer.emit(GLOBAL_EVENT.STORED_ORDER_CHANGED, null);
+		TypedObserver.storedOrderChanged.emit(null);
 	}
 
 	/*static get sparrowOrigMap() {

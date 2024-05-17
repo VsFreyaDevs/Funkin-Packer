@@ -17,3 +17,4 @@
 - [ ] Make it apply detect identical at the import stage
 - [ ] Make splitter allow importing multiple files at once
 - [ ] Make splitter show info like if the data file is manually edited, or if the width and height are too low
+- [ ] Mobile support?

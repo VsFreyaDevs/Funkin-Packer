@@ -128,7 +128,7 @@ class SheetSplitter extends React.Component<Props, State> {
 
 		if(!this.frames || !this.frames.length) {
 			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_FRAMES'));
+			TypedObserver.showMessage.emit(I18.f('SPLITTER_ERROR_NO_FRAMES'));
 
 			return;
 		}
@@ -146,7 +146,7 @@ class SheetSplitter extends React.Component<Props, State> {
 			if(parts.length > 1) parts.pop();
 			filename = parts.join(".");
 			PackProperties.i.packOptions.fileName = filename;
-			Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, PackProperties.i.getPackOptions());
+			TypedObserver.packExporterChanged.emit(PackProperties.i.getPackOptions());
 			PackProperties.i.refreshPackOptions();
 		}
 
@@ -242,7 +242,7 @@ class SheetSplitter extends React.Component<Props, State> {
 
 		if(!this.frames || !this.frames.length) {
 			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_FRAMES'));
+			TypedObserver.showMessage.emit(I18.f('SPLITTER_ERROR_NO_FRAMES'));
 
 			return;
 		}
@@ -325,7 +325,7 @@ class SheetSplitter extends React.Component<Props, State> {
 
 				if(keys.length === 0) {
 					Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-					Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_TEXTURE'));
+					TypedObserver.showMessage.emit(I18.f('SPLITTER_ERROR_NO_TEXTURE'));
 					return;
 				}
 
@@ -483,7 +483,7 @@ class SheetSplitter extends React.Component<Props, State> {
 		this.setState({updateFileName: val});
 		PackProperties.i.packOptions.repackUpdateFileName = val;
 		PackProperties.i.saveOptions();
-		Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, PackProperties.i.getPackOptions());
+		TypedObserver.packExporterChanged.emit(PackProperties.i.getPackOptions());
 	}
 
 	close = () => {

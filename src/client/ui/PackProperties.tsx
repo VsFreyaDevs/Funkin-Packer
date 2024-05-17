@@ -14,6 +14,7 @@ import I18 from '../utils/I18';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import Globals from '../utils/Globals';
 import { PackOptions } from 'types';
+import TypedObserver from 'TypedObserver';
 
 //import FileSystem from 'platform/FileSystem';
 
@@ -102,14 +103,14 @@ class PackProperties extends React.Component<Props, State> {
 	}
 
 	componentDidMount = () => {
-		Observer.on(GLOBAL_EVENT.STORED_ORDER_CHANGED, this.onStoredOrderChanged, this);
+		TypedObserver.storedOrderChanged.on(this.onStoredOrderChanged, this);
 
 		this.updateEditCustomTemplateButton();
 		this.emitChanges();
 	}
 
 	componentWillUnmount = () => {
-		Observer.off(GLOBAL_EVENT.STORED_ORDER_CHANGED, this.onStoredOrderChanged, this);
+		TypedObserver.storedOrderChanged.off(this.onStoredOrderChanged, this);
 	}
 
 	static get i() {
@@ -224,7 +225,7 @@ class PackProperties extends React.Component<Props, State> {
 
 		this.packOptions = this.applyOptionsDefaults(data);
 
-		Observer.emit(GLOBAL_EVENT.STATS_INFO_SET_SI, data.statsSI);
+		TypedObserver.siUnitsChanged.emit(this.packOptions.statsSI);
 	}
 
 	refreshPackOptions = () => {
@@ -264,8 +265,8 @@ class PackProperties extends React.Component<Props, State> {
 	}
 
 	emitChanges = () => {
-		Observer.emit(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, this.getPackOptions());
-		Observer.emit(GLOBAL_EVENT.STATS_INFO_SET_SI, this.packOptions.statsSI);
+		TypedObserver.packOptionsChanged.emit(this.getPackOptions());
+		TypedObserver.siUnitsChanged.emit(this.packOptions.statsSI);
 	}
 
 	onPackerChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -306,7 +307,7 @@ class PackProperties extends React.Component<Props, State> {
 		this.updatePackOptions();
 		this.saveOptions();
 
-		Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, this.getPackOptions());
+		TypedObserver.packExporterChanged.emit(this.getPackOptions());
 	}
 	eventForceUpdate = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
 		if(!e) return;
@@ -359,9 +360,9 @@ class PackProperties extends React.Component<Props, State> {
 	render() {
 		let exporter = getExporterByType(this.packOptions.exporter);
 		let allowRotation = this.packOptions.allowRotation && exporter.allowRotation;
-		let exporterRotationDisabled = exporter.allowRotation;
+		let exporterRotationDisabled = !exporter.allowRotation;
 		let allowTrim = this.packOptions.allowTrim && exporter.allowTrim;
-		let exporterTrimDisabled = exporter.allowTrim;
+		let exporterTrimDisabled = !exporter.allowTrim;
 
 		return (
 			<div className="props-list back-white">
@@ -578,22 +579,28 @@ interface PackerMethodsProps {
 	handler: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
 }
 
-class PackerMethods extends React.Component<PackerMethodsProps> {
+class PackerMethods extends React.Component<PackerMethodsProps, {
+	value: string
+}> {
 	selectRef: React.RefObject<HTMLSelectElement>;
 
 	constructor(props: PackerMethodsProps) {
 		super(props);
 
 		this.selectRef = React.createRef();
+
+		this.state = {
+			value: this.props.packer ?? this.props.defaultMethod
+		};
 	}
 
 	// theres probably a better way to do this
 	get value() {
-		return this.selectRef.current.value;
+		return this.state.value;
 	}
 
 	set value(value: string) {
-		this.selectRef.current.value = value;
+		this.setState({value});
 	}
 
 	render() {

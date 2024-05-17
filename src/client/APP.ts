@@ -26,8 +26,8 @@ class APP {
 		this.packResult = null;
 
 		TypedObserver.imagesListChanged.on(this.onImagesListChanged, this);
-		Observer.on(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, this.onPackOptionsChanged, this);
-		Observer.on(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, this.onPackExporterOptionsChanged, this);
+		TypedObserver.packOptionsChanged.on(this.onPackOptionsChanged, this);
+		TypedObserver.packExporterChanged.on(this.onPackExporterOptionsChanged, this);
 		Observer.on(GLOBAL_EVENT.START_EXPORT, this.startExport, this);
 	}
 
@@ -35,18 +35,18 @@ class APP {
 		return INSTANCE;
 	}
 
-	onImagesListChanged(data: LoadedImages) {
+	onImagesListChanged = (data: LoadedImages) => {
 		this.images = data;
 		//console.log(this.images);
 		this.pack();
 	}
 
-	onPackOptionsChanged(data: PackOptions) {
+	onPackOptionsChanged = (data: PackOptions) => {
 		this.packOptions = data;
 		this.pack();
 	}
 
-	onPackExporterOptionsChanged(data: PackOptions) {
+	onPackExporterOptionsChanged = (data: PackOptions) => {
 		this.packOptions = data;
 	}
 
@@ -79,23 +79,23 @@ class APP {
 			});
 		}
 
-		Observer.emit(GLOBAL_EVENT.PACK_COMPLETE, this.packResult);
+		TypedObserver.packComplete.emit(this.packResult);
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 
 	onPackError = (err: MessageBoxData) => {
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, err.description);
+		TypedObserver.showMessage.emit(err.description);
 	}
 
 	startExport() {
 		if (!this.packResult || !this.packResult.length) {
-			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("NO_IMAGES_ERROR"));
+			TypedObserver.showMessage.emit(I18.f("NO_IMAGES_ERROR"));
 			return;
 		}
 
 		//if (this.packOptions.tinify && !this.packOptions.tinifyKey) {
-		//    Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("NO_TINIFY_KEY_ERROR"));
+		//    TypedObserver.showMessage.emit(I18.f("NO_TINIFY_KEY_ERROR"));
 		//    return;
 		//}
 
@@ -131,7 +131,7 @@ class APP {
 			}
 			catch (e) {
 				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-				Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, e);
+				TypedObserver.showMessage.emit(e);
 				return;
 			}*/
 
@@ -172,7 +172,7 @@ class APP {
 			}
 			catch (e) {
 				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-				Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("EXPORTER_ERROR", e));
+				TypedObserver.showMessage.emit(I18.f("EXPORTER_ERROR", e));
 				return;
 			}
 

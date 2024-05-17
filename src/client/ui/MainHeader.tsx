@@ -5,6 +5,7 @@ import I18 from '../utils/I18';
 import * as appInfo from '../../../package.json';
 import * as languages from '../resources/static/localization/languages.json';
 import StatsInfo from './StatsInfo';
+import TypedObserver from 'TypedObserver';
 
 class MainHeader extends React.Component {
 	/* showAbout() {
@@ -12,7 +13,7 @@ class MainHeader extends React.Component {
 	} */
 
 	changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		Observer.emit(GLOBAL_EVENT.CHANGE_LANG, e.target.value);
+		TypedObserver.changeLanguage.emit(e.target.value);
 	}
 
 	showSplitter = () => {

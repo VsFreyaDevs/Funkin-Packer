@@ -5,7 +5,6 @@ import FileSystem from 'platform/FileSystem';
 import Controller from 'platform/Controller';
 import appInfo from '../../../../package.json';
 import I18 from '../../utils/I18';
-import { Observer, GLOBAL_EVENT } from "../../Observer";
 import TypedObserver from 'TypedObserver';
 
 const RECENT_PROJECTS_KEY = "recent-projects";
@@ -18,14 +17,14 @@ class Project {
 		Project.stopObserv();
 
 		TypedObserver.imagesListChanged.on(Project.onImagesListChanged);
-		Observer.on(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, Project.onProjectChanged);
-		Observer.on(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, Project.onProjectChanged);
+		TypedObserver.packOptionsChanged.on(Project.onProjectChanged);
+		TypedObserver.packExporterChanged.on(Project.onProjectChanged);
 	}
 
 	static stopObserv() {
 		TypedObserver.imagesListChanged.off(Project.onImagesListChanged);
-		Observer.off(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, Project.onProjectChanged);
-		Observer.off(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, Project.onProjectChanged);
+		TypedObserver.packOptionsChanged.off(Project.onProjectChanged);
+		TypedObserver.packExporterChanged.off(Project.onProjectChanged);
 	}
 
 	static onProjectChanged() {
@@ -133,7 +132,7 @@ class Project {
 				{ name: "cancel", caption: I18.f("CANCEL") }
 			];
 
-			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("SAVE_CHANGES_CONFIRM"), buttons);
+			TypedObserver.showMessage.emit(I18.f("SAVE_CHANGES_CONFIRM"), buttons);
 		}
 		else if (cb) {
 			cb();

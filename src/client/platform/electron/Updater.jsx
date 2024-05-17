@@ -36,7 +36,7 @@ class Updater extends React.Component {
 			{name: "no", caption: I18.f("NO")}
 		];
 
-		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("SKIP_VERSION_CONFIRM"), buttons);
+		TypedObserver.showMessage.emit(I18.f("SKIP_VERSION_CONFIRM"), buttons);
 	}
 
 	doSkip = () => {

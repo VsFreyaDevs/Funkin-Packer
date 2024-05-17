@@ -5,12 +5,14 @@ import Trimmer from './utils/Trimmer';
 import TextureRenderer from './utils/TextureRenderer';
 
 import I18 from './utils/I18';
-import { LoadedImages, PackOptions, Rect } from 'types';
+import { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
 import { TreeListItem, TreeListItems } from 'ui/ItemTree';
+import { PackerClass } from './packers/Packer';
+import { ButtonData } from 'ui/MessageBox';
 
 class PackProcessor {
 	static detectIdentical(rects: Rect[], didTrim: boolean) {
-		let identical = [];
+		let identical:Rect[] = [];
 
 		const len = rects.length;
 
@@ -96,7 +98,7 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:Function = null, onError:Function = null, onProgress:Function = null) {
+	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][]) => void = null, onError:(data:MessageBoxData) => void = null, onProgress:(data:any) => void = null) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
@@ -207,7 +209,7 @@ class PackProcessor {
 			return methods;
 		};
 
-		let packerClass = getPackerByType(options.packer) || MaxRectsBinPack;
+		let packerClass:PackerClass = getPackerByType(options.packer) || MaxRectsBinPack;
 		let packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
 		let packerCombos = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
 

@@ -5,6 +5,7 @@ import I18 from '../utils/I18';
 import { getExporterByType } from '../exporters';
 import * as mustache from 'mustache';
 import * as appInfo from '../../../package.json';
+import TypedObserver from 'TypedObserver';
 
 const STORAGE_CUSTOM_EXPORTER_KEY = "custom-exporter";
 
@@ -48,7 +49,7 @@ class EditCustomExporter extends React.Component {
 			Observer.emit(GLOBAL_EVENT.HIDE_EDIT_CUSTOM_EXPORTER);
 		}
 		catch(e) {
-			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("EXPORTER_ERROR", e.message));
+			TypedObserver.showMessage.emit(I18.f("EXPORTER_ERROR", e.message));
 		}
 	}
 

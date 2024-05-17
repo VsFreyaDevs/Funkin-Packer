@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import { PackResultsData, Rect } from 'types';
+import TypedObserver from 'TypedObserver';
 
 interface TextureViewProps {
 	data: PackResultsData;
@@ -136,7 +137,7 @@ class TextureView extends React.Component<TextureViewProps> {
 		}
 
 		if(selectedItem) {
-			Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
+			TypedObserver.imageSelected.emit({
 				isFolder: false,
 				path: selectedItem.file,
 				ctrlKey: e.ctrlKey || e.shiftKey,
@@ -154,7 +155,7 @@ class TextureView extends React.Component<TextureViewProps> {
 	selectCloned = (selectedItem: Rect) => {
 		for (let item of this.props.data.data) {
 			if(item.cloned && item.file === selectedItem.file) {
-				Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
+				TypedObserver.imageSelected.emit({
 					isFolder: false,
 					path: item.originalFile,
 					ctrlKey: true,

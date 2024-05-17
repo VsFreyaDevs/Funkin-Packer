@@ -9,11 +9,12 @@ import Project from 'platform/Project';
 
 import PackProperties from '../../ui/PackProperties';
 import ImagesList from "../../ui/ImagesList";
+import TypedObserver from "TypedObserver";
 
 class Controller {
 	static init() {
 		ipcRenderer.on("change-locale", (_e, payload) => {
-			Observer.emit(GLOBAL_EVENT.CHANGE_LANG, payload.data);
+			TypedObserver.changeLanguage.emit(payload.data);
 		});
 
 		ipcRenderer.on("show-about", (_e, _payload) => {
