@@ -36,21 +36,17 @@ class LocalImagesLoader {
 		if (types.indexOf(item.type) >= 0) {
 			let img = new Image();
 
-			let path = "";
-			let name = "";
+			let path = item.name;
+			let name = item.name;
 
 			if (item.path) {
 				path = item.path.split("\\").join("/");
 				name = path.split("/").pop();
 			}
-			else {
-				path = item.name;
-				name = item.name;
-			}
 
 			img.fsPath = {
-				name: name,
-				path: path,
+				name,
+				path,
 				folder: ""
 			};
 

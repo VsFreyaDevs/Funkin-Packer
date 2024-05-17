@@ -1,4 +1,4 @@
-function smartSortImages(f1, f2) {
+export function smartSortImages(f1, f2) {
 	let t1 = f1.split('/');
 	let t2 = f2.split('/');
 
@@ -28,13 +28,13 @@ function smartSortImages(f1, f2) {
 	return f1 > f2 ? 1 : -1;
 }
 
-function cleanPrefix(str) {
+export function cleanPrefix(str) {
 	let parts = str.split(".");
 	if(parts.length > 1) parts.pop();
 	str = parts.join(".");
 
-	var lastDigit = "";
-	var c = "";
+	let lastDigit = "";
+	let c = "";
 	do {
 		c = str[str.length-1];
 		if(c >= '0' && c <= '9') {
@@ -46,15 +46,15 @@ function cleanPrefix(str) {
 	return str + lastDigit;
 }
 
-function removeFromArray(arr, item) {
-	let idx = arr.indexOf(item);
+export function removeFromArray(arr, item) {
+	const idx = arr.indexOf(item);
 
 	if (idx !== -1) {
 		arr.splice(idx, 1);
 	}
 }
 
-function deepClone(obj) {
+export function deepClone(obj) {
 	if (obj === null || typeof obj !== 'object') {
 		return obj;
 	}
@@ -69,7 +69,7 @@ function deepClone(obj) {
 
 	const newObj = {};
 	for (const key in obj) {
-		if (obj.hasOwnProperty(key)) {
+		if (Object.hasOwn(obj, key)) {
 			newObj[key] = deepClone(obj[key]);
 		}
 	}
@@ -77,16 +77,6 @@ function deepClone(obj) {
 	return newObj;
 }
 
-function clearGlobals() {
-	window.atlas = undefined;
-	window.__sparrow_order = undefined;
-	window.sparrowOrigMap = undefined;
-	window.sparrowMaxMap = undefined;
+export function isNullOrUndefined(val) {
+	return val === null || val === undefined;
 }
-
-module.exports = {
-	smartSortImages: smartSortImages,
-	cleanPrefix: cleanPrefix,
-	clearGlobals: clearGlobals,
-	removeFromArray: removeFromArray
-};

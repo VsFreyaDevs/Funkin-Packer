@@ -57,16 +57,16 @@ class FileSystem {
 				let name = path.split("/").pop();
 
 				files.push({
-					name: name,
-					path: path,
+					name,
+					path,
 					folder: ""
 				});
 			}
 
 			FileSystem.loadImages(files, cb);
 		}
-		else {
-			if (cb) cb();
+		else if (cb) {
+			cb();
 		}
 	}
 
@@ -79,8 +79,8 @@ class FileSystem {
 			let path = FileSystem.fixPath(dir[0]);
 			FileSystem.loadFolder(path, cb);
 		}
-		else {
-			if (cb) cb();
+		else if (cb) {
+			cb();
 		}
 	}
 
@@ -94,7 +94,9 @@ class FileSystem {
 				watcher.add(path);
 			}
 		}
-		catch (e) { }
+		catch (e) {
+			// continue regardless of error
+		}
 	}
 
 	static stopWatch(path) {
@@ -111,7 +113,10 @@ class FileSystem {
 	}
 
 	static onWatchEvent(event, path) {
-		Observer.emit(GLOBAL_EVENT.FS_CHANGES, { event: event, path: FileSystem.fixPath(path) });
+		Observer.emit(GLOBAL_EVENT.FS_CHANGES, {
+			event,
+			path: FileSystem.fixPath(path)
+		});
 	}
 
 	static loadImages(list, cb) {
@@ -129,7 +134,9 @@ class FileSystem {
 					content = "data:image/" + ext + ";base64," + content;
 					files.push({ name: item.name, url: content, fsPath: item });
 				}
-				catch (e) { }
+				catch (e) {
+					// continue regardless of error
+				}
 			}
 		}
 
@@ -177,7 +184,7 @@ class FileSystem {
 				Controller.updateProject(path);
 			}
 			catch (e) {
-
+				// continue regardless of error
 			}
 		}
 

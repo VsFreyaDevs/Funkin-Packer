@@ -13,11 +13,9 @@ class MessageBox extends React.Component {
 				ok: {caption: I18.f("OK")}
 			}
 		}
-
-		this.close = this.close.bind(this);
 	}
 
-	close() {
+	close = () => {
 		this.props.closeCallback();
 	}
 
@@ -47,11 +45,9 @@ class MessageBox extends React.Component {
 class MessageBoxButton extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.onClick = this.onClick.bind(this);
 	}
 
-	onClick() {
+	onClick = () => {
 		if(this.props.callback) this.props.callback();
 		if(this.props.parentBox) this.props.parentBox.close();
 	}

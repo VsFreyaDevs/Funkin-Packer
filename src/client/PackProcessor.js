@@ -29,8 +29,8 @@ class PackProcessor {
 		}
 
 		return {
-			rects: rects,
-			identical: identical
+			rects,
+			identical
 		}
 	}
 
@@ -58,14 +58,14 @@ class PackProcessor {
 			rect2.image.cachedDetection = [];
 		}*/
 
-		var i1 = rect1.trimmedImage;
-		var i2 = rect2.trimmedImage;
+		const i1 = rect1.trimmedImage;
+		const i2 = rect2.trimmedImage;
 
 		//return i1 === i2;
 
 		if(i1.length !== i2.length) return false;
 
-		var length = i1.length;
+		let length = i1.length;
 
 		while(length--) {
 			if(i1[length] !== i2[length]) return false;
@@ -84,16 +84,16 @@ class PackProcessor {
 			if (ix >= 0) {
 				let rect = rects[ix];
 
-				let clone = Object.assign({}, rect);
+				let clone = { ...rect};
 
 				clone.name = item.name;
 				clone.image = item.image;
 				clone.originalFile = item.file;
-				clone.frame = Object.assign({}, item.frame);
+				clone.frame = { ...item.frame};
 				clone.frame.x = rect.frame.x;
 				clone.frame.y = rect.frame.y;
-				clone.sourceSize = Object.assign({}, item.sourceSize);
-				clone.spriteSourceSize = Object.assign({}, item.spriteSourceSize);
+				clone.sourceSize = { ...item.sourceSize};
+				clone.spriteSourceSize = { ...item.spriteSourceSize};
 				clone.skipRender = true;
 
 				removeIdentical.push(item);
@@ -145,8 +145,15 @@ class PackProcessor {
 				rotated: false,
 				trimmed: false,
 				spriteSourceSize: { x: 0, y: 0, w: img.width, h: img.height },
-				sourceSize: { w: img.width, h: img.height },
-				name: name,
+				sourceSize: {
+					w: img.width,
+					h: img.height,
+					frameWidth: img.width,
+					frameHeight: img.height,
+					mw: img.width,
+					mh: img.height
+				},
+				name,
 				file: key,
 				image: img
 			});
@@ -165,11 +172,11 @@ class PackProcessor {
 			let sw = Math.round(Math.log(width) / Math.log(2));
 			let sh = Math.round(Math.log(height) / Math.log(2));
 
-			let pw = Math.pow(2, sw);
-			let ph = Math.pow(2, sh);
+			let pw = 2 ** sw;
+			let ph = 2 ** sh;
 
-			if (pw < width) pw = Math.pow(2, sw + 1);
-			if (ph < height) ph = Math.pow(2, sh + 1);
+			if (pw < width) pw = 2 ** (sw + 1);
+			if (ph < height) ph = 2 ** (sh + 1);
 
 			width = pw;
 			height = ph;
@@ -200,6 +207,8 @@ class PackProcessor {
 			for (let packerClass of allPackers) {
 				if (packerClass !== OptimalPacker) {
 					for (let method in packerClass.methods) {
+						if(!Object.hasOwn(packerClass.methods, method)) continue;
+
 						methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false });
 						if (options.allowRotation) {
 							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: true });
@@ -228,13 +237,14 @@ class PackProcessor {
 			let sheetArea = 0;
 
 			// duplicate rects if more than 1 combo since the array is mutated in pack()
-			let _rects = packerCombos.length > 1 ? rects.map(rect => {
-				return Object.assign({}, rect, {
-					frame: Object.assign({}, rect.frame),
-					spriteSourceSize: Object.assign({}, rect.spriteSourceSize),
-					sourceSize: Object.assign({}, rect.sourceSize)
-				});
-			}) : rects;
+			let _rects = packerCombos.length > 1 ? rects.map(rect => (
+				{
+					...rect,
+					frame: { ...rect.frame},
+					spriteSourceSize: { ...rect.spriteSourceSize},
+					sourceSize: { ...rect.sourceSize}
+				}
+			)) : rects;
 
 			// duplicate identical if more than 1 combo and fix references to point to the
 			//  cloned rects since the array is mutated in applyIdentical()
@@ -242,12 +252,14 @@ class PackProcessor {
 			let _identical = packerCombos.length > 1 ? identical.map(rect => {
 				for (let rect2 of _rects) {
 					if (rect.identical.image._base64 === rect2.image._base64) {
-						return Object.assign({}, rect, { identical: rect2 });
+						return { ...rect, identical: rect2};
 					}
 				}
+				return {...rect};
 			}) : identical;
 
 			while (_rects.length) {
+				// eslint-disable-next-line new-cap
 				let packer = new combo.packerClass(width, height, combo.allowRotation, spritePadding);
 				let result = packer.pack(_rects, combo.packerMethod);
 

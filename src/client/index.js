@@ -1,12 +1,15 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-use-before-define */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import Globals from './utils/Globals';
 
 import I18 from './utils/I18';
 import APP from './APP';
 import MainLayout from './ui/MainLayout.jsx';
 
 import Storage from './utils/Storage';
-import {Observer, GLOBAL_EVENT} from './Observer';
+import { Observer, GLOBAL_EVENT } from './Observer';
 
 import languages from './resources/static/localization/languages.json';
 
@@ -42,7 +45,7 @@ function loadLocalization() {
 function renderLayout() {
 	Controller.updateLocale();
 	const root = createRoot(document.getElementById("root"));
-	if(layoutRef === null)
+	if(!layoutRef)
 		layoutRef = React.createRef();
 	root.render(
 		<React.StrictMode>

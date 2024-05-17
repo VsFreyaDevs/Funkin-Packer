@@ -8,11 +8,11 @@ import MessageBox from './MessageBox.jsx';
 import ProcessingShader from './ProcessingShader.jsx';
 import OldBrowserBlocker from './OldBrowserBlocker.jsx';
 //import About from './About.jsx';
-import Updater from './Updater.jsx';
+//import Updater from '../platform/electron/Updater.jsx';
 import EditCustomExporter from './EditCustomExporter.jsx';
 import SheetSplitter from './SheetSplitter.jsx';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 
 class MainLayout extends React.Component {
 	constructor(props) {
@@ -24,13 +24,12 @@ class MainLayout extends React.Component {
 			//about: false,
 			editCustomExporter: false,
 			updater: false,
-			sheetSplitter: false
+			sheetSplitter: false,
+			browserBlocker: !OldBrowserBlocker.isSupported()
 		};
 	}
 
-	componentDidMount() {
-		this.closeMessage = this.closeMessage.bind(this);
-
+	componentDidMount = () => {
 		Observer.on(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
 		Observer.on(GLOBAL_EVENT.SHOW_SHADER, this.showShader, this);
 		Observer.on(GLOBAL_EVENT.HIDE_SHADER, this.hideShader, this);
@@ -38,36 +37,50 @@ class MainLayout extends React.Component {
 		//Observer.on(GLOBAL_EVENT.HIDE_ABOUT, this.hideAbout, this);
 		Observer.on(GLOBAL_EVENT.SHOW_EDIT_CUSTOM_EXPORTER, this.showEditCustomExporter, this);
 		Observer.on(GLOBAL_EVENT.HIDE_EDIT_CUSTOM_EXPORTER, this.hideEditCustomExporter, this);
-		Observer.on(GLOBAL_EVENT.UPDATE_AVAILABLE, this.onUpdateAvailable, this);
-		Observer.on(GLOBAL_EVENT.HIDE_UPDATER, this.hideUpdater, this);
+		//Observer.on(GLOBAL_EVENT.UPDATE_AVAILABLE, this.onUpdateAvailable, this);
+		//Observer.on(GLOBAL_EVENT.HIDE_UPDATER, this.hideUpdater, this);
 		Observer.on(GLOBAL_EVENT.SHOW_SHEET_SPLITTER, this.showSheetSplitter, this);
 		Observer.on(GLOBAL_EVENT.HIDE_SHEET_SPLITTER, this.hideSheetSplitter, this);
 	}
 
-	onUpdateAvailable(info) {
+	componentWillUnmount = () => {
+		Observer.off(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
+		Observer.off(GLOBAL_EVENT.SHOW_SHADER, this.showShader, this);
+		Observer.off(GLOBAL_EVENT.HIDE_SHADER, this.hideShader, this);
+		//Observer.off(GLOBAL_EVENT.SHOW_ABOUT, this.showAbout, this);
+		//Observer.off(GLOBAL_EVENT.HIDE_ABOUT, this.hideAbout, this);
+		Observer.off(GLOBAL_EVENT.SHOW_EDIT_CUSTOM_EXPORTER, this.showEditCustomExporter, this);
+		Observer.off(GLOBAL_EVENT.HIDE_EDIT_CUSTOM_EXPORTER, this.hideEditCustomExporter, this);
+		//Observer.off(GLOBAL_EVENT.UPDATE_AVAILABLE, this.onUpdateAvailable, this);
+		//Observer.off(GLOBAL_EVENT.HIDE_UPDATER, this.hideUpdater, this);
+		Observer.off(GLOBAL_EVENT.SHOW_SHEET_SPLITTER, this.showSheetSplitter, this);
+		Observer.off(GLOBAL_EVENT.HIDE_SHEET_SPLITTER, this.hideSheetSplitter, this);
+	}
+
+	/* onUpdateAvailable(info) {
 		this.setState({updater: info});
 	}
 
 	hideUpdater() {
 		this.setState({updater: null});
-	}
+	} */
 
-	showMessage(content, buttons=null) {
+	showMessage = (content, buttons=null) => {
 		if(this.state.messageBox) return;
 
 		let box = (<MessageBox content={content} buttons={buttons} closeCallback={this.closeMessage} />);
 		this.setState({messageBox: box});
 	}
 
-	closeMessage() {
+	closeMessage = () => {
 		this.setState({messageBox: null});
 	}
 
-	showShader() {
+	showShader = () => {
 		this.setState({shader: true});
 	}
 
-	hideShader() {
+	hideShader = () => {
 		this.setState({shader: false});
 	}
 
@@ -79,29 +92,23 @@ class MainLayout extends React.Component {
 		this.setState({about: false});
 	}*/
 
-	showEditCustomExporter() {
+	showEditCustomExporter = () => {
 		this.setState({editCustomExporter: true});
 	}
 
-	hideEditCustomExporter() {
+	hideEditCustomExporter = () => {
 		this.setState({editCustomExporter: false});
 	}
 
-	showSheetSplitter() {
+	showSheetSplitter = () => {
 		this.setState({sheetSplitter: true});
 	}
 
-	hideSheetSplitter() {
+	hideSheetSplitter = () => {
 		this.setState({sheetSplitter: false});
 	}
 
 	render() {
-		let shader = this.state.shader ? (<ProcessingShader/>) : null;
-		//let about = this.state.about ? (<About/>) : null;
-		let editCustomExporter = this.state.editCustomExporter ? (<EditCustomExporter/>) : null;
-		let updater = this.state.updater ? (<Updater data={this.state.updater}/>) : null;
-		let sheetSplitter = this.state.sheetSplitter ? (<SheetSplitter/>) : null;
-
 		return (
 
 			<div className="main-wrapper">
@@ -111,12 +118,12 @@ class MainLayout extends React.Component {
 					<ImagesList/>
 					<PackProperties/>
 					<PackResults/>
-					<OldBrowserBlocker/>
-					{/*about*/}
-					{editCustomExporter}
-					{sheetSplitter}
-					{updater}
-					{shader}
+					{this.state.browserBlocker ? (<OldBrowserBlocker/>) : null}
+					{/*this.state.about ? (<About/>) : null*/}
+					{this.state.editCustomExporter ? (<EditCustomExporter/>) : null}
+					{this.state.sheetSplitter ? (<SheetSplitter/>) : null}
+					{/* this.state.updater ? (<Updater data={this.state.updater}/>) : null */}
+					{this.state.shader ? (<ProcessingShader/>) : null}
 					{this.state.messageBox}
 				</div>
 			</div>

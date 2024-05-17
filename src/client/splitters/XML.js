@@ -3,7 +3,7 @@ import Splitter from './Splitter';
 import xmlParser from 'xml2js';
 
 class XML extends Splitter {
-	static check(data, cb) {
+	static doCheck(data, cb) {
 		try {
 			xmlParser.parseString(data, (err, atlas) => {
 				if(err) {
@@ -19,11 +19,10 @@ class XML extends Splitter {
 		}
 	}
 
-	static split(data, options, cb) {
+	static doSplit(data, options, cb) {
 		let res = [];
 
 		try {
-
 			xmlParser.parseString(data, (err, atlas) => {
 				if(err) {
 					cb(res);
@@ -33,7 +32,7 @@ class XML extends Splitter {
 				let list = atlas.TextureAtlas.sprite;
 
 				for(let item of list) {
-					item = item['$'];
+					item = item.$;
 
 					item.x *= 1;
 					item.y *= 1;
@@ -62,10 +61,12 @@ class XML extends Splitter {
 						},
 						sourceSize: {
 							w: item.oW,
-							h: item.oH
+							h: item.oH,
+							frameWidth: item.oW,
+							frameHeight: item.oH
 						},
 						rotated: item.r === 'y',
-						trimmed: trimmed
+						trimmed
 					});
 				}
 
@@ -73,12 +74,13 @@ class XML extends Splitter {
 			});
 		}
 		catch(e) {
+			// continue regardless of error
 		}
 
 		cb(res);
 	}
 
-	static get type() {
+	static get name() {
 		return 'XML';
 	}
 }

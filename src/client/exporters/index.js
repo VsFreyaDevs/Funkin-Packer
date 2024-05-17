@@ -1,25 +1,19 @@
+/* eslint-disable no-use-before-define */
 import list from './list.json';
 import appInfo from '../../../package.json';
-import {GET} from '../utils/ajax';
+import { sendGet } from '../utils/ajax';
 import mustache from 'mustache';
 import wax from '@jvitela/mustache-wax';
-import { smartSortImages, removeFromArray } from '../utils/common';
+import { smartSortImages, removeFromArray, isNullOrUndefined } from '../utils/common';
+import Globals from '../utils/Globals';
 
 wax(mustache);
 
 mustache.Formatters = {
-	add: (v1, v2) => {
-		return v1 + v2;
-	},
-	subtract: (v1, v2) => {
-		return v1 - v2;
-	},
-	multiply: (v1, v2) => {
-		return v1 * v2;
-	},
-	divide: (v1, v2) => {
-		return v1 / v2;
-	},
+	add: (v1, v2) => v1 + v2,
+	subtract: (v1, v2) => v1 - v2,
+	multiply: (v1, v2) => v1 * v2,
+	divide: (v1, v2) => v1 / v2,
 	offsetLeft: (start, size1, size2) => {
 		let x1 = start + size1 / 2;
 		let x2 = size2 / 2;
@@ -30,17 +24,8 @@ mustache.Formatters = {
 		let x2 = size2 / 2;
 		return x2 - x1;
 	},
-	mirror: (start, size1, size2) => {
-		return size2 - start - size1;
-	},
-	escapeName: (name) => {
-		return name.replace(/%/g, "%25")
-			.replace(/#/g, "%23")
-			.replace(/:/g, "%3A")
-			.replace(/;/g, "%3B")
-			.replace(/\\/g, "-")
-			.replace(/\//g, "-");
-	}
+	mirror: (start, size1, size2) => size2 - start - size1,
+	escapeName: (name) => name.replace(/%/g, "%25").replace(/#/g, "%23").replace(/:/g, "%3A").replace(/;/g, "%3B").replace(/\\/g, "-").replace(/\//g, "-")
 };
 
 function getExporterByType(type) {
@@ -54,12 +39,12 @@ function getExporterByType(type) {
 
 function prepareData(data, options) {
 
-	let opt = Object.assign({}, options);
+	let opt = { ...options};
 
-	opt.imageName = opt.imageName || "texture";
-	opt.imageFile = opt.imageFile || (opt.imageName + "." + options.textureFormat);
-	opt.format = opt.format || "RGBA8888";
-	opt.scale = opt.scale || 1;
+	opt.imageName ||= "texture";
+	opt.imageFile ||= (opt.imageName + "." + options.textureFormat);
+	opt.format ||= "RGBA8888";
+	opt.scale ||= 1;
 	opt.base64Prefix = options.textureFormat === "png" ? "data:image/png;base64," : "data:image/jpeg;base64,";
 
 	let ret = [];
@@ -67,7 +52,7 @@ function prepareData(data, options) {
 	for(let item of data) {
 
 		let name = item.originalFile || item.file;
-		var origName = name;
+		let origName = name;
 
 		if(options.trimSpriteNames) {
 			name.trim();
@@ -83,9 +68,28 @@ function prepareData(data, options) {
 			name = name.split("/").pop();
 		}
 
-		let frame = {x: item.frame.x, y: item.frame.y, w: item.frame.w, h: item.frame.h, hw: item.frame.w/2, hh: item.frame.h/2};
-		let spriteSourceSize = {x: item.spriteSourceSize.x, y: item.spriteSourceSize.y, w: item.spriteSourceSize.w, h: item.spriteSourceSize.h};
-		let sourceSize = {w: item.sourceSize.w, h: item.sourceSize.h};
+		let frame = {
+			x: item.frame.x,
+			y: item.frame.y,
+			w: item.frame.w,
+			h: item.frame.h,
+			hw: item.frame.w/2,
+			hh: item.frame.h/2
+		};
+		let spriteSourceSize = {
+			x: item.spriteSourceSize.x,
+			y: item.spriteSourceSize.y,
+			w: item.spriteSourceSize.w,
+			h: item.spriteSourceSize.h
+		};
+		let sourceSize = {
+			w: item.sourceSize.w,
+			h: item.sourceSize.h,
+			frameWidth: item.sourceSize.frameWidth,
+			frameHeight: item.sourceSize.frameHeight,
+			mw: item.sourceSize.mw,
+			mh: item.sourceSize.mh
+		};
 
 		let trimmed = item.trimmed;
 
@@ -115,13 +119,13 @@ function prepareData(data, options) {
 		}
 
 		ret.push({
-			name: name,
-			origName: origName,
-			frame: frame,
-			spriteSourceSize: spriteSourceSize,
-			sourceSize: sourceSize,
+			name,
+			origName,
+			frame,
+			spriteSourceSize,
+			sourceSize,
 			rotated: item.rotated,
-			trimmed: trimmed
+			trimmed
 		});
 
 	}
@@ -138,22 +142,20 @@ function startExporter(exporter, data, options) {
 	return new Promise((resolve, reject) => {
 		let {rects, config} = prepareData(data, options);
 		let renderOptions = {
-			rects: rects,
-			config: config,
-			appInfo: appInfo
+			rects,
+			config,
+			appInfo
 		};
 
 		// Sort the exported rows
 		if(options.sortExportedRows) {
-			rects = rects.sort((a, b) => {
-				return smartSortImages(a.name, b.name);
-			});
+			rects = rects.sort((a, b) => smartSortImages(a.name, b.name));
 		}
 
-		let sparrowOrder = window.__sparrow_order;
+		let sparrowOrder = Globals.sparrowOrder;//window.__sparrow_order;
 
 		// Make order the same as before
-		if(sparrowOrder != null) {
+		if(sparrowOrder !== null) {
 			sparrowOrder = [...sparrowOrder];
 			/* if(options.removeFileExtension) {
 				for(let i = 0; i < sparrowOrder.length; i++) {
@@ -170,9 +172,8 @@ function startExporter(exporter, data, options) {
 				nameMap[v.origName] = v;
 			}
 
-			let array = sparrowOrder.filter((v) => {
-				return nameMap[v] !== undefined; // filter for frames which exist
-			}).map(name => {
+			// filter for frames which exist
+			let array = sparrowOrder.filter((v) => !isNullOrUndefined(nameMap[v])).map(name => {
 				const item = nameMap[name];
 				removeFromArray(oldRects, item);
 				return item;
@@ -184,12 +185,12 @@ function startExporter(exporter, data, options) {
 		}
 
 		// Fix sourceSize
-		if(window.sparrowOrigMap != null) {
+		/*if(sparrowOrigMap != null) {
 			for(var i = 0; i < rects.length; i++) {
-				if(!window.sparrowOrigMap.hasOwnProperty(rects[i].name)) {
+				if(!sparrowOrigMap.hasOwnProperty(rects[i].name)) {
 					continue;
 				}
-				var orig = window.sparrowOrigMap[rects[i].name];
+				var orig = sparrowOrigMap[rects[i].name];
 				if(orig != null) {
 					// sorry for this horrendus code
 					rects[i] = JSON.parse(JSON.stringify(rects[i]));
@@ -200,7 +201,7 @@ function startExporter(exporter, data, options) {
 					rects[i].sourceSize.h = orig.frameHeight;
 				}
 			}
-		}
+		}*/
 
 		//console.log(rects.map((v)=>v.name));
 
@@ -212,10 +213,10 @@ function startExporter(exporter, data, options) {
 			return;
 		}
 
-		GET("static/exporters/" + exporter.template, null, (template) => {
+		sendGet("static/exporters/" + exporter.template, null, (template) => {
 			exporter.content = template;
 			finishExporter(exporter, renderOptions, resolve, reject);
-		}, () => reject(exporter.template + " not found"));
+		}, () => reject(new Error(exporter.template + " not found")));
 	});
 }
 

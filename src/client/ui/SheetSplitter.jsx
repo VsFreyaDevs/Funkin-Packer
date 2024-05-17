@@ -1,17 +1,21 @@
 import React from 'react';
+import ReactDOM from "react-dom";
 import APP from '../APP';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 
-import splitters, {getSplitterByData, getSplitterByType} from '../splitters';
-import {getDefaultSplitter} from '../splitters';
+import { SplitterMaster } from '../splitters';
 import LocalImagesLoader from "../utils/LocalImagesLoader";
-import ReactDOM from "react-dom";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList.jsx";
 import { cleanPrefix } from '../utils/common';
 import PackProperties from '../ui/PackProperties.jsx';
+
+/**
+ * @type {SplitterMaster}
+ */
+var splitterMaster = new SplitterMaster();
 
 class SheetSplitter extends React.Component {
 	constructor(props) {
@@ -32,7 +36,7 @@ class SheetSplitter extends React.Component {
 		this.step = 0.1;
 
 		this.state = {
-			splitter: getDefaultSplitter(),
+			splitter: null,
 			textureBack: this.textureBackColors[0],
 			scale: 1,
 			updateFileName: APP.i.packOptions.repackUpdateFileName === undefined ? true : APP.i.packOptions.repackUpdateFileName
@@ -49,26 +53,18 @@ class SheetSplitter extends React.Component {
 		this.dataName = '';
 
 		this.buffer = document.createElement('canvas');
-
-		this.doExport = this.doExport.bind(this);
-		this.doRepack = this.doRepack.bind(this);
-		this.selectTexture = this.selectTexture.bind(this);
-		this.selectDataFile = this.selectDataFile.bind(this);
-		this.updateFrames = this.updateFrames.bind(this);
-		this.updateView = this.updateView.bind(this);
-		this.changeSplitter = this.changeSplitter.bind(this);
-		this.setBack = this.setBack.bind(this);
-		this.changeScale = this.changeScale.bind(this);
-		this.handleWheel = this.handleWheel.bind(this);
-		this.onUpdateFileNameChange = this.onUpdateFileNameChange.bind(this);
 	}
 
-	componentDidMount() {
+	componentDidMount = () => {
 		this.updateTexture();
 		this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
 	}
 
-	handleWheel(event) {
+	componentWillUnmount = () => {
+		this.wheelRef.current.removeEventListener('wheel', this.handleWheel, { passive: false });
+	}
+
+	handleWheel = (event) => {
 		if(!event.ctrlKey) return;
 
 		let value = this.state.scale;
@@ -94,7 +90,7 @@ class SheetSplitter extends React.Component {
 		return false;
 	}
 
-	doRepack() {
+	doRepack = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
 
 		if(!this.frames || !this.frames.length) {
@@ -104,10 +100,12 @@ class SheetSplitter extends React.Component {
 			return;
 		}
 
+		splitterMaster.finishSplit();
+
 		let ctx = this.buffer.getContext('2d');
 		let files = [];
 
-		let disableuntrim = this.disableUntrimRef.current.checked;
+		let disableUntrim = this.disableUntrimRef.current.checked;
 
 		if(this.state.updateFileName) {
 			var filename = this.fileName;
@@ -119,32 +117,20 @@ class SheetSplitter extends React.Component {
 			PackProperties.i.refreshPackOptions();
 		}
 
-		if(window.sparrowMaxMap == undefined) {
-			window.sparrowMaxMap = {};
-		}
-
 		for(let item of this.frames) {
-			let trimmed = item.trimmed ? disableuntrim : false;
+			let trimmed = item.trimmed ? disableUntrim : false;
 
-			var prefix = cleanPrefix(item.originalFile || item.file || item.name);
+			//var prefix = cleanPrefix(item.originalFile || item.file || item.name);
 
-			var ssw = item.sourceSize.w;
-			var ssh = item.sourceSize.h;
+			var ssw = item.sourceSize.mw;
+			var ssh = item.sourceSize.mh;
 
-			if(window.sparrowMaxMap.hasOwnProperty(prefix)) {
-				var maxMap = window.sparrowMaxMap[prefix];
-
-				ssw = maxMap.mw;
-				ssh = maxMap.mh;
-			}
-
-			this.buffer.width = (disableuntrim && trimmed) ? item.spriteSourceSize.w : ssw;
-			this.buffer.height = (disableuntrim && trimmed) ? item.spriteSourceSize.h : ssh;
+			this.buffer.width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
+			this.buffer.height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
 
 			var isEmpty = this.buffer.width === 0 || this.buffer.height === 0;
 
 			if(isEmpty) {
-				//console.log(item);
 				this.buffer.width = 1;
 				this.buffer.height = 1;
 			}
@@ -218,7 +204,7 @@ class SheetSplitter extends React.Component {
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, ImagesList.i.state.images);
 	}
 
-	doExport() {
+	doExport = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
 
 		if(!this.frames || !this.frames.length) {
@@ -231,29 +217,18 @@ class SheetSplitter extends React.Component {
 		let ctx = this.buffer.getContext('2d');
 		let files = [];
 
-		let disableuntrim = this.disableUntrimRef.current.checked;
-
-		if(window.sparrowMaxMap == undefined) {
-			window.sparrowMaxMap = {};
-		}
+		let disableUntrim = this.disableUntrimRef.current.checked;
 
 		for(let item of this.frames) {
-			let trimmed = item.trimmed ? disableuntrim : false;
+			let trimmed = item.trimmed ? disableUntrim : false;
 
-			var prefix = cleanPrefix(item.originalFile || item.file || item.name);
+			//var prefix = cleanPrefix(item.originalFile || item.file || item.name);
 
-			var ssw = item.sourceSize.w;
-			var ssh = item.sourceSize.h;
+			var ssw = item.sourceSize.mw;
+			var ssh = item.sourceSize.mh;
 
-			if(window.sparrowMaxMap.hasOwnProperty(prefix)) {
-				var maxMap = window.sparrowMaxMap[prefix];
-
-				ssw = maxMap.mw;
-				ssh = maxMap.mh;
-			}
-
-			this.buffer.width = (disableuntrim && trimmed) ? item.spriteSourceSize.w : ssw;
-			this.buffer.height = (disableuntrim && trimmed) ? item.spriteSourceSize.h : ssh;
+			this.buffer.width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
+			this.buffer.height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
 
 			ctx.clearRect(0, 0, this.buffer.width, this.buffer.height);
 
@@ -307,13 +282,19 @@ class SheetSplitter extends React.Component {
 		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
 	}
 
-	selectTexture(e) {
+	selectTexture = (e) => {
 		if(e.target.files.length) {
 			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
 
 			let loader = new LocalImagesLoader();
 			loader.load(e.target.files, null, data => {
 				let keys = Object.keys(data);
+
+				if(keys.length === 0) {
+					Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+					Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_TEXTURE'));
+					return;
+				}
 
 				this.fileName = keys[0];
 
@@ -327,7 +308,7 @@ class SheetSplitter extends React.Component {
 		}
 	}
 
-	updateTexture() {
+	updateTexture = () => {
 		let canvas = this.viewRef.current;
 
 		if(this.texture) {
@@ -347,13 +328,12 @@ class SheetSplitter extends React.Component {
 		}
 	}
 
-	selectDataFile(e) {
+	selectDataFile = (e) => {
 		if(e.target.files.length) {
 			let item = e.target.files[0];
 
 			let reader = new FileReader();
 			reader.onload = e => {
-
 				let content = e.target.result;
 				content = content.split(',');
 				content.shift();
@@ -364,20 +344,22 @@ class SheetSplitter extends React.Component {
 				this.dataName = item.name;
 				this.dataFileNameRef.current.textContent = this.dataName;
 
-				getSplitterByData(this.data, (splitter) => {
-					this.setState({splitter: splitter});
-					this.updateView();
+				this.setState({
+					splitter: splitterMaster.findSplitter(this.data)
 				});
+				this.updateView();
 			};
 
 			reader.readAsDataURL(item);
 		}
 	}
 
-	updateFrames() {
+	updateFrames = () => {
 		if(!this.texture) return;
+		if(this.data === null) return;
 
-		this.state.splitter.split(this.data, {
+		splitterMaster.loadSplitter(this.state.splitter);
+		splitterMaster.splitData(this.data, {
 			textureWidth: this.texture.width,
 			textureHeight: this.texture.height,
 			width: this.widthRef.current.value * 1 || 32,
@@ -416,21 +398,19 @@ class SheetSplitter extends React.Component {
 		});
 	}
 
-	updateView() {
+	updateView = () => {
 		this.updateTexture();
 		this.updateFrames();
 	}
 
-	changeSplitter(e) {
-		let splitter = getSplitterByType(e.target.value);
-
-		this.state.splitter = splitter;
+	changeSplitter = (e) => {
+		let splitter = splitterMaster.getSplitterFromName(e.target.value);
 
 		this.setState({splitter: splitter});
 		this.updateView();
 	}
 
-	setBack(e) {
+	setBack = (e) => {
 		let classNames = e.target.className.split(" ");
 		for(let name of classNames) {
 			if(this.textureBackColors.indexOf(name) >= 0) {
@@ -444,7 +424,7 @@ class SheetSplitter extends React.Component {
 		}
 	}
 
-	updateTextureScale(val=this.state.scale) {
+	updateTextureScale = (val=this.state.scale) => {
 		if(this.texture) {
 			let w = Math.floor(this.texture.width * val);
 			let h = Math.floor(this.texture.height * val);
@@ -455,13 +435,13 @@ class SheetSplitter extends React.Component {
 		}
 	}
 
-	changeScale(e) {
+	changeScale = (e) => {
 		let val = Number(e.target.value);
 		this.setState({scale: val});
 		this.updateTextureScale(val);
 	}
 
-	onUpdateFileNameChange(e) {
+	onUpdateFileNameChange = (e) => {
 		let val = e.target.checked;
 		this.setState({updateFileName: val});
 		PackProperties.i.packOptions.repackUpdateFileName = val;
@@ -469,16 +449,16 @@ class SheetSplitter extends React.Component {
 		Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, PackProperties.i.getPackOptions());
 	}
 
-	close() {
+	close = () => {
 		Observer.emit(GLOBAL_EVENT.HIDE_SHEET_SPLITTER);
 	}
 
 	render() {
-		let displayType = this.state.splitter.type;
+		let currentSplitterName = splitterMaster.getCurrentSplitter().name;
 
 		let displayGridProperties = 'none';
 
-		switch (displayType) {
+		switch (currentSplitterName) {
 			case "Grid": {
 				displayGridProperties = '';
 				break;
@@ -525,9 +505,9 @@ class SheetSplitter extends React.Component {
 								<tr>
 									<td>{I18.f('FORMAT')}</td>
 									<td>
-										<select ref={this.dataFormatRef} className="border-color-gray" value={this.state.splitter.type} onChange={this.changeSplitter}>
-											{splitters.map(node => {
-												return (<option key={"data-format-" + node.type} defaultValue={node.type}>{node.type}</option>)
+										<select ref={this.dataFormatRef} className="border-color-gray" value={currentSplitterName} onChange={this.changeSplitter}>
+											{splitterMaster.getListOfSplittersNames().map(name => {
+												return (<option key={"data-format-" + name} defaultValue={name}>{name}</option>)
 											})}
 										</select>
 									</td>

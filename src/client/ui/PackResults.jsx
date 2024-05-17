@@ -1,5 +1,5 @@
 import React from 'react';
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 import TextureView from './TextureView.jsx';
 import SpritesPlayer from './SpritesPlayer.jsx';
 import I18 from '../utils/I18';
@@ -25,29 +25,22 @@ class PackResults extends React.Component {
 		};
 	}
 
-	componentDidMount() {
+	componentDidMount = () => {
 		this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
-
-		this.setBack = this.setBack.bind(this);
-		this.changeOutlines = this.changeOutlines.bind(this);
-		this.changeScale = this.changeScale.bind(this);
-		this.toggleSpritesPlayer = this.toggleSpritesPlayer.bind(this);
-		this.clearSelection = this.clearSelection.bind(this);
-		this.handleWheel = this.handleWheel.bind(this);
 
 		Observer.on(GLOBAL_EVENT.PACK_COMPLETE, this.updatePackResult, this);
 		Observer.on(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, this.onImagesSelected, this);
 	}
 
-	onImagesSelected(data) {
+	onImagesSelected = (data) => {
 		this.setState({selectedImages: data});
 	}
 
-	updatePackResult(data) {
+	updatePackResult = (data) => {
 		this.setState({packResult: data});
 	}
 
-	setBack(e) {
+	setBack = (e) => {
 		let classNames = e.target.className.split(" ");
 		for(let name of classNames) {
 			if(this.textureBackColors.indexOf(name) >= 0) {
@@ -57,13 +50,13 @@ class PackResults extends React.Component {
 		}
 	}
 
-	clearSelection() {
+	clearSelection = () => {
 		if(this.state.playerVisible) return;
 
 		Observer.emit(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, null);
 	}
 
-	handleWheel(event) {
+	handleWheel = (event) => {
 		if(!event.ctrlKey) return;
 
 		let value = this.state.scale;
@@ -90,15 +83,15 @@ class PackResults extends React.Component {
 		return false;
 	}
 
-	changeOutlines(e) {
+	changeOutlines = (e) => {
 		this.setState({displayOutline: e.target.checked});
 	}
 
-	changeScale(e) {
+	changeScale = (e) => {
 		this.setState({scale: Number(e.target.value)});
 	}
 
-	toggleSpritesPlayer() {
+	toggleSpritesPlayer = () => {
 		this.setState({playerVisible: !this.state.playerVisible});
 	}
 

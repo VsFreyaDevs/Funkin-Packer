@@ -1,4 +1,5 @@
-import { GET } from './ajax';
+import { sendGet } from './ajax';
+import { isNullOrUndefined } from './common';
 
 let _currentLocale = "en";
 let _supportedLanguages = ["en"];
@@ -82,10 +83,10 @@ class I18 {
 			strings = I18.parser(data);
 		}
 		else {
-			let parts = data.split("\n"), keyVal;
+			let parts = data.split("\n");
 
 			for(let part of parts) {
-				keyVal = part.split(I18.iniSeparator);
+				let keyVal = part.split(I18.iniSeparator);
 				if(keyVal[0].trim()) strings[keyVal[0].trim()] = keyVal[1].trim();
 			}
 		}
@@ -95,7 +96,7 @@ class I18 {
 
 	static load(callback) {
 		let url = I18.path + "/" + I18.iniPrefix + I18.currentLocale + "." + I18.iniExt + "?v=" + (new Date().getTime());
-		GET(url, null, data => {
+		sendGet(url, null, data => {
 			I18.setup(I18.parse(data));
 			if(callback) callback();
 		});
@@ -110,32 +111,29 @@ class I18 {
 	}
 
 	static arrayAntidot(values) {
-		if (!values) return;
+		if (!values) return null;
 		if (values.length > 0 && Array.isArray(values[0])) return values[0];
 		return values;
 	}
 
 	static getString(key, values) {
-		if (typeof values == "undefined") values = null;
+		if (isNullOrUndefined(values)) values = null;
 
 		let str = I18.getStringOrNull(key, values);
-		if (str == null) return "{" + key + "}";
+		if (str === null) return "{" + key + "}";
 
 		return str;
 	}
 
 	static getStringOrNull(key, args)
 	{
-		if (typeof args == "undefined") args = null;
+		if (isNullOrUndefined(args)) return null;
 
 		let value = I18.strings[key];
-		if (typeof value == "undefined") value = null;
+		if (isNullOrUndefined(value)) return null;
 
-		if(args == null || value == null) return value;
-		else {
-			args = [value].concat(I18.arrayAntidot(args));
-			return I18.sprintf.apply(I18, args);
-		}
+		args = [value].concat(I18.arrayAntidot(args));
+		return I18.sprintf.apply(I18, args);
 	}
 
 	static f(key, ...values) {
@@ -156,7 +154,7 @@ class I18 {
 	}
 
 	static sprintf(...values) {
-		let regex = /%%|%(\d+\$)?([-+\'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
+		let regex = /%%|%(\d+\$)?([-+'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
 		let a = values;
 		let i = 0;
 		let format = a[i++];
@@ -185,7 +183,7 @@ class I18 {
 		};
 
 		let formatString = function(value, leftJustify, minWidth, precision, zeroPad, customPadChar) {
-			if (precision != null) value = value.slice(0, precision);
+			if (typeof precision === "undefined") value = value.slice(0, precision);
 			return justify(value, '', leftJustify, minWidth, zeroPad, customPadChar);
 		};
 
@@ -199,35 +197,39 @@ class I18 {
 			let zeroPad = false;
 			let prefixBaseX = false;
 			let customPadChar = ' ';
-			let flagsl = flags.length;
-			for (let j = 0; flags && j < flagsl; j++) {
-				switch (flags.charAt(j))
-				{
-					case ' ':
-						positivePrefix = ' ';
-						break;
-					case '+':
-						positivePrefix = '+';
-						break;
-					case '-':
-						leftJustify = true;
-						break;
-					case "'":
-						customPadChar = flags.charAt(j + 1);
-						break;
-					case '0':
-						zeroPad = true;
-						customPadChar = '0';
-						break;
-					case '#':
-						prefixBaseX = true;
-						break;
+			if(typeof flags !== "undefined") {
+				let flagsl = flags.length;
+				for (let j = 0; j < flagsl; j++) {
+					switch (flags.charAt(j))
+					{
+						case ' ':
+							positivePrefix = ' ';
+							break;
+						case '+':
+							positivePrefix = '+';
+							break;
+						case '-':
+							leftJustify = true;
+							break;
+						case "'":
+							customPadChar = flags.charAt(j + 1);
+							break;
+						case '0':
+							zeroPad = true;
+							customPadChar = '0';
+							break;
+						case '#':
+							prefixBaseX = true;
+							break;
+						default:
+							break;
+					}
 				}
 			}
 
 			if (!minWidth) minWidth = 0;
 			else if (minWidth === '*') minWidth = +a[i++];
-			else if (minWidth.charAt(0) == '*') minWidth = +a[minWidth.slice(1, -1)];
+			else if (minWidth.charAt(0) === '*') minWidth = +a[minWidth.slice(1, -1)];
 			else minWidth = +minWidth;
 
 			if (minWidth < 0) {
@@ -241,7 +243,7 @@ class I18 {
 
 			if (!precision) precision = 'fFeE'.indexOf(type) > -1 ? 6 : (type === 'd') ? 0 : undefined;
 			else if (precision === '*') precision = +a[i++];
-			else if (precision.charAt(0) == '*') precision = +a[precision.slice(1, -1)];
+			else if (precision.charAt(0) === '*') precision = +a[precision.slice(1, -1)];
 			else  precision = +precision;
 
 			value = valueIndex ? a[valueIndex.slice(0, -1)] : a[i++];

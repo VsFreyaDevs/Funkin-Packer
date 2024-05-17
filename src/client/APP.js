@@ -18,9 +18,6 @@ class APP {
 		this.packOptions = {};
 		this.packResult = null;
 
-		this.onPackComplete = this.onPackComplete.bind(this);
-		this.onPackError = this.onPackError.bind(this);
-
 		Observer.on(GLOBAL_EVENT.IMAGES_LIST_CHANGED, this.onImagesListChanged, this);
 		Observer.on(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, this.onPackOptionsChanged, this);
 		Observer.on(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, this.onPackExporterOptionsChanged, this);
@@ -28,8 +25,7 @@ class APP {
 
 		Object.defineProperty(
 			HTMLImageElement.prototype,'toDataURL',
-			{enumerable:false,configurable:false,writable:false,value:function(m,q)
-			{
+			{enumerable:false,configurable:false,writable:false,value:(m,q) => {
 				let c=document.createElement('canvas');
 				c.width=this.naturalWidth; c.height=this.naturalHeight;
 				c.getContext('2d').drawImage(this,0,0); return c.toDataURL(m,q);
@@ -37,7 +33,7 @@ class APP {
 		);
 
 		// IDK WHERE TO PUT THIS
-		setTimeout(function(){
+		setTimeout(() => {
 			function formatBytes(bytes, decimals = 2, si=1024) {
 				if (bytes === 0) return '0 Bytes';
 
@@ -47,30 +43,30 @@ class APP {
 
 				const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-				return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+				return parseFloat((bytes / k**i).toFixed(dm)) + ' ' + sizes[i];
 			}
 			window.formatBytes = formatBytes;
 
-			var sizeElement = document.createElement("div");
+			const sizeElement = document.createElement("div");
 			sizeElement.style = "font-size: 20px; pointer-events: none;";
 			sizeElement.textContent = "0x0";
 
-			var ramSize = document.createElement("div");
+			const ramSize = document.createElement("div");
 			ramSize.style = "font-size: 16px;position: relative;top: -90px; pointer-events: none;";
 			ramSize.textContent = "0 Bytes";
 
-			var header = document.getElementsByClassName("main-header")[0];
+			const header = document.getElementsByClassName("main-header")[0];
 
 			header.appendChild(sizeElement);
 			header.appendChild(ramSize);
 
 			const config = { attributes: true, childList: true, subtree: true };
 
-			const callback = function(mutationList, observer) {
-				var sizes = [...document.getElementsByClassName("texture-view")].map((v) => `${v.children[0].width}x${v.children[0].height}`);
-				var ramTotal = 0;
+			const callback = function(_mutationList, _observer) {
+				const sizes = [...document.getElementsByClassName("texture-view")].map((v) => `${v.children[0].width}x${v.children[0].height}`);
+				let ramTotal = 0;
 				[...document.getElementsByClassName("texture-view")].forEach((v) => {
-				ramTotal+=parseInt(v.children[0].width,10)*parseInt(v.children[0].height,10)*4;
+					ramTotal+=parseInt(v.children[0].width,10)*parseInt(v.children[0].height,10)*4;
 				});
 				sizeElement.textContent = sizes.join(" + ");
 				if(sizeElement.textContent.length > 60) {
@@ -90,6 +86,7 @@ class APP {
 
 	onImagesListChanged(data) {
 		this.images = data;
+		console.log(this.images);
 		this.pack();
 	}
 
@@ -118,16 +115,16 @@ class APP {
 		PackProcessor.pack(this.images, this.packOptions, this.onPackComplete, this.onPackError);
 	}
 
-	onPackComplete(res) {
+	onPackComplete = (res) => {
 		this.packResult = [];
 
 		for (let data of res) {
 			let renderer = new TextureRenderer(data, this.packOptions);
 
 			this.packResult.push({
-				data: data,
+				data,
 				buffer: renderer.buffer,
-				renderer: renderer
+				renderer
 			});
 		}
 
@@ -135,7 +132,7 @@ class APP {
 		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
 	}
 
-	onPackError(err) {
+	onPackError = (err) => {
 		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
 		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, err.description);
 	}
@@ -159,6 +156,7 @@ class APP {
 		let exporter = this.packOptions.exporter;
 		let fileName = this.packOptions.fileName;
 		let filterClass = getFilterByType(this.packOptions.filter);
+		// eslint-disable-next-line new-cap
 		let filter = new filterClass();
 
 		let files = [];
@@ -196,7 +194,7 @@ class APP {
 			let options = {
 				imageName: `${fName}`,
 				imageFile: `${fName}.${this.packOptions.textureFormat}`,
-				imageData: imageData,
+				imageData,
 				spritePadding: this.packOptions.spritePadding,
 				borderPadding: this.packOptions.borderPadding,
 				format: pixelFormat,

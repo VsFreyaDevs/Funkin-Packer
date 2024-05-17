@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
-import Storage from '../utils/Storage';
-import I18 from '../utils/I18';
+import { Observer, GLOBAL_EVENT } from '../../Observer';
+import Storage from '../../utils/Storage';
+import I18 from '../../utils/I18';
 
 const STORAGE_SKIPPED_VERSIONS_KEY = "skipped-versions";
 
@@ -17,11 +17,6 @@ class Updater extends React.Component {
 			downloadProgress: 0
 		};
 
-		this.close = this.close.bind(this);
-		this.skip = this.skip.bind(this);
-		this.doSkip = this.doSkip.bind(this);
-		this.install = this.install.bind(this);
-
 		Observer.on(GLOBAL_EVENT.DOWNLOAD_PROGRESS_CHANGED, this.changeDownloadProgress, this);
 
 		this.skippedVersion = Storage.load(STORAGE_SKIPPED_VERSIONS_KEY);
@@ -30,12 +25,12 @@ class Updater extends React.Component {
 		if(this.skippedVersion.indexOf(this.props.data.releaseName) >= 0) this.close();
 	}
 
-	close() {
+	close = () => {
 		Observer.off(GLOBAL_EVENT.DOWNLOAD_PROGRESS_CHANGED, this.changeDownloadProgress, this);
 		Observer.emit(GLOBAL_EVENT.HIDE_UPDATER);
 	}
 
-	skip() {
+	skip = () => {
 		let buttons = {
 			"yes": {caption: I18.f("YES"), callback: this.doSkip},
 			"no": {caption: I18.f("NO")}
@@ -44,17 +39,17 @@ class Updater extends React.Component {
 		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("SKIP_VERSION_CONFIRM"), buttons);
 	}
 
-	doSkip() {
+	doSkip = () => {
 		this.skippedVersion.push(this.props.data.releaseName);
 		Storage.save(STORAGE_SKIPPED_VERSIONS_KEY, this.skippedVersion);
 		this.close();
 	}
 
-	changeDownloadProgress(val) {
+	changeDownloadProgress = (val) => {
 		this.setState({downloadProgress: val});
 	}
 
-	install() {
+	install = () => {
 		this.setState({installation: true});
 		Observer.emit(GLOBAL_EVENT.INSTALL_UPDATE);
 	}

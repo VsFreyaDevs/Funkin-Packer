@@ -426,9 +426,9 @@ html, body {
 }
 
 .texture-view canvas {
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  image-rendering: -moz-crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+	image-rendering: -moz-crisp-edges;
 }
 
 .white-back {
@@ -605,7 +605,7 @@ html, body {
 
 .old-browser-content {
 	width: 400px;
-	height: 180px;
+	height: 170px;
 	background: #fff;
 	margin: auto;
 	margin-top: 86px;
@@ -618,8 +618,11 @@ html, body {
 	border: 1px solid #ccc;
 	padding: 16px;
 	text-align: center;
-	font-weight: bold;
 	box-shadow: 1px 1px 1px 1px rgba(0,0,0,.2);
+}
+
+.old-browser-header {
+	font-weight: bold;
 }
 
 .old-browser-content a {

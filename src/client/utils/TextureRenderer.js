@@ -47,11 +47,11 @@ class TextureRenderer {
 			let sw = Math.round(Math.log(width)/Math.log(2));
 			let sh = Math.round(Math.log(height)/Math.log(2));
 
-			let pw = Math.pow(2, sw);
-			let ph = Math.pow(2, sh);
+			let pw = 2 ** sw;
+			let ph = 2 ** sh;
 
-			if(pw < width) pw = Math.pow(2, sw + 1);
-			if(ph < height) ph = Math.pow(2, sh + 1);
+			if(pw < width) pw = 2 ** (sw + 1);
+			if(ph < height) ph = 2 ** (sh + 1);
 
 			width = pw;
 			height = ph;
@@ -91,7 +91,7 @@ class TextureRenderer {
 		return tempBuffer;
 	}
 
-	/*renderExtrude(ctx, item, options) {
+	/* renderExtrude(ctx, item, options) {
 		if(!options.extrude) return;
 
 		let dx = item.frame.x;
@@ -156,7 +156,7 @@ class TextureRenderer {
 
 	}*/
 
-	renderItem(ctx, item, options) {
+	renderItem(ctx, item, _options) {
 		if(item.skipRender) return;
 
 		let img = item.image;

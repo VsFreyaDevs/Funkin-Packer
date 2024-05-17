@@ -3,8 +3,8 @@ const METHOD = {
 };
 
 class Packer {
-
 	constructor() {
+		// nothing to do
 	}
 
 	pack() {

@@ -12,7 +12,7 @@ class ProcessingShader extends React.Component {
 		this.showTimer = null;
 	}
 
-	componentDidMount() {
+	componentDidMount = () => {
 		let shader = this.shaderRef.current;
 		if(shader) {
 			shader.style.visibility = "hidden";
@@ -23,7 +23,7 @@ class ProcessingShader extends React.Component {
 		}
 	}
 
-	componentWillUnmount() {
+	componentWillUnmount = () => {
 		clearTimeout(this.showTimer);
 	}
 

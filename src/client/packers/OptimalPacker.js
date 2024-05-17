@@ -5,11 +5,11 @@ const METHOD = {
 };
 
 class OptimalPacker extends Packer {
-	constructor(width, height, allowRotate=false) {
+	constructor(_width, _height, _allowRotate=false) {
 		super();
 	}
 
-	pack(data, method) {
+	pack(_data, _method) {
 		throw new Error('OptimalPacker is a dummy and cannot be used directly');
 	}
 

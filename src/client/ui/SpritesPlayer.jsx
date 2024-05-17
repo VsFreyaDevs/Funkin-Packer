@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import I18 from '../utils/I18';
-import {GLOBAL_EVENT, Observer} from "../Observer";
+import { Observer, GLOBAL_EVENT } from "../Observer";
 import {cleanPrefix, smartSortImages} from '../utils/common';
 
 class SpritesPlayer extends React.Component {
@@ -29,29 +29,28 @@ class SpritesPlayer extends React.Component {
 		this.selectedImages = [];
 	}
 
-	componentDidMount() {
-		this.update = this.update.bind(this);
-		this.forceUpdate = this.forceUpdate.bind(this);
-		this.updateCurrentTextures = this.updateCurrentTextures.bind(this);
-		this.onSpeedChange = this.onSpeedChange.bind(this);
-
+	componentDidMount = () => {
 		Observer.on(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, this.onImagesSelected, this);
 
 		if(this.props.start) this.setup();
 		else this.stop();
 	}
 
-	onImagesSelected(list=[]) {
+	componentWillUnmount = () => {
+		this.stop();
+	}
+
+	onImagesSelected = (list=[]) => {
 		this.selectedImages = list;
 		this.updateCurrentTextures();
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate = () => {
 		if(this.props.start) this.setup();
 		else this.stop();
 	}
 
-	setup() {
+	setup = () => {
 		this.playerContainerRef.current.className = "player-view-container " + this.props.textureBack;
 
 		this.textures = [];
@@ -61,25 +60,12 @@ class SpritesPlayer extends React.Component {
 		this.width = 0;
 		this.height = 0;
 
-		if(window.sparrowMaxMap == undefined) {
-			window.sparrowMaxMap = {};
-		}
-
 		for(let part of this.props.data) {
 			let baseTexture = part.buffer;
 
 			for (let config of part.data) {
-				var w = config.sourceSize.w;
-				var h = config.sourceSize.h;
-
-				var prefix = cleanPrefix(config.originalFile || config.file || config.name);
-
-				if(window.sparrowMaxMap.hasOwnProperty(prefix)) {
-					var maxMap = window.sparrowMaxMap[prefix];
-
-					w = maxMap.mw;
-					h = maxMap.mh;
-				}
+				var w = config.sourceSize.mw;
+				var h = config.sourceSize.mh;
 
 				//console.log(w, h, config, config.sourceSize);
 
@@ -103,17 +89,16 @@ class SpritesPlayer extends React.Component {
 		this.updateCurrentTextures();
 	}
 
-	forceUpdate(e) {
+	forceUpdate = (e) => {
 		let key = e.keyCode || e.which;
 		if(key === 13) this.updateCurrentTextures();
 	}
 
-	onSpeedChange(e)
-	{
-		this.refs.fps.textContent = e.target.value + " fps";
+	onSpeedChange = (e) => {
+		this.fpsRef.current.textContent = e.target.value + " fps";
 	}
 
-	updateCurrentTextures() {
+	updateCurrentTextures = () => {
 		let textures = [];
 
 		for(let tex of this.textures) {
@@ -135,7 +120,7 @@ class SpritesPlayer extends React.Component {
 		this.update(true);
 	}
 
-	update(skipFrameUpdate) {
+	update = (skipFrameUpdate) => {
 		clearTimeout(this.updateTimer);
 
 		if(!skipFrameUpdate){
@@ -149,7 +134,7 @@ class SpritesPlayer extends React.Component {
 		this.updateTimer = setTimeout(this.update, 1000 / this.speedRef.current.value);
 	}
 
-	renderTexture() {
+	renderTexture = () => {
 		let ctx = this.viewRef.current.getContext("2d");
 
 		ctx.clearRect(0, 0, this.width, this.height);
@@ -157,25 +142,14 @@ class SpritesPlayer extends React.Component {
 		let texture = this.currentTextures[this.currentFrame];
 		if(!texture) return;
 
-		var w = texture.config.sourceSize.w;
-		var h = texture.config.sourceSize.h;
+		console.log(texture.config);
 
-		var prefix = cleanPrefix(texture.config.originalFile || texture.config.file || texture.config.name);
-
-		if(window.sparrowMaxMap == undefined) {
-			window.sparrowMaxMap = {};
-		}
-
-		if(window.sparrowMaxMap.hasOwnProperty(prefix)) {
-			var maxMap = window.sparrowMaxMap[prefix];
-
-			w = maxMap.mw;
-			h = maxMap.mh;
-		}
+		//var w = Math.max(texture.config.sourceSize.mw, texture.config.sourceSize.w);
+		//var h = Math.max(texture.config.sourceSize.mh, texture.config.sourceSize.h);
+		var w = texture.config.sourceSize.mw;
+		var h = texture.config.sourceSize.mh;
 
 		let buffer = this.bufferRef.current;
-		console.log(buffer);
-		console.log(this.viewRef.current);
 		buffer.width = w;
 		buffer.height = h;
 
@@ -213,7 +187,7 @@ class SpritesPlayer extends React.Component {
 			w, h);
 	}
 
-	stop() {
+	stop = () => {
 		clearTimeout(this.updateTimer);
 	}
 

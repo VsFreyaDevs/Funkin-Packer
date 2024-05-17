@@ -56,6 +56,8 @@ class MaxRectsBin extends Packer {
 			case METHOD.BestAreaFit:
 				newNode = this._findPositionForNewNodeBestAreaFit(width, height, score1, score2);
 				break;
+			default:
+				throw Error("Unknown method " + method);
 		}
 
 		if (newNode.height === 0){
@@ -145,6 +147,8 @@ class MaxRectsBin extends Packer {
 			case METHOD.BestAreaFit:
 				newNode = this._findPositionForNewNodeBestAreaFit(width, height, score1, score2);
 				break;
+			default:
+				throw Error("Unknown method " + method);
 		}
 
 		if (newNode.height === 0) {

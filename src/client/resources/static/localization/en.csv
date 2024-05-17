@@ -84,7 +84,7 @@ NO_TINIFY_KEY_ERROR;Please, set your TinyPNG key https://tinypng.com/developers
 TINIFY_ERROR;Tinify error: %s
 TINIFY_ERROR_COMMON;Tinify error...
 OLD_BROWSER_MESSAGE1;Sorry, but your browser is too old for this application...
-OLD_BROWSER_MESSAGE2;Please, use one of modern browsers:
+OLD_BROWSER_MESSAGE2;Use one of these recommended browsers:
 ABOUT_HOMEPAGE;Home page:
 ABOUT_SOURCES;Sources:
 ABOUT_BUGS;Bugtracker:
@@ -144,3 +144,4 @@ CLEAR_STORED_ORDER;Clear Stored Order
 SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
 UPDATE_FILENAME;Update Filename:
+SPLITTER_ERROR_NO_TEXTURE;No textures found. Please, try again.

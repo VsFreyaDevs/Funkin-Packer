@@ -53,7 +53,7 @@ class Project {
 			}
 		}
 
-		let packOptions = Object.assign({}, APP.i.packOptions);
+		let packOptions = {...APP.i.packOptions};
 		packOptions.packer = APP.i.packOptions.packer.type;
 		packOptions.exporter = APP.i.packOptions.exporter.type;
 
@@ -62,11 +62,11 @@ class Project {
 		};
 
 		return {
-			meta: meta,
+			meta,
 			savePath: APP.i.packOptions.savePath || '',
-			images: images,
-			folders: folders,
-			packOptions: packOptions
+			images,
+			folders,
+			packOptions
 		}
 	}
 
@@ -134,8 +134,8 @@ class Project {
 
 			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("SAVE_CHANGES_CONFIRM"), buttons);
 		}
-		else {
-			if (cb) cb();
+		else if (cb) {
+			cb();
 		}
 	}
 

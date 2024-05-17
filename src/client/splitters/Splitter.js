@@ -1,12 +1,20 @@
+import { cleanPrefix } from '../utils/common';
+
 class Splitter {
-	static check(data) {
+	static doCheck(_data) {
+		throw new Error('doCheck not implemented');
 	}
 
-	static split(data, options) {
+	static doSplit(_data, _options) {
+		throw new Error('doSplit not implemented');
 	}
 
-	static get type() {
+	static get name() {
 		return 'Default';
+	}
+
+	static cleanPrefix(str) {
+		return cleanPrefix(str);
 	}
 
 	static fixFileName(name) {

@@ -3,7 +3,7 @@ import Splitter from './Splitter';
 import plist from 'plist';
 
 class UIKit extends Splitter {
-	static check(data, cb) {
+	static doCheck(data, cb) {
 		try {
 			let atlas = plist.parse(data);
 
@@ -33,7 +33,7 @@ class UIKit extends Splitter {
 		}
 	}
 
-	static split(data, options, cb) {
+	static doSplit(data, options, cb) {
 		let res = [];
 
 		try {
@@ -61,20 +61,23 @@ class UIKit extends Splitter {
 					},
 					sourceSize: {
 						w: item.oW,
-						h: item.oH
+						h: item.oH,
+						frameWidth: item.oW,
+						frameHeight: item.oH
 					},
-					trimmed: trimmed,
+					trimmed,
 					rotated: false
 				});
 			}
 		}
 		catch(e) {
+			// continue regardless of error
 		}
 
 		cb(res);
 	}
 
-	static get type() {
+	static get name() {
 		return 'UIKit';
 	}
 }

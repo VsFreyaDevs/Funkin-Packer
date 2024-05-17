@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 
 import appInfo from '../../../package.json';

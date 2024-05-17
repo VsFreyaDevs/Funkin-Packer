@@ -5,12 +5,13 @@ import LocalImagesLoader from '../utils/LocalImagesLoader';
 import ZipLoader from '../utils/ZipLoader';
 import I18 from '../utils/I18';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 import ImagesTree from './ImagesTree.jsx';
 
 import FileSystem from 'platform/FileSystem';
 
-import {clearGlobals, smartSortImages} from '../utils/common';
+import Globals from '../utils/Globals';
+import {smartSortImages} from '../utils/common';
 
 let INSTANCE = null;
 
@@ -25,26 +26,6 @@ class ImagesList extends React.Component {
 		this.addImagesInputRef = React.createRef();
 		this.addZipInputRef = React.createRef();
 
-		this.addImages = this.addImages.bind(this);
-		this.addZip = this.addZip.bind(this);
-		this.addImagesFs = this.addImagesFs.bind(this);
-		this.addFolderFs = this.addFolderFs.bind(this);
-		this.loadImagesComplete = this.loadImagesComplete.bind(this);
-		this.clear = this.clear.bind(this);
-		this.deleteSelectedImages = this.deleteSelectedImages.bind(this);
-		this.doClear = this.doClear.bind(this);
-		this.onFilesDrop = this.onFilesDrop.bind(this);
-		this.handleImageItemSelected = this.handleImageItemSelected.bind(this);
-		this.handleImageClearSelection = this.handleImageClearSelection.bind(this);
-
-		Observer.on(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
-		Observer.on(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
-		Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
-
-		this.handleKeys = this.handleKeys.bind(this);
-
-		window.addEventListener("keydown", this.handleKeys, false);
-
 		this.state = {images: {}};
 	}
 
@@ -52,7 +33,32 @@ class ImagesList extends React.Component {
 		return INSTANCE;
 	}
 
-	componentWillUnmount() {
+	componentDidMount = () => {
+		Observer.on(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
+		Observer.on(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
+		Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
+
+		window.addEventListener("keydown", this.handleKeys, false);
+
+		let dropZone = this.imagesTreeRef.current;
+		if(dropZone) {
+			dropZone.ondrop = this.onFilesDrop;
+
+			dropZone.addEventListener("dragover", e => {
+				let help = this.dropHelpRef.current;
+				if(help) help.className = "image-drop-help selected";
+				return e.preventDefault();
+			});
+
+			dropZone.addEventListener("dragleave", e => {
+				let help = this.dropHelpRef.current;
+				if(help) help.className = "image-drop-help";
+				return e.preventDefault();
+			});
+		}
+	}
+
+	componentWillUnmount = () => {
 		Observer.off(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
 		Observer.off(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		Observer.off(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
@@ -60,38 +66,19 @@ class ImagesList extends React.Component {
 		window.removeEventListener("keydown", this.handleKeys, false);
 	}
 
-	handleKeys(e) {
+	handleKeys = (e) => {
 		if(e) {
 			let key = e.keyCode || e.which;
 			if(key === 65 && e.ctrlKey) this.selectAllImages();
 		}
 	}
 
-	componentDidMount() {
-		let dropZone = this.imagesTreeRef.current;
-		if(dropZone) {
-			dropZone.ondrop = this.onFilesDrop;
-
-			dropZone.ondragover = () => {
-				let help = this.dropHelpRef.current;
-				if(help) help.className = "image-drop-help selected";
-				return false;
-			};
-
-			dropZone.ondragleave = () => {
-				let help = this.dropHelpRef.current;
-				if(help) help.className = "image-drop-help";
-				return false;
-			};
-		}
-	}
-
-	setImages(images) {
+	setImages = (images) => {
 		this.setState({images: images});
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, images);
 	}
 
-	onFilesDrop(e) {
+	onFilesDrop = (e) => {
 		e.preventDefault();
 
 		if(e.dataTransfer.files.length) {
@@ -104,7 +91,7 @@ class ImagesList extends React.Component {
 		return false;
 	}
 
-	addImages(e) {
+	addImages = (e) => {
 		if(e.target.files.length) {
 			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
 
@@ -115,7 +102,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	addZip(e) {
+	addZip = (e) => {
 		let file = e.target.files[0];
 		if(file) {
 			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
@@ -125,17 +112,17 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	addImagesFs() {
+	addImagesFs = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
 		FileSystem.addImages(this.loadImagesComplete);
 	}
 
-	addFolderFs() {
+	addFolderFs = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
 		FileSystem.addFolder(this.loadImagesComplete);
 	}
 
-	handleFsChanges(data) {
+	handleFsChanges = (data) => {
 		let image = null;
 		let images = this.state.images;
 		let imageKey = "";
@@ -181,7 +168,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	loadImagesComplete(data=[]) {
+	loadImagesComplete = (data=[]) => {
 
 		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
 
@@ -206,7 +193,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	sortImages(images) {
+	sortImages = (images) => {
 		let names = Object.keys(images);
 		names.sort(smartSortImages);
 
@@ -219,7 +206,7 @@ class ImagesList extends React.Component {
 		return sorted;
 	}
 
-	clear() {
+	clear = () => {
 		let keys = Object.keys(this.state.images);
 		if(keys.length) {
 			let buttons = {
@@ -231,14 +218,14 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	doClear() {
+	doClear = () => {
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, {});
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, []);
-		clearGlobals();
+		Globals.didClearImageList();
 		this.setState({images: {}});
 	}
 
-	selectAllImages() {
+	selectAllImages = () => {
 		let images = this.state.images;
 		for(let key in images) {
 			images[key].selected = true;
@@ -248,14 +235,14 @@ class ImagesList extends React.Component {
 		this.emitSelectedChanges();
 	}
 
-	removeImagesSelect() {
+	removeImagesSelect = () => {
 		let images = this.state.images;
 		for(let key in images) {
 			images[key].selected = false;
 		}
 	}
 
-	getCurrentImage() {
+	getCurrentImage = () => {
 		let images = this.state.images;
 		for(let key in images) {
 			if(images[key].current) return images[key];
@@ -264,7 +251,7 @@ class ImagesList extends React.Component {
 		return null;
 	}
 
-	getImageIx(image) {
+	getImageIx = (image) => {
 		let ix = 0;
 
 		let images = this.state.images;
@@ -276,7 +263,7 @@ class ImagesList extends React.Component {
 		return -1;
 	}
 
-	bulkSelectImages(to) {
+	bulkSelectImages = (to) => {
 		let current = this.getCurrentImage();
 		if(!current) {
 			to.selected = true;
@@ -295,7 +282,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	selectImagesFolder(path, selected) {
+	selectImagesFolder = (path, selected) => {
 		let images = this.state.images;
 
 		let first = false;
@@ -311,14 +298,14 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	clearCurrentImage() {
+	clearCurrentImage = () => {
 		let images = this.state.images;
 		for(let key in images) {
 			images[key].current = false;
 		}
 	}
 
-	getFirstImageInFolder(path) {
+	getFirstImageInFolder = (path) => {
 		let images = this.state.images;
 
 		for(let key in images) {
@@ -328,7 +315,7 @@ class ImagesList extends React.Component {
 		return null;
 	}
 
-	getLastImageInFolder(path) {
+	getLastImageInFolder = (path) => {
 		let images = this.state.images;
 
 		let ret = null;
@@ -339,7 +326,7 @@ class ImagesList extends React.Component {
 		return ret;
 	}
 
-	handleImageItemSelected(e) {
+	handleImageItemSelected = (e) => {
 		let path = e.path;
 		let images = this.state.images;
 
@@ -387,14 +374,14 @@ class ImagesList extends React.Component {
 		this.emitSelectedChanges();
 	}
 
-	handleImageClearSelection() {
+	handleImageClearSelection = () => {
 		this.removeImagesSelect();
 		this.clearCurrentImage();
 		this.setState({images: this.state.images});
 		this.emitSelectedChanges();
 	}
 
-	emitSelectedChanges() {
+	emitSelectedChanges = () => {
 		let selected = [];
 
 		let images = this.state.images;
@@ -416,7 +403,7 @@ class ImagesList extends React.Component {
 		};
 	}
 
-	getImageSubFolder(root, parts) {
+	getImageSubFolder = (root, parts) => {
 		parts = parts.slice();
 
 		let folder = null;
@@ -448,7 +435,7 @@ class ImagesList extends React.Component {
 		return folder || root;
 	}
 
-	getImagesTree() {
+	getImagesTree = () => {
 		let res = this.createImagesFolder();
 
 		let keys = Object.keys(this.state.images);
@@ -470,7 +457,7 @@ class ImagesList extends React.Component {
 		return res;
 	}
 
-	deleteSelectedImages() {
+	deleteSelectedImages = () => {
 		let images = this.state.images;
 
 		let deletedCount = 0;

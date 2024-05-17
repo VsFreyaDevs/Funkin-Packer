@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Storage from '../utils/Storage';
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import { getExporterByType } from '../exporters';
 import mustache from 'mustache';
@@ -19,15 +19,11 @@ class EditCustomExporter extends React.Component {
 		this.fileExtRef = React.createRef();
 	}
 
-	componentDidMount() {
-		this.save = this.save.bind(this);
-	}
-
-	close() {
+	close = () => {
 		Observer.emit(GLOBAL_EVENT.HIDE_EDIT_CUSTOM_EXPORTER);
 	}
 
-	save() {
+	save = () => {
 		let exporter = getExporterByType("custom");
 
 		let content = (this.contentRef.current).value;

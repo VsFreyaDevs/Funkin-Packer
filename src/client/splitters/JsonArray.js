@@ -1,7 +1,7 @@
 import Splitter from './Splitter';
 
 class JsonArray extends Splitter {
-	static check(data, cb) {
+	static doCheck(data, cb) {
 		try {
 			let json = JSON.parse(data);
 			cb(json && json.frames && Array.isArray(json.frames));
@@ -11,7 +11,7 @@ class JsonArray extends Splitter {
 		}
 	}
 
-	static split(data, options, cb) {
+	static doSplit(data, options, cb) {
 		let res = [];
 
 		try {
@@ -23,12 +23,13 @@ class JsonArray extends Splitter {
 			}
 		}
 		catch(e) {
+			// continue regardless of error
 		}
 
 		cb(res);
 	}
 
-	static get type() {
+	static get name() {
 		return 'JSON (array)';
 	}
 }

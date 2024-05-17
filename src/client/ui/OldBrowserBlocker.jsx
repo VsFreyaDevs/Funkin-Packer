@@ -9,54 +9,51 @@ class OldBrowserBlocker extends React.Component {
 		this.shaderRef = React.createRef();
 	}
 
-	render() {
-		let ok = true;
-
+	static isSupported() {
 		//check local storage
-		if(!window.localStorage) ok = false;
+		if(!window.localStorage) return false;
 
 		//check file reader
-		if(!window.FileReader) ok = false;
+		if(!window.FileReader) return false;
 
 		//check canvas
 		let canvas = document.createElement("canvas");
-		if(!canvas.getContext) ok = false;
+		if(!canvas.getContext) return false;
 
 		//check ajax
-		if(!window.XMLHttpRequest) ok = false;
+		//if(!window.XMLHttpRequest) return false;
 
-		if(!ok) {
-			return (
-				<div ref={this.shaderRef} className="old-browser-shader">
-					<div className="old-browser-content">
-						{I18.f("OLD_BROWSER_MESSAGE1")}
-						<br/><br/>
-						{I18.f("OLD_BROWSER_MESSAGE2")}
-						<br/><br/><br/>
+		return true;
+	}
 
-						<a href="https://www.google.ru/chrome/browser/" target="_blank" title="Google Chrome">
-							<img src="static/images/browser/chrome.png"/>
-						</a>
+	render() {
+		return (
+			<div ref={this.shaderRef} className="old-browser-shader">
+				<div className="old-browser-content">
+					<div className="old-browser-header">{I18.f("OLD_BROWSER_MESSAGE1")}</div>
+					<br/>
+					{I18.f("OLD_BROWSER_MESSAGE2")}
+					<br/><br/><br/>
 
-						<a href="https://www.mozilla.org/firefox/" target="_blank" title="Firefox">
-							<img src="static/images/browser/firefox.png"/>
-						</a>
+					<a href="https://www.google.com/chrome/" target="_blank" title="Google Chrome">
+						<img src="static/images/browser/chrome.png"/>
+					</a>
 
-						<a href="https://www.opera.com/download" target="_blank" title="Google Chrome">
-							<img src="static/images/browser/opera.png"/>
-						</a>
+					<a href="https://www.mozilla.org/firefox/" target="_blank" title="Firefox">
+						<img src="static/images/browser/firefox.png"/>
+					</a>
 
-						<a href="https://www.microsoft.com/windows/microsoft-edge" target="_blank" title="Microsoft Edge">
-							<img src="static/images/browser/edge.png"/>
-						</a>
+					<a href="https://www.opera.com/download" target="_blank" title="Google Chrome">
+						<img src="static/images/browser/opera.png"/>
+					</a>
 
-					</div>
+					<a href="https://www.microsoft.com/windows/microsoft-edge" target="_blank" title="Microsoft Edge">
+						<img src="static/images/browser/edge.png"/>
+					</a>
+
 				</div>
-			);
-		}
-		else {
-			return (<> </>);
-		}
+			</div>
+		);
 	}
 }
 

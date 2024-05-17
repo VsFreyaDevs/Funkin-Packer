@@ -7,19 +7,23 @@ class Tinifyer {
 		return new Promise((resolve, reject) => {
 			if(packOptions.tinify) {
 				let uid = Date.now() + "_" + Math.random();
-				let data = {imageData: imageData, key: packOptions.tinifyKey, uid: uid};
+				let data = {
+					imageData,
+					key: packOptions.tinifyKey,
+					uid
+				};
 
-				let handler = (e, data) => {
-					if(data.uid === uid) {
+				let handler = (e, tinyData) => {
+					if(tinyData.uid === uid) {
 						ipcRenderer.removeListener('tinify-complete', handler);
 
-						if(data.success) {
-							resolve(data.data);
+						if(tinyData.success) {
+							resolve(tinyData.data);
 						}
-						else {
-							if(data.error) reject(I18.f("TINIFY_ERROR", data.error));
-							else reject(I18.f("TINIFY_ERROR_COMMON"));
-						}
+						else if(tinyData.error)
+							reject(I18.f("TINIFY_ERROR", tinyData.error));
+						else
+						reject(I18.f("TINIFY_ERROR_COMMON"));
 					}
 				};
 

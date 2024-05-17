@@ -1,5 +1,5 @@
 import React from 'react';
-import {GLOBAL_EVENT, Observer} from "../Observer";
+import { Observer, GLOBAL_EVENT } from "../Observer";
 
 class ImagesTree extends React.Component {
 
@@ -50,14 +50,11 @@ class TreePart extends React.Component {
 }
 
 class TreeItem extends React.Component {
-
 	constructor(props) {
 		super(props);
-
-		this.onSelect = this.onSelect.bind(this);
 	}
 
-	onSelect(e) {
+	onSelect = (e) => {
 		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
 			isFolder: false,
 			path: this.props.data.path,
@@ -89,15 +86,12 @@ class TreeView extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.handleClick = this.handleClick.bind(this);
-		this.handleCollapse = this.handleCollapse.bind(this);
-
 		this.state = {
 			collapsed: this.props.defaultCollapsed
 		};
 	}
 
-	handleCollapse(e) {
+	handleCollapse = (e) => {
 		this.setState({collapsed: !this.state.collapsed});
 
 		e.preventDefault();
@@ -105,7 +99,7 @@ class TreeView extends React.Component {
 		return false;
 	}
 
-	handleClick(e) {
+	handleClick = (e) => {
 		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
 			isFolder: true,
 			path: this.props.data.path,

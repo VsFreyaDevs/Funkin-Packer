@@ -1,5 +1,7 @@
 {
-	"rules": {},
+	"rules": {
+		"no-implicit-globals": "warn"
+	},
 	"env": {
 		"es6": true,
 		"browser": true

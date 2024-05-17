@@ -1,5 +1,7 @@
 class Project {
-	static init() {}
+	static init() {
+		// nothing to do
+	}
 }
 
 export default Project;

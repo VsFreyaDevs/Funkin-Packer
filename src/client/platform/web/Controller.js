@@ -1,6 +1,10 @@
 class Controller {
-	static init() {}
-	static updateLocale() {}
+	static init() {
+		// nothing to do
+	}
+	static updateLocale() {
+		// nothing to do
+	}
 }
 
 export default Controller;

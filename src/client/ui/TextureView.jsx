@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 
 class TextureView extends React.Component {
 	constructor(props) {
@@ -8,11 +8,9 @@ class TextureView extends React.Component {
 
 		this.backRef = React.createRef();
 		this.viewRef = React.createRef();
-
-		this.onViewClick = this.onViewClick.bind(this);
 	}
 
-	componentDidMount() {
+	componentDidMount = () => {
 		this.updateView();
 	}
 
@@ -20,7 +18,7 @@ class TextureView extends React.Component {
 		this.updateView();
 	}
 
-	updateView() {
+	updateView = () => {
 		let view = this.viewRef.current;
 		if(view) {
 			view.width = this.props.data.buffer.width;
@@ -100,7 +98,7 @@ class TextureView extends React.Component {
 		ctx.stroke();
 	}
 
-	onViewClick(e) {
+	onViewClick = (e) => {
 		let selectedItem = null;
 
 		let canvas = this.viewRef.current;
@@ -142,7 +140,7 @@ class TextureView extends React.Component {
 		return false;
 	}
 
-	selectCloned(selectedItem) {
+	selectCloned = (selectedItem) => {
 		for (let item of this.props.data.data) {
 			if(item.cloned && item.file === selectedItem.file) {
 				Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {

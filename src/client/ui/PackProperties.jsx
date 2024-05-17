@@ -12,9 +12,10 @@ import { getFilterByType } from '../filters';
 
 import I18 from '../utils/I18';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
+import Globals from '../utils/Globals';
 
-import FileSystem from 'platform/FileSystem';
+//import FileSystem from 'platform/FileSystem';
 
 const STORAGE_OPTIONS_KEY = "pack-options";
 const STORAGE_CUSTOM_EXPORTER_KEY = "custom-exporter";
@@ -24,6 +25,16 @@ let INSTANCE = null;
 class PackProperties extends React.Component {
 	constructor(props) {
 		super(props);
+
+		INSTANCE = this;
+
+		this.packOptions = this.loadOptions();
+		this.loadCustomExporter();
+
+		this.state = {
+			packer: this.packOptions.packer,
+			hasStoredOrder: Globals.hasStoredOrder()
+		};
 
 		this.fileNameRef = React.createRef();
 		this.textureFormatRef = React.createRef();
@@ -54,37 +65,31 @@ class PackProperties extends React.Component {
 		this.powerOfTwoRef = React.createRef();
 		this.trimModeRef = React.createRef();
 		this.alphaThresholdRef = React.createRef();
+	}
 
+	componentDidMount = () => {
+		Observer.on(GLOBAL_EVENT.STORED_ORDER_CHANGED, this.onStoredOrderChanged, this);
 
-		INSTANCE = this;
+		this.updateEditCustomTemplateButton();
+		this.emitChanges();
+	}
 
-		this.onPackerChange = this.onPackerChange.bind(this);
-		this.onPropChanged = this.onPropChanged.bind(this);
-		this.onExporterChanged = this.onExporterChanged.bind(this);
-		this.onExporterPropChanged = this.onExporterPropChanged.bind(this);
-		this.forceUpdate = this.forceUpdate.bind(this);
-		//this.selectSavePath = this.selectSavePath.bind(this);
-
-		this.packOptions = this.loadOptions();
-		this.loadCustomExporter();
-
-		window.applyOptionsDefaults = this.applyOptionsDefaults;
-
-		this.state = {packer: this.packOptions.packer};
+	componentWillUnmount = () => {
+		Observer.off(GLOBAL_EVENT.STORED_ORDER_CHANGED, this.onStoredOrderChanged, this);
 	}
 
 	static get i() {
 		return INSTANCE;
 	}
 
-	setOptions(data) {
+	setOptions = (data) => {
 		this.packOptions = this.applyOptionsDefaults(data);
 		this.saveOptions();
 		this.refreshPackOptions();
 		this.emitChanges();
 	}
 
-	loadCustomExporter() {
+	loadCustomExporter = () => {
 		let data = Storage.load(STORAGE_CUSTOM_EXPORTER_KEY);
 		if(data) {
 			let exporter = getExporterByType("custom");
@@ -95,11 +100,11 @@ class PackProperties extends React.Component {
 		}
 	}
 
-	loadOptions() {
+	loadOptions = () => {
 		return this.applyOptionsDefaults(Storage.load(STORAGE_OPTIONS_KEY));
 	}
 
-	applyOptionsDefaults(data) {
+	applyOptionsDefaults = (data) => {
 		if(!data) data = {};
 
 		data.fileName = data.fileName || "texture";
@@ -143,18 +148,13 @@ class PackProperties extends React.Component {
 		return data;
 	}
 
-	saveOptions(force=false) {
+	saveOptions = (force=false) => {
 		if(PLATFORM === "web" || force) {
 			Storage.save(STORAGE_OPTIONS_KEY, this.packOptions);
 		}
 	}
 
-	componentDidMount() {
-		this.updateEditCustomTemplateButton();
-		this.emitChanges();
-	}
-
-	updatePackOptions() {
+	updatePackOptions = () => {
 		let data = {};
 
 		data.textureFormat = (this.textureFormatRef.current).value;
@@ -186,7 +186,7 @@ class PackProperties extends React.Component {
 		this.packOptions = this.applyOptionsDefaults(data);
 	}
 
-	refreshPackOptions() {
+	refreshPackOptions = () => {
 		(this.textureFormatRef.current).value = this.packOptions.textureFormat;
 		(this.removeFileExtensionRef.current).checked = this.packOptions.removeFileExtension;
 		(this.prependFolderNameRef.current).checked = this.packOptions.prependFolderName;
@@ -214,30 +214,30 @@ class PackProperties extends React.Component {
 		(this.sortExportedRowsRef.current).value = this.packOptions.sortExportedRows;
 	}
 
-	getPackOptions() {
+	getPackOptions = () => {
 		let data = Object.assign({}, this.packOptions);
 		data.exporter = getExporterByType(data.exporter);
 		data.packer = getPackerByType(data.packer);
 		return data;
 	}
 
-	emitChanges() {
+	emitChanges = () => {
 		Observer.emit(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, this.getPackOptions());
 	}
 
-	onPackerChange(e) {
+	onPackerChange = (e) => {
 		this.setState({packer: e.target.value});
 		this.onPropChanged();
 	}
 
-	onPropChanged() {
+	onPropChanged = () => {
 		this.updatePackOptions();
 		this.saveOptions();
 
 		this.emitChanges();
 	}
 
-	onExporterChanged() {
+	onExporterChanged = () => {
 		let exporter = getExporterByType((this.exporterRef.current).value);
 		let allowTrimInput = this.allowTrimRef.current;
 		let allowRotationInput = this.allowRotationRef.current;
@@ -254,34 +254,34 @@ class PackProperties extends React.Component {
 		if(doRefresh) this.onPropChanged();
 	}
 
-	updateEditCustomTemplateButton() {
+	updateEditCustomTemplateButton = () => {
 		let exporter = getExporterByType(this.exporterRef.current.value);
 		(this.editCustomFormatRef.current).style.visibility = exporter.type === "custom" ? "visible" : "hidden";
 	}
 
-	onExporterPropChanged() {
+	onExporterPropChanged = () => {
 		this.updatePackOptions();
 		this.saveOptions();
 
 		Observer.emit(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, this.getPackOptions());
 	}
 
-	forceUpdate(e) {
+	forceUpdate = (e) => {
 		if(e) {
 			let key = e.keyCode || e.which;
 			if (key === 13) this.onPropChanged();
 		}
 	}
 
-	startExport() {
+	startExport = () => {
 		Observer.emit(GLOBAL_EVENT.START_EXPORT);
 	}
 
-	editCustomExporter() {
+	editCustomExporter = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_EDIT_CUSTOM_EXPORTER);
 	}
 
-	/*selectSavePath() {
+	/*selectSavePath = () => {
 		let dir = FileSystem.selectFolder();
 		if(dir) {
 			(this.savePathRef.current).value = dir;
@@ -289,8 +289,8 @@ class PackProperties extends React.Component {
 		}
 	}*/
 
-	clearOrder() {
-		window.__sparrow_order = undefined;
+	onStoredOrderChanged = (order) => {
+		this.setState({hasStoredOrder: order !== null && order.length > 0});
 	}
 
 	render() {
@@ -349,17 +349,6 @@ class PackProperties extends React.Component {
 							<tr title={I18.f("SCALE_TITLE")}>
 								<td>{I18.f("SCALE")}</td>
 								<td><input ref={this.scaleRef} type="number" min="0" className="border-color-gray" defaultValue={this.packOptions.scale} onBlur={this.onPropChanged}/></td>
-								<td></td>
-							</tr>
-							<tr title={I18.f("FILTER_TITLE")}>
-								<td>{I18.f("FILTER")}</td>
-								<td>
-									<select ref={this.filterRef} className="border-color-gray" onChange={this.onExporterChanged} defaultValue={this.packOptions.filter}>
-										{filters.map(node => {
-											return (<option key={"filter-" + node.type} defaultValue={node.type}>{node.type}</option>)
-										})}
-									</select>
-								</td>
 								<td></td>
 							</tr>
 							<tr title={I18.f("FORMAT_TITLE")}>
@@ -447,7 +436,12 @@ class PackProperties extends React.Component {
 
 							<tr title={I18.f("CLEAR_STORED_ORDER_TITLE")}>
 								<td colSpan="3" className="center-align">
-									<div className={"btn "+ (window.__sparrow_order == undefined ? "back-400" : "back-800") +" border-color-gray color-white"} onClick={this.clearOrder}>{I18.f("CLEAR_STORED_ORDER")}</div>
+									{
+										this.state.hasStoredOrder ?
+											<div className="btn back-800 border-color-gray color-white" onClick={Globals.clearOrder}>{I18.f("CLEAR_STORED_ORDER")}</div> :
+											<></>
+										//<div className="btn back-400 border-color-gray color-white">{I18.f("CLEAR_STORED_ORDER")}</div>
+									}
 								</td>
 							</tr>
 
@@ -480,6 +474,17 @@ class PackProperties extends React.Component {
 							<tr title={I18.f("ALPHA_THRESHOLD_TITLE")}>
 								<td>{I18.f("ALPHA_THRESHOLD")}</td>
 								<td><input ref={this.alphaThresholdRef} type="number" className="border-color-gray" defaultValue={this.packOptions.alphaThreshold} min="0" max="255" onBlur={this.onPropChanged} onKeyDown={this.forceUpdate}/></td>
+								<td></td>
+							</tr>
+							<tr title={I18.f("FILTER_TITLE")}>
+								<td>{I18.f("FILTER")}</td>
+								<td>
+									<select ref={this.filterRef} className="border-color-gray" onChange={this.onExporterChanged} defaultValue={this.packOptions.filter}>
+										{filters.map(node => {
+											return (<option key={"filter-" + node.type} defaultValue={node.type}>{node.type}</option>)
+										})}
+									</select>
+								</td>
 								<td></td>
 							</tr>
 						</tbody>

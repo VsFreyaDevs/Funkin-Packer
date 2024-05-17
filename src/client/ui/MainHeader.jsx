@@ -1,22 +1,21 @@
 import React from 'react';
 
-import {Observer, GLOBAL_EVENT} from '../Observer';
+import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import appInfo from '../../../package.json';
 import languages from '../resources/static/localization/languages.json';
+import StatsInfo from './StatsInfo.jsx';
 
 class MainHeader extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.changeLanguage = this.changeLanguage.bind(this);
 	}
 
 	/* showAbout() {
 		Observer.emit(GLOBAL_EVENT.SHOW_ABOUT);
 	} */
 
-	changeLanguage(e) {
+	changeLanguage = (e) => {
 		Observer.emit(GLOBAL_EVENT.CHANGE_LANG, e.target.value);
 	}
 
@@ -41,6 +40,8 @@ class MainHeader extends React.Component {
 					<div>0x0</div>
 					<div>0 Bytes</div>
 				</div> */}
+
+				<StatsInfo />
 
 				<div className='main-header-github'>
 					<a href="https://github.com/NeeEoo/funkin-tex-packer">

@@ -1,5 +1,6 @@
 class Filter {
 	constructor() {
+		// nothing to do
 	}
 
 	apply(buffer) {

@@ -1,7 +1,7 @@
 import Splitter from './Splitter';
 
 class Spine extends Splitter {
-	static check(data, cb) {
+	static doCheck(data, cb) {
 		let lines = data.split('\n');
 		if(lines[0] === undefined || String(lines[0]).trim() !== '') cb(false);
 
@@ -28,7 +28,7 @@ class Spine extends Splitter {
 		return item;
 	}
 
-	static split(data, options, cb) {
+	static doSplit(data, options, cb) {
 		let res = [];
 
 		let lines = data.split('\n');
@@ -64,23 +64,27 @@ class Spine extends Splitter {
 						break;
 					case "xy":
 						if(!currentItem.frame) currentItem.frame = {};
-						currentItem.frame.x = parseInt(valParts[0]);
-						currentItem.frame.y = parseInt(valParts[1]);
+						currentItem.frame.x = parseInt(valParts[0], 10);
+						currentItem.frame.y = parseInt(valParts[1], 10);
 						break;
 					case "size":
 						if(!currentItem.frame) currentItem.frame = {};
-						currentItem.frame.w = parseInt(valParts[0]);
-						currentItem.frame.h = parseInt(valParts[1]);
+						currentItem.frame.w = parseInt(valParts[0], 10);
+						currentItem.frame.h = parseInt(valParts[1], 10);
 						break;
 					case "orig":
 						if(!currentItem.sourceSize) currentItem.sourceSize = {};
-						currentItem.sourceSize.w = parseInt(valParts[0]);
-						currentItem.sourceSize.h = parseInt(valParts[1]);
+						currentItem.sourceSize.w = parseInt(valParts[0], 10);
+						currentItem.sourceSize.h = parseInt(valParts[1], 10);
+						currentItem.sourceSize.frameWidth = currentItem.sourceSize.w;
+						currentItem.sourceSize.frameHeight = currentItem.sourceSize.h;
 						break;
 					case "offset":
 						if(!currentItem.offset) currentItem.offset = {};
-						currentItem.offset.x = parseInt(valParts[0]);
-						currentItem.offset.y = parseInt(valParts[1]);
+						currentItem.offset.x = parseInt(valParts[0], 10);
+						currentItem.offset.y = parseInt(valParts[1], 10);
+						break;
+					default:
 						break;
 				}
 			}
@@ -93,7 +97,7 @@ class Spine extends Splitter {
 		cb(res);
 	}
 
-	static get type() {
+	static get name() {
 		return 'Spine';
 	}
 

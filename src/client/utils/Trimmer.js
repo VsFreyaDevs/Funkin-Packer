@@ -8,14 +8,8 @@ function getAlpha(data, width, x, y) {
 
 class Trimmer {
 
-	constructor() {
-
-	}
-
 	static getLeftSpace(data, width, height, threshold) {
-		let x = 0;
-
-		for(x=0; x<width; x++) {
+		for(let x=0; x<width; x++) {
 			for(let y=0; y<height; y++) {
 				if(getAlpha(data, width, x, y) > threshold) {
 					return x;
@@ -27,9 +21,7 @@ class Trimmer {
 	}
 
 	static getRightSpace(data, width, height, threshold) {
-		let x = 0;
-
-		for(x=width-1; x>=0; x--) {
+		for(let x=width-1; x>=0; x--) {
 			for(let y=0; y<height; y++) {
 				if(getAlpha(data, width, x, y) > threshold) {
 					return width-x-1;
@@ -41,9 +33,7 @@ class Trimmer {
 	}
 
 	static getTopSpace(data, width, height, threshold) {
-		let y = 0;
-
-		for(y=0; y<height; y++) {
+		for(let y=0; y<height; y++) {
 			for(let x=0; x<width; x++) {
 				if(getAlpha(data, width, x, y) > threshold) {
 					return y;
@@ -55,9 +45,8 @@ class Trimmer {
 	}
 
 	static getBottomSpace(data, width, height, threshold) {
-		let y = 0;
 
-		for(y=height-1; y>=0; y--) {
+		for(let y=height-1; y>=0; y--) {
 			for(let x=0; x<width; x++) {
 				if(getAlpha(data, width, x, y) > threshold) {
 					return height-y-1;
@@ -75,7 +64,7 @@ class Trimmer {
 
 			let spaces = {left: 0, right: 0, top: 0, bottom: 0};
 
-			var cached = img.cachedTrim !== undefined && img.cachedTrim === threshold;
+			let cached = img.cachedTrim !== undefined && img.cachedTrim === threshold;
 
 			if(cached) {
 				spaces = img.cachedSpaces;
@@ -87,7 +76,7 @@ class Trimmer {
 
 				ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
 
-				let data = ctx.getImageData(0, 0, img.width, img.height).data;
+				let {data} = ctx.getImageData(0, 0, img.width, img.height);
 
 				spaces.left = this.getLeftSpace(data, img.width, img.height, threshold);
 
