@@ -5,7 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 let entry = [
 	'core-js/stable',
-	'./src/client/index'
+	'./src/client/index.jsx'
 ];
 
 let plugins = [];
@@ -14,10 +14,11 @@ let devtool = 'eval-source-map';
 let output = 'static/js/index.js';
 let debug = true;
 
+let profiler = debug
 let prod = !debug;
 
 const argv = {
-	build: !debug
+	build: prod
 }
 
 let PLATFORM = argv.platform || 'web';
@@ -28,7 +29,8 @@ if (PLATFORM === 'electron') target = 'electron-renderer';
 
 plugins.push(new webpack.DefinePlugin({
 	'process.env.NODE_ENV': JSON.stringify(mode),
-	'PLATFORM': JSON.stringify(PLATFORM)
+	'PLATFORM': JSON.stringify(PLATFORM),
+	'PROFILER': JSON.stringify(profiler)
 }));
 
 if (argv.build) {
@@ -62,20 +64,36 @@ else {
 }
 
 const config = {
-	entry: entry,
+	entry,
 	output: {
-		path: __dirname + "/dist",
+		path: path.resolve(__dirname, 'dist'),
 		filename: output
 	},
 	devServer: {
 		static: './dist',
 	},
-	devtool: devtool,
-	target: target,
-	mode: mode,
+	devtool,
+	target,
+	mode,
 	module: {
-		noParse: /.*[\/\\]bin[\/\\].+\.js/,
+		noParse: /.*[/\\]bin[/\\].+\.js/,
 		rules: [
+			{
+				test: /\.tsx$/,
+				use: [
+					{loader: 'ts-loader'},
+					//{loader: 'babel-loader', options: {presets: ['@babel/preset-react', '@babel/preset-env']}}
+				],
+				exclude: /node_modules/,
+			},
+			{
+				test: /\.ts$/,
+				use: [
+					{loader: 'ts-loader'},
+					//{loader: 'babel-loader', options: {presets: ['@babel/preset-env']}}
+				],
+				exclude: /node_modules/,
+			},
 			{
 				test: /.jsx?$/,
 				include: [path.resolve(__dirname, 'src')],
@@ -96,13 +114,19 @@ const config = {
 		minimize: prod,
 		usedExports: true,
 	},
-	plugins: plugins
+	plugins
 };
 
 if (target === 'electron-renderer') {
-	config.resolve = {alias: {'platform': path.resolve(__dirname, './src/client/platform/electron')}};
+	config.resolve = {
+		alias: {'platform': path.resolve(__dirname, './src/client/platform/electron')}
+	};
 } else {
-	config.resolve = {alias: {'platform': path.resolve(__dirname, './src/client/platform/web')}};
+	config.resolve = {
+		alias: {'platform': path.resolve(__dirname, './src/client/platform/web')}
+	};
 }
+config.resolve.alias.types = path.resolve(__dirname, './src/client/types');
+config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js'];
 
 module.exports = config;

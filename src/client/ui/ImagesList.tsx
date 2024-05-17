@@ -1,22 +1,50 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 import LocalImagesLoader from '../utils/LocalImagesLoader';
 import ZipLoader from '../utils/ZipLoader';
 import I18 from '../utils/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import ImagesTree from './ItemTree';
+import ImagesTree, { TreeListItem } from './ItemTree';
 
-import FileSystem from 'platform/FileSystem';
+//import * as FileSystem from './platform/FileSystem';
 
 import Globals from '../utils/Globals';
 import {smartSortImages} from '../utils/common';
+import { LoadedImage, LoadedImages, PLATFORM } from 'types';
 
-let INSTANCE = null;
+let INSTANCE:ImagesList = null;
 
-class ImagesList extends React.Component {
-	constructor(props) {
+type SelectedEvent = {
+	isFolder: boolean,
+	path: string,
+	ctrlKey: boolean,
+	shiftKey: boolean
+};
+
+type MapOfImages = {
+	[key: string]: TreeListItem
+}
+
+interface Props {
+}
+
+interface State {
+	images: MapOfImages
+};
+
+class ImagesList extends React.Component<Props, State> {
+	imagesTreeRef: React.RefObject<HTMLDivElement>;
+	dropHelpRef: React.RefObject<HTMLDivElement>;
+	addImagesInputRef: React.RefObject<HTMLInputElement>;
+	addZipInputRef: React.RefObject<HTMLInputElement>;
+
+	state:State = {
+		images: {},
+	};
+
+	constructor(props: Props) {
 		super(props);
 
 		INSTANCE = this;
@@ -36,7 +64,7 @@ class ImagesList extends React.Component {
 	componentDidMount = () => {
 		Observer.on(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
 		Observer.on(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
-		Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
+		//Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
 
 		window.addEventListener("keydown", this.handleKeys, false);
 
@@ -61,24 +89,24 @@ class ImagesList extends React.Component {
 	componentWillUnmount = () => {
 		Observer.off(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, this.handleImageItemSelected, this);
 		Observer.off(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
-		Observer.off(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
+		//Observer.off(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
 
 		window.removeEventListener("keydown", this.handleKeys, false);
 	}
 
-	handleKeys = (e) => {
+	handleKeys = (e:KeyboardEvent) => {
 		if(e) {
-			let key = e.keyCode || e.which;
+			let key = e.code || e.keyCode || e.which;
 			if(key === 65 && e.ctrlKey) this.selectAllImages();
 		}
 	}
 
-	setImages = (images) => {
+	setImages = (images: MapOfImages) => {
 		this.setState({images: images});
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, images);
 	}
 
-	onFilesDrop = (e) => {
+	onFilesDrop = (e: DragEvent) => {
 		e.preventDefault();
 
 		if(e.dataTransfer.files.length) {
@@ -91,7 +119,7 @@ class ImagesList extends React.Component {
 		return false;
 	}
 
-	addImages = (e) => {
+	addImages = (e:React.ChangeEvent<HTMLInputElement>) => {
 		if(e.target.files.length) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
@@ -102,7 +130,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	addZip = (e) => {
+	addZip = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let file = e.target.files[0];
 		if(file) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
@@ -112,7 +140,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	addImagesFs = () => {
+	/*addImagesFs = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 		FileSystem.addImages(this.loadImagesComplete);
 	}
@@ -166,9 +194,9 @@ class ImagesList extends React.Component {
 
 			FileSystem.loadImages([{name: name, path: data.path, folder: folder}], this.loadImagesComplete);
 		}
-	}
+	}*/
 
-	loadImagesComplete = (data=[]) => {
+	loadImagesComplete = (data:LoadedImages={}) => {
 
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 
@@ -183,7 +211,14 @@ class ImagesList extends React.Component {
 			let images = this.state.images;
 
 			for (let name of names) {
-				images[name] = data[name];
+				images[name] = {
+					img: data[name],
+					name: name,
+					path: name,
+					isFolder: false,
+					selected: false,
+					current: false,
+				}
 			}
 
 			images = this.sortImages(images);
@@ -193,11 +228,11 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	sortImages = (images) => {
+	sortImages = (images:MapOfImages) => {
 		let names = Object.keys(images);
 		names.sort(smartSortImages);
 
-		let sorted = {};
+		let sorted:MapOfImages = {};
 
 		for(let name of names) {
 			sorted[name] = images[name];
@@ -251,27 +286,27 @@ class ImagesList extends React.Component {
 		return null;
 	}
 
-	getImageIx = (image) => {
-		let ix = 0;
+	getImageIdx = (image:TreeListItem) => {
+		let idx = 0;
 
 		let images = this.state.images;
 		for(let key in images) {
-			if(images[key] === image) return ix;
-			ix++;
+			if(images[key] === image) return idx;
+			idx++;
 		}
 
 		return -1;
 	}
 
-	bulkSelectImages = (to) => {
+	bulkSelectImages = (to:TreeListItem) => {
 		let current = this.getCurrentImage();
 		if(!current) {
 			to.selected = true;
 			return;
 		}
 
-		let fromIx = this.getImageIx(current);
-		let toIx = this.getImageIx(to);
+		let fromIx = this.getImageIdx(current);
+		let toIx = this.getImageIdx(to);
 
 		let images = this.state.images;
 		let ix = 0;
@@ -282,7 +317,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	selectImagesFolder = (path, selected) => {
+	selectImagesFolder = (path: string, selected: boolean) => {
 		let images = this.state.images;
 
 		let first = false;
@@ -305,7 +340,7 @@ class ImagesList extends React.Component {
 		}
 	}
 
-	getFirstImageInFolder = (path) => {
+	getFirstImageInFolder = (path: string) => {
 		let images = this.state.images;
 
 		for(let key in images) {
@@ -315,7 +350,7 @@ class ImagesList extends React.Component {
 		return null;
 	}
 
-	getLastImageInFolder = (path) => {
+	getLastImageInFolder = (path: string) => {
 		let images = this.state.images;
 
 		let ret = null;
@@ -326,7 +361,7 @@ class ImagesList extends React.Component {
 		return ret;
 	}
 
-	handleImageItemSelected = (e) => {
+	handleImageItemSelected = (e: SelectedEvent) => {
 		let path = e.path;
 		let images = this.state.images;
 
@@ -393,17 +428,19 @@ class ImagesList extends React.Component {
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, selected);
 	}
 
-	createImagesFolder(name="", path="") {
+	createImagesFolder(name="", path=""):TreeListItem {
 		return {
+			img: null,
 			isFolder: true,
 			selected: false,
+			current: false,
 			name: name,
 			path: path,
 			items: []
 		};
 	}
 
-	getImageSubFolder = (root, parts) => {
+	getImageSubFolder = (root:TreeListItem, parts:string[]) => {
 		parts = parts.slice();
 
 		let folder = null;
@@ -445,10 +482,15 @@ class ImagesList extends React.Component {
 			let name = parts.pop();
 			let folder = this.getImageSubFolder(res, parts);
 
+			let img = this.state.images[key];
+
 			folder.items.push({
-				img: this.state.images[key],
+				img: img.img,
 				path: key,
-				name: name
+				name: name,
+				isFolder: false,
+				selected: false,
+				current: false
 			});
 
 			if(this.state.images[key].selected) folder.selected = true;
@@ -494,7 +536,7 @@ class ImagesList extends React.Component {
 		);
 	}
 
-	renderElectronButtons() {
+	/*renderElectronButtons() {
 		return (
 			<span>
 				<div className="btn back-800 border-color-gray color-white" onClick={this.addImagesFs} title={I18.f("ADD_IMAGES_TITLE")}>
@@ -506,10 +548,10 @@ class ImagesList extends React.Component {
 				</div>
 			</span>
 		);
-	}
+	}*/
 
 	render() {
-		let data = this.getImagesTree(this.state.images);
+		let data = this.getImagesTree();
 
 		let dropHelp = Object.keys(this.state.images).length > 0 ? null : (<div ref={this.dropHelpRef} className="image-drop-help">{I18.f("IMAGE_DROP_HELP")}</div>);
 
@@ -519,7 +561,7 @@ class ImagesList extends React.Component {
 				<div className="images-controllers border-color-gray">
 
 					{
-						PLATFORM === "web" ? (this.renderWebButtons()) : (this.renderElectronButtons())
+						PLATFORM === "web" ? (this.renderWebButtons()) : (<>{/* this.renderElectronButtons() */}</>)
 					}
 
 					<div className="btn back-800 border-color-gray color-white" onClick={this.deleteSelectedImages} title={I18.f("DELETE_TITLE")}>
@@ -529,7 +571,7 @@ class ImagesList extends React.Component {
 						{I18.f("CLEAR")}
 					</div>
 
-					<hr/>
+					<hr />
 
 				</div>
 

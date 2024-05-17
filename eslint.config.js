@@ -21,6 +21,7 @@ module.exports = [
 				SharedArrayBuffer: "readonly",
 				PLATFORM: "readonly",
 				APP: "readonly",
+				PROFILER: "readonly",
 			},
 		},
 		plugins: {

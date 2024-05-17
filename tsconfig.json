@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"lib": ["ESNext", "dom"],
+		"target": "es5",
+		"jsx": "react-jsx",
+		"allowJs": true,
+		"moduleResolution": "Node",
+		"baseUrl": "./src",
+		"paths": {
+			"*": ["client/*"]
+		}
+	},
+	"exclude": [
+        "node_modules"
+    ]
+}

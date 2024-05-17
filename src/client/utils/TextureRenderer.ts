@@ -1,6 +1,11 @@
-class TextureRenderer {
+import { Options, PROFILER, Rect } from "types";
 
-	constructor(data, options={}) {
+class TextureRenderer {
+	buffer: HTMLCanvasElement;
+	width: number;
+	height: number;
+
+	constructor(data:Rect[], options={}) {
 		this.buffer = document.createElement("canvas");
 
 		this.width = 0;
@@ -9,7 +14,7 @@ class TextureRenderer {
 		this.render(data, options);
 	}
 
-	static getSize(data, options={}) {
+	static getSize(data:Rect[], options:Options={}) {
 		let width = options.width || 0;
 		let height = options.height || 0;
 
@@ -21,15 +26,16 @@ class TextureRenderer {
 			height = 0;
 
 			for (let item of data) {
-
-				let w = item.frame.x + item.frame.w;
-				let h = item.frame.y + item.frame.h;
+				let w = item.frame.x;
+				let h = item.frame.y;
 
 				if(item.rotated) {
-					w = item.frame.x + item.frame.h;
-					h = item.frame.y + item.frame.w;
+					w += item.frame.h;
+					h += item.frame.w;
+				} else {
+					w += item.frame.w;
+					h += item.frame.h;
 				}
-
 
 				if (w > width) {
 					width = w;
@@ -44,8 +50,8 @@ class TextureRenderer {
 		}
 
 		if (options.powerOfTwo) {
-			let sw = Math.round(Math.log(width)/Math.log(2));
-			let sh = Math.round(Math.log(height)/Math.log(2));
+			let sw = Math.round(Math.log2(width));
+			let sh = Math.round(Math.log2(height));
 
 			let pw = 2 ** sw;
 			let ph = 2 ** sh;
@@ -60,8 +66,11 @@ class TextureRenderer {
 		return {width, height};
 	}
 
-	render(data, options={}) {
+	render(data:Rect[], options:Options={}) {
 		let ctx = this.buffer.getContext("2d");
+
+		if(PROFILER)
+			console.time("render");
 
 		let { width, height } = TextureRenderer.getSize(data, options);
 
@@ -76,9 +85,15 @@ class TextureRenderer {
 			this.renderItem(ctx, item, options);
 		}
 
+		if(PROFILER)
+			console.timeEnd("render");
 	}
 
-	scale(val) {
+	getBuffer() {
+		return this.buffer;
+	}
+
+	/*scale(val) {
 		if(val === 1) return this.buffer;
 
 		let tempBuffer = document.createElement("canvas");
@@ -89,7 +104,7 @@ class TextureRenderer {
 		tempCtx.drawImage(this.buffer, 0, 0, this.buffer.width, this.buffer.height, 0, 0, tempBuffer.width, tempBuffer.height);
 
 		return tempBuffer;
-	}
+	}*/
 
 	/* renderExtrude(ctx, item, options) {
 		if(!options.extrude) return;
@@ -156,7 +171,7 @@ class TextureRenderer {
 
 	}*/
 
-	renderItem(ctx, item, _options) {
+	renderItem(ctx: CanvasRenderingContext2D, item: Rect, _options: Options) {
 		if(item.skipRender) return;
 
 		let img = item.image;
@@ -169,22 +184,26 @@ class TextureRenderer {
 
 			//this.renderExtrude(ctx, item, options);
 
-			ctx.drawImage(img,
-							item.spriteSourceSize.x, item.spriteSourceSize.y,
-							item.spriteSourceSize.w, item.spriteSourceSize.h,
-							0, 0,
-							item.frame.w, item.frame.h);
+			ctx.drawImage(
+				img,
+				item.spriteSourceSize.x, item.spriteSourceSize.y,
+				item.spriteSourceSize.w, item.spriteSourceSize.h,
+				0, 0,
+				item.frame.w, item.frame.h
+			);
 
 			ctx.restore();
 		}
 		else {
 			//this.renderExtrude(ctx, item, options);
 
-			ctx.drawImage(img,
-							item.spriteSourceSize.x, item.spriteSourceSize.y,
-							item.spriteSourceSize.w, item.spriteSourceSize.h,
-							item.frame.x, item.frame.y,
-							item.frame.w, item.frame.h);
+			ctx.drawImage(
+				img,
+				item.spriteSourceSize.x, item.spriteSourceSize.y,
+				item.spriteSourceSize.w, item.spriteSourceSize.h,
+				item.frame.x, item.frame.y,
+				item.frame.w, item.frame.h
+			);
 		}
 	}
 }

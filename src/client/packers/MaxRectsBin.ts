@@ -1,5 +1,6 @@
-import Packer from "./Packer";
-import Rect from "../math/Rect";
+import Packer, { MethodList } from "./Packer";
+import Rectangle from "../math/Rectangle";
+import { Rect } from "types";
 
 const METHOD = {
 	BestShortSideFit: "BestShortSideFit",
@@ -9,10 +10,23 @@ const METHOD = {
 	ContactPointRule: "ContactPointRule"
 };
 
-class MaxRectsBin extends Packer {
+class MutatableNumber {
+	value: number;
+	constructor(value:number = 0) {
+		this.value = value;
+	}
+}
 
-	constructor(width, height, allowRotate=false, padding=0) {
-		super();
+class MaxRectsBin extends Packer {
+	usedRectangles: Rectangle[];
+	freeRectangles: Rectangle[];
+	binWidth: number;
+	binHeight: number;
+	allowRotate: boolean;
+	padding: number;
+
+	constructor(width: number, height: number, allowRotate: boolean = false, padding: number = 0) {
+		super(width, height, allowRotate, padding);
 
 		this.usedRectangles = [];
 		this.freeRectangles = [];
@@ -22,7 +36,7 @@ class MaxRectsBin extends Packer {
 		this.allowRotate = allowRotate;
 		this.padding = padding;
 
-		this.freeRectangles.push(new Rect(
+		this.freeRectangles.push(new Rectangle(
 			0,
 			0,
 			width,
@@ -30,15 +44,15 @@ class MaxRectsBin extends Packer {
 		));
 	}
 
-	pack(data, method) {
+	pack(data:Rect[], method:string) {
 		let res = this.insert2(data, method);
 		return res;
 	}
 
-	insert(width, height, method=METHOD.BestShortSideFit) {
-		let newNode = new Rect();
-		let score1 = {value:0};
-		let score2 = {value:0};
+	insert(width:number, height:number, method:string=METHOD.BestShortSideFit) {
+		let newNode = new Rectangle();
+		let score1 = new MutatableNumber();
+		let score2 = new MutatableNumber();
 
 		switch(method) {
 			case METHOD.BestShortSideFit:
@@ -68,18 +82,18 @@ class MaxRectsBin extends Packer {
 		return newNode;
 	}
 
-	insert2(rectangles, method) {
+	insert2(rectangles:Rect[], method:string) {
 		let res = [];
 
 		while(rectangles.length > 0) {
 			let bestScore1 = Infinity;
 			let bestScore2 = Infinity;
 			let bestRectangleIndex = -1;
-			let bestNode = new Rect();
+			let bestNode = new Rectangle();
 
 			for(let i= 0; i < rectangles.length; i++) {
-				let score1 = {value:0};
-				let score2 = {value:0};
+				let score1 = new MutatableNumber();
+				let score2 = new MutatableNumber();
 				let newNode = this._scoreRectangle(rectangles[i].frame.w + this.padding, rectangles[i].frame.h + this.padding, method, score1, score2);
 
 				if (score1.value < bestScore1 || (score1.value === bestScore1 && score2.value < bestScore2)) {
@@ -111,7 +125,7 @@ class MaxRectsBin extends Packer {
 		return res;
 	}
 
-	_placeRectangle(node) {
+	_placeRectangle(node:Rectangle) {
 		let numRectanglesToProcess = this.freeRectangles.length;
 		for(let i= 0; i < numRectanglesToProcess; i++) {
 			if (this._splitFreeNode(this.freeRectangles[i], node)) {
@@ -125,8 +139,8 @@ class MaxRectsBin extends Packer {
 		this.usedRectangles.push(node);
 	}
 
-	_scoreRectangle(width, height, method, score1, score2) {
-		let newNode = new Rect();
+	_scoreRectangle(width:number, height:number, method:string, score1:MutatableNumber, score2:MutatableNumber) {
+		let newNode = new Rectangle();
 		score1.value = Infinity;
 		score2.value = Infinity;
 
@@ -169,9 +183,9 @@ class MaxRectsBin extends Packer {
 		return usedSurfaceArea/(this.binWidth * this.binHeight);
 	}
 
-	_findPositionForNewNodeBottomLeft(width, height, bestY, bestX) {
+	_findPositionForNewNodeBottomLeft(width:number, height:number, bestY:MutatableNumber, bestX:MutatableNumber) {
 		let freeRectangles = this.freeRectangles;
-		let bestNode = new Rect();
+		let bestNode = new Rectangle();
 
 		bestY.value = Infinity;
 		let rect;
@@ -204,9 +218,9 @@ class MaxRectsBin extends Packer {
 		return bestNode;
 	}
 
-	_findPositionForNewNodeBestShortSideFit(width, height, bestShortSideFit, bestLongSideFit){
+	_findPositionForNewNodeBestShortSideFit(width:number, height:number, bestShortSideFit:MutatableNumber, bestLongSideFit:MutatableNumber){
 		let freeRectangles = this.freeRectangles;
-		let bestNode = new Rect();
+		let bestNode = new Rectangle();
 
 		bestShortSideFit.value = Infinity;
 
@@ -259,9 +273,9 @@ class MaxRectsBin extends Packer {
 		return bestNode;
 	}
 
-	_findPositionForNewNodeBestLongSideFit(width, height, bestShortSideFit, bestLongSideFit) {
+	_findPositionForNewNodeBestLongSideFit(width:number, height:number, bestShortSideFit:MutatableNumber, bestLongSideFit:MutatableNumber) {
 		let freeRectangles = this.freeRectangles;
-		let bestNode = new Rect();
+		let bestNode = new Rectangle();
 		bestLongSideFit.value = Infinity;
 
 		let rect,
@@ -308,9 +322,9 @@ class MaxRectsBin extends Packer {
 		return bestNode;
 	}
 
-	_findPositionForNewNodeBestAreaFit(width, height, bestAreaFit, bestShortSideFit) {
+	_findPositionForNewNodeBestAreaFit(width:number, height:number, bestAreaFit:MutatableNumber, bestShortSideFit:MutatableNumber) {
 		let freeRectangles = this.freeRectangles;
-		let bestNode = new Rect();
+		let bestNode = new Rectangle();
 
 		bestAreaFit.value = Infinity;
 
@@ -335,7 +349,7 @@ class MaxRectsBin extends Packer {
 					bestNode.width = width;
 					bestNode.height = height;
 					bestShortSideFit.value = shortSideFit;
-					bestAreaFit = areaFit;
+					bestAreaFit.value = areaFit;
 				}
 			}
 
@@ -357,14 +371,14 @@ class MaxRectsBin extends Packer {
 		return bestNode;
 	}
 
-	_commonIntervalLength(i1start, i1end, i2start, i2end){
+	static _commonIntervalLength(i1start:number, i1end:number, i2start:number, i2end:number){
 		if (i1end < i2start || i2end < i1start){
 			return 0;
 		}
 		return Math.min(i1end, i2end) - Math.max(i1start, i2start);
 	}
 
-	_contactPointScoreNode(x, y, width, height){
+	_contactPointScoreNode(x:number, y:number, width:number, height:number){
 		let usedRectangles = this.usedRectangles;
 		let score = 0;
 
@@ -376,16 +390,16 @@ class MaxRectsBin extends Packer {
 		for(let i= 0; i < usedRectangles.length; i++) {
 			rect = usedRectangles[i];
 			if (rect.x === x + width || rect.x + rect.width === x)
-				score += this._commonIntervalLength(rect.y, rect.y + rect.height, y, y + height);
+				score += MaxRectsBin._commonIntervalLength(rect.y, rect.y + rect.height, y, y + height);
 			if (rect.y === y + height || rect.y + rect.height === y)
-				score += this._commonIntervalLength(rect.x, rect.x + rect.width, x, x + width);
+				score += MaxRectsBin._commonIntervalLength(rect.x, rect.x + rect.width, x, x + width);
 		}
 		return score;
 	}
 
-	_findPositionForNewNodeContactPoint(width, height, bestContactScore) {
+	_findPositionForNewNodeContactPoint(width:number, height:number, bestContactScore:MutatableNumber) {
 		let freeRectangles = this.freeRectangles;
-		let bestNode = new Rect();
+		let bestNode = new Rectangle();
 
 		bestContactScore.value = -1;
 
@@ -401,7 +415,7 @@ class MaxRectsBin extends Packer {
 					bestNode.y = rect.y;
 					bestNode.width = width;
 					bestNode.height = height;
-					bestContactScore = score;
+					bestContactScore.value = score;
 				}
 			}
 			if (this.allowRotate && rect.width >= height && rect.height >= width) {
@@ -418,7 +432,7 @@ class MaxRectsBin extends Packer {
 		return bestNode;
 	}
 
-	_splitFreeNode(freeNode, usedNode){
+	_splitFreeNode(freeNode:Rectangle, usedNode:Rectangle) {
 		let freeRectangles = this.freeRectangles;
 		if (usedNode.x >= freeNode.x + freeNode.width || usedNode.x + usedNode.width <= freeNode.x ||
 			usedNode.y >= freeNode.y + freeNode.height || usedNode.y + usedNode.height <= freeNode.y)
@@ -461,11 +475,11 @@ class MaxRectsBin extends Packer {
 		let freeRectangles = this.freeRectangles;
 		for(let i = 0;i < freeRectangles.length; i++)
 			for(let j= i+1; j < freeRectangles.length; j++) {
-				if (Rect.hitTest(freeRectangles[i], freeRectangles[j])) {
+				if (Rectangle.hitTest(freeRectangles[i], freeRectangles[j])) {
 					freeRectangles.splice(i,1);
 					break;
 				}
-				if (Rect.hitTest(freeRectangles[j], freeRectangles[i])) {
+				if (Rectangle.hitTest(freeRectangles[j], freeRectangles[i])) {
 					freeRectangles.splice(j,1);
 				}
 			}
@@ -475,11 +489,11 @@ class MaxRectsBin extends Packer {
 		return "MaxRectsBin";
 	}
 
-	static get methods() {
+	static get methods():MethodList {
 		return METHOD;
 	}
 
-	static getMethodProps(id='') {
+	static getMethodProps(id:string='') {
 		switch(id) {
 			case METHOD.BestShortSideFit:
 				return {name: "Best short side fit", description: "Positions the Rectangle against the short side of a free Rectangle into which it fits the best."};

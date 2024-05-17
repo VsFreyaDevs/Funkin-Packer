@@ -119,7 +119,9 @@ class APP {
 
 			let fName = fileName + (this.packResult.length > 1 ? "-" + ix : "");
 
-			let buffer = item.renderer.scale(this.packOptions.scale);
+			//let buffer = item.renderer.scale(this.packOptions.scale);
+
+			let buffer = item.renderer.getBuffer();
 
 			let imageData = filter.apply(buffer).toDataURL(this.packOptions.textureFormat === "png" ? "image/png" : "image/jpeg");
 			let parts = imageData.split(",");
@@ -158,6 +160,7 @@ class APP {
 				prependFolderName: this.packOptions.prependFolderName,
 				base64Export: this.packOptions.base64Export,
 				scale: this.packOptions.scale,
+				changedScale: this.packOptions.scale !== 1,
 				trimMode: this.packOptions.trimMode,
 
 				sortExportedRows: this.packOptions.sortExportedRows,

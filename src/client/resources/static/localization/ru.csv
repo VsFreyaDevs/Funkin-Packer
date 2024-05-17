@@ -36,8 +36,6 @@ TINIFY_TITLE;Оптимизировать, используя TinyPNG https://ti
 TINIFY;Оптимизировать TinyPNG
 TINIFY_KEY_TITLE;Ключ TinyPNG https://tinypng.com/developers
 TINIFY_KEY;Ключ TinyPNG
-DISABLE_SMOOTHING;Отключить сглаживание
-DISABLE_SMOOTHING_TITLE;Отключить сглаживание изображения
 SCALE;Масштаб:
 SCALE_TITLE;Текущий масштаб текстуры. Влияет на пересчет размеров и координат при экспорте
 FILTER;Фильтр:
@@ -144,3 +142,4 @@ CLEAR_STORED_ORDER;Clear Stored Order
 SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
 UPDATE_FILENAME;Update Filename:
+BASED_ON;Based on Free Texture Packer

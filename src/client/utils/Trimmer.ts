@@ -1,14 +1,16 @@
+import { PROFILER, Rect } from "types";
+
 let cns = document.createElement("canvas");
 let ctx = cns.getContext("2d", {willReadFrequently: true});
 
 /*#__PURE__*/
-function getAlpha(data, width, x, y) {
+function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) {
 	return data[((y * (width * 4)) + (x * 4)) + 3];
 }
 
 class Trimmer {
 
-	static getLeftSpace(data, width, height, threshold) {
+	static getLeftSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		for(let x=0; x<width; x++) {
 			for(let y=0; y<height; y++) {
 				if(getAlpha(data, width, x, y) > threshold) {
@@ -20,7 +22,7 @@ class Trimmer {
 		return width;
 	}
 
-	static getRightSpace(data, width, height, threshold) {
+	static getRightSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		for(let x=width-1; x>=0; x--) {
 			for(let y=0; y<height; y++) {
 				if(getAlpha(data, width, x, y) > threshold) {
@@ -32,7 +34,7 @@ class Trimmer {
 		return width;
 	}
 
-	static getTopSpace(data, width, height, threshold) {
+	static getTopSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		for(let y=0; y<height; y++) {
 			for(let x=0; x<width; x++) {
 				if(getAlpha(data, width, x, y) > threshold) {
@@ -44,8 +46,7 @@ class Trimmer {
 		return height;
 	}
 
-	static getBottomSpace(data, width, height, threshold) {
-
+	static getBottomSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		for(let y=height-1; y>=0; y--) {
 			for(let x=0; x<width; x++) {
 				if(getAlpha(data, width, x, y) > threshold) {
@@ -57,8 +58,11 @@ class Trimmer {
 		return height;
 	}
 
-	static trim(rects, threshold=0) {
+	static trim(rects:Rect[], threshold:number=0) {
+		if(rects.length === 0) return;
 
+		if(PROFILER)
+			console.time("trim");
 		for(let item of rects) {
 			let img = item.image;
 
@@ -124,6 +128,8 @@ class Trimmer {
 			img.cachedSpaces = spaces;
 			img.cachedTrim = threshold;
 		}
+		if(PROFILER)
+			console.timeEnd("trim");
 	}
 }
 

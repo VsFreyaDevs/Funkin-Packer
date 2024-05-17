@@ -36,8 +36,6 @@ TINIFY_TITLE;Tinify using https://tinypng.com
 TINIFY;Tinify
 TINIFY_KEY_TITLE;TinyPNG key https://tinypng.com/developers
 TINIFY_KEY;TinyPNG key
-DISABLE_SMOOTHING;Disable smoothing
-DISABLE_SMOOTHING_TITLE;Disable image smoothing
 SCALE;Scale:
 SCALE_TITLE;Base texture scale
 FILTER;Filter:
@@ -48,9 +46,9 @@ FILE_NAME;File name:
 FILE_NAME_TITLE;Result file name
 SAVE_PATH;Save path
 SAVE_PATH_TITLE;Path to save pack results
-WIDTH;Width:
+WIDTH;Width (px):
 WIDTH_TITLE;Max texture width
-HEIGHT;Height:
+HEIGHT;Height (px):
 HEIGHT_TITLE;Max texture height
 FIXED_SIZE;Fixed size:
 POWER_OF_TWO;Power of two:
@@ -149,3 +147,4 @@ STATS_SIZE;Size
 STATS_RAM;RAM
 STATS_SI_TITLE;SI units (Used for ram usage stat)\nCodename Engine SI = 1024\nPsych 0.7+ SI = 1024\nPsych 0.6 and below SI = 1000
 STATS_SI;SI units:
+BASED_ON;Based on Free Texture Packer

@@ -1,20 +1,26 @@
 let MaxRectsPackerEngine = require("maxrects-packer").MaxRectsPacker;
 let PACKING_LOGIC = require("maxrects-packer").PACKING_LOGIC;
 
-import Packer from "./Packer";
+import { Rect } from "types";
+import Packer, { MethodList } from "./Packer";
 
 const METHOD = {
 	Smart: "Smart",
 	SmartArea: "SmartArea",
 	Square: "Square",
 	SquareArea: "SquareArea",
-	// SmartSquare: "SmartSquare",
-	// SmartSquareArea: "SmartSquareArea"
+	SmartSquare: "SmartSquare",
+	SmartSquareArea: "SmartSquareArea"
 };
 
 class MaxRectsPacker extends Packer {
-	constructor(width, height, allowRotate = false, padding = 0) {
-		super();
+	binWidth: number;
+	binHeight: number;
+	allowRotate: boolean;
+	padding: number;
+
+	constructor(width: number, height: number, allowRotate: boolean = false, padding: number = 0) {
+		super(width, height, allowRotate, padding);
 
 		this.binWidth = width;
 		this.binHeight = height;
@@ -22,7 +28,7 @@ class MaxRectsPacker extends Packer {
 		this.padding = padding;
 	}
 
-	pack(data, method) {
+	pack(data: Rect[], method: string) {
 		let options = {
 			smart: (method === METHOD.Smart || method === METHOD.SmartArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
 			pot: false,
@@ -58,15 +64,15 @@ class MaxRectsPacker extends Packer {
 		return res;
 	}
 
-	static get type() {
+	static get packerName() {
 		return "MaxRectsPacker";
 	}
 
-	static get methods() {
+	static get methods():MethodList {
 		return METHOD;
 	}
 
-	static getMethodProps(id = '') {
+	static getMethodProps(id:string = '') {
 		switch (id) {
 			case METHOD.Smart:
 				return { name: "Smart edge logic", description: "" };

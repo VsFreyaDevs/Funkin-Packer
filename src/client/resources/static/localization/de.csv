@@ -18,8 +18,6 @@ DELETE;Löschen
 DELETE_TITLE;Löscht das ausgewählte Bild
 REPLACE_FILES_PROMPT;Bestehende Dateien ersetzen?
 DISPLAY_OUTLINES;Umriss:
-DISABLE_SMOOTHING;Glättung deaktivieren
-DISABLE_SMOOTHING_TITLE;Deaktivieren Sie die Bildglättung
 SCALE;Skalierung:
 SHOW_SPRITES;Animationen
 SPRITE_NAME;Sprite-Name:
@@ -143,3 +141,4 @@ CLEAR_STORED_ORDER;Clear Stored Order
 SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
 UPDATE_FILENAME;Update Filename:
+BASED_ON;Based on Free Texture Packer

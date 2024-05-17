@@ -36,8 +36,6 @@ TINIFY_TITLE;Tinify usando https://tinypng.com
 TINIFY;Tinify
 TINIFY_KEY_TITLE;TinyPNG key https://tinypng.com/developers
 TINIFY_KEY;TinyPNG key
-DISABLE_SMOOTHING;Deshabilitar suavizado
-DISABLE_SMOOTHING_TITLE;Deshabilitar suavizado de imagen
 SCALE;Escala:
 SCALE_TITLE;Escala de la textura base
 FILTER;Filtro:
@@ -144,3 +142,4 @@ CLEAR_STORED_ORDER;Clear Stored Order
 SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
 UPDATE_FILENAME;Update Filename:
+BASED_ON;Based on Free Texture Packer

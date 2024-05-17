@@ -365,11 +365,6 @@ class PackProperties extends React.Component {
 								<td><input ref={this.tinifyKeyRef} type="text" className="border-color-gray" defaultValue={this.packOptions.tinifyKey} onBlur={this.onExporterPropChanged} /></td>
 								<td></td>
 							</tr> */}
-							<tr title={I18.f("SCALE_TITLE")}>
-								<td>{I18.f("SCALE")}</td>
-								<td><input ref={this.scaleRef} type="number" min="0" className="border-color-gray" defaultValue={this.packOptions.scale} onBlur={this.onPropChanged}/></td>
-								<td></td>
-							</tr>
 							<tr title={I18.f("FORMAT_TITLE")}>
 								<td>{I18.f("FORMAT")}</td>
 								<td>
@@ -441,7 +436,7 @@ class PackProperties extends React.Component {
 								<td>
 									<select ref={this.packerRef} className="border-color-gray" onChange={this.onPackerChange} defaultValue={this.packOptions.packer}>
 									{packers.map(node => {
-										return (<option key={"packer-" + node.type} defaultValue={node.type}>{node.type}</option>)
+										return (<option key={"packer-" + node.packerName} defaultValue={node.packerName}>{node.packerName}</option>)
 									})}
 									</select>
 								</td>
@@ -450,6 +445,11 @@ class PackProperties extends React.Component {
 							<tr title={I18.f("PACKER_METHOD_TITLE")}>
 								<td>{I18.f("PACKER_METHOD")}</td>
 								<td><PackerMethods ref={this.packerMethodRef} packer={this.state.packer} defaultMethod={this.packOptions.packerMethod} handler={this.onPropChanged}/></td>
+								<td></td>
+							</tr>
+							<tr title={I18.f("SCALE_TITLE")}>
+								<td>{I18.f("SCALE")}</td>
+								<td><input ref={this.scaleRef} type="number" min="0" className="border-color-gray" defaultValue={this.packOptions.scale} onBlur={this.onPropChanged}/></td>
 								<td></td>
 							</tr>
 							<tr>

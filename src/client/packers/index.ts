@@ -1,16 +1,17 @@
 import MaxRectsPacker from "./MaxRectsPacker";
 import MaxRectsBin from "./MaxRectsBin";
 import OptimalPacker from "./OptimalPacker";
+import { PackerClass } from "./Packer";
 
-const list = [
+const list:PackerClass[] = [
 	MaxRectsBin,
 	MaxRectsPacker,
 	OptimalPacker
 ];
 
-function getPackerByType(type) {
+function getPackerByType(name:string) {
 	for(let item of list) {
-		if(item.type === type) {
+		if(item.name === name) {
 			return item;
 		}
 	}

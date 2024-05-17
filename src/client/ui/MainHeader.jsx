@@ -30,7 +30,7 @@ class MainHeader extends React.Component {
 					<div className="main-header-app-name">
 						<img src="static/images/logo.png" alt="Logo" />
 						{appInfo.displayName} {appInfo.version}
-						<div className='based-on'>Based on Free Texture Packer</div>
+						<div className='based-on'>{I18.f("BASED_ON")}</div>
 					</div>
 
 					<div className='main-header-github'>

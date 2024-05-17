@@ -1,4 +1,11 @@
+import { LoadedImages } from "types";
+
 class LocalImagesLoader {
+	data: File[];
+	loaded: LoadedImages;
+	loadedCnt: number;
+	onProgress: (loaded: number) => void;
+	onEnd: (data: LoadedImages) => void;
 
 	constructor() {
 		this.data = null;
@@ -11,7 +18,7 @@ class LocalImagesLoader {
 		this.waitImages = this.waitImages.bind(this);
 	}
 
-	load(data, onProgress = null, onEnd = null) {
+	load(data: FileList, onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) {
 		this.data = [];
 
 		for (let i = 0; i < data.length; i++) {
@@ -52,8 +59,8 @@ class LocalImagesLoader {
 
 			let reader = new FileReader();
 			reader.onload = e => {
-				img.src = e.target.result;
-				img._base64 = e.target.result;
+				img.src = e.target.result as string;
+				img._base64 = e.target.result as string;
 
 				this.loaded[item.name] = img;
 				this.loadedCnt++;
