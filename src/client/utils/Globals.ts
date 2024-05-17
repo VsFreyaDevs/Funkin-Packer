@@ -1,8 +1,9 @@
 import { Observer, GLOBAL_EVENT } from "../Observer";
 
-let INSTANCE = null;
+let INSTANCE:Globals = null;
 
 class Globals {
+	storedOrder: string[];
 	constructor() {
 		INSTANCE = this;
 
@@ -11,12 +12,12 @@ class Globals {
 		//this.sparrowOrigMap = null;
 		//this.sparrowMaxMap = null;
 
-		window.Globals = this;
+		(globalThis as any).Globals = this;
 
 		Observer.on(GLOBAL_EVENT.STORED_ORDER_CHANGED, this.onStoredOrderChanged, this);
 	}
 
-	onStoredOrderChanged = (data) => {
+	onStoredOrderChanged = (data:string[]) => {
 		this.storedOrder = data;
 	}
 

@@ -1,10 +1,11 @@
+import { Rect, SplitterRect } from 'types';
 import { isNullOrUndefined } from '../utils/common';
 import Splitter from './Splitter';
 
-import xmlParser from 'xml2js';
+import * as xmlParser from 'xml2js';
 
 class Sparrow extends Splitter {
-	static doCheck(data, cb) {
+	doCheck(data: string, cb: (checked: boolean) => void) {
 		if(isNullOrUndefined(data)) {
 			cb(false);
 			return;
@@ -28,13 +29,13 @@ class Sparrow extends Splitter {
 		}
 	}
 
-	static doSplit(data, options, cb) {
-		let res = [];
-
+	doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		if(isNullOrUndefined(data)) {
 			cb(false);
 			return;
 		}
+
+		let res: SplitterRect[] = [];
 
 		try {
 			if(data.startsWith("ï»¿")) data = data.slice(3);
@@ -78,6 +79,7 @@ class Sparrow extends Splitter {
 
 					let trimmed = item.width < item.frameWidth || item.height < item.frameHeight;
 
+					// TODO: make this only happen visually, since users have reported issues with this
 					item.frameWidth = Math.max(item.frameWidth, item.width + item.frameX);
 					item.frameHeight = Math.max(item.frameHeight, item.height + item.frameY);
 
@@ -116,7 +118,7 @@ class Sparrow extends Splitter {
 		cb(res);
 	}
 
-	static get name() {
+	get splitterName() {
 		return 'Sparrow';
 	}
 }

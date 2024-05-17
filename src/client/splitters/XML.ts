@@ -1,9 +1,11 @@
+import { Rect } from 'types';
 import Splitter from './Splitter';
 
-import xmlParser from 'xml2js';
+import * as xmlParser from 'xml2js';
+import { isNullOrUndefined } from '../utils/common';
 
 class XML extends Splitter {
-	static doCheck(data, cb) {
+	doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
 			xmlParser.parseString(data, (err, atlas) => {
 				if(err) {
@@ -19,15 +21,20 @@ class XML extends Splitter {
 		}
 	}
 
-	static doSplit(data, options, cb) {
-		let res = [];
+	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+		if(isNullOrUndefined(data)) {
+			cb(false);
+			return;
+		}
 
 		try {
 			xmlParser.parseString(data, (err, atlas) => {
 				if(err) {
-					cb(res);
+					cb(false);
 					return;
 				}
+
+				let res = [];
 
 				let list = atlas.TextureAtlas.sprite;
 
@@ -74,13 +81,11 @@ class XML extends Splitter {
 			});
 		}
 		catch(e) {
-			// continue regardless of error
+			cb(false);
 		}
-
-		cb(res);
 	}
 
-	static get name() {
+	get splitterName() {
 		return 'XML';
 	}
 }

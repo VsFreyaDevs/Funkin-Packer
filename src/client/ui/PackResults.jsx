@@ -1,7 +1,7 @@
 import React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import TextureView from './TextureView.jsx';
-import SpritesPlayer from './SpritesPlayer.jsx';
+import TextureView from './TextureView';
+import SpritesPlayer from './SpritesPlayer';
 import I18 from '../utils/I18';
 
 class PackResults extends React.Component {

@@ -1,7 +1,8 @@
+import { Rect } from 'types';
 import Splitter from './Splitter';
 
 class JsonArray extends Splitter {
-	static doCheck(data, cb) {
+	doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
 			let json = JSON.parse(data);
 			cb(json && json.frames && Array.isArray(json.frames));
@@ -11,25 +12,24 @@ class JsonArray extends Splitter {
 		}
 	}
 
-	static doSplit(data, options, cb) {
-		let res = [];
-
+	doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		try {
+			let res = [];
 			let json = JSON.parse(data);
 
 			for(let item of json.frames) {
 				item.name = Splitter.fixFileName(item.filename);
 				res.push(item);
 			}
-		}
-		catch(e) {
-			// continue regardless of error
-		}
 
 		cb(res);
+		}
+		catch(e) {
+			cb(false);
+		}
 	}
 
-	static get name() {
+	get splitterName() {
 		return 'JSON (array)';
 	}
 }

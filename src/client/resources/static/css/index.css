@@ -724,7 +724,7 @@ html, body {
 }
 
 .updater-download {
-	visible: false;
+	visibility: hidden;
 }
 
 .tree-view {

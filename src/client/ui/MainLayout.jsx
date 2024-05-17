@@ -1,16 +1,16 @@
 import React from 'react';
 
-import ImagesList from './ImagesList.jsx';
-import MainHeader from './MainHeader.jsx';
-import PackProperties from './PackProperties.jsx';
-import PackResults from './PackResults.jsx';
-import MessageBox from './MessageBox.jsx';
-import ProcessingCover from './ProcessingCover.jsx';
-import OldBrowserBlocker from './OldBrowserBlocker.jsx';
-//import About from './About.jsx';
-//import Updater from '../platform/electron/Updater.jsx';
-import EditCustomExporter from './EditCustomExporter.jsx';
-import SheetSplitter from './SheetSplitter.jsx';
+import ImagesList from './ImagesList';
+import MainHeader from './MainHeader';
+import PackProperties from './PackProperties';
+import PackResults from './PackResults';
+import MessageBox from './MessageBox';
+import ProcessingCover from './ProcessingCover';
+import OldBrowserBlocker from './OldBrowserBlocker';
+//import About from './About';
+//import Updater from '../platform/electron/Updater';
+import EditCustomExporter from './EditCustomExporter';
+import SheetSplitter from './SheetSplitter';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 

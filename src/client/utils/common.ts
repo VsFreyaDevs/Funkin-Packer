@@ -1,4 +1,4 @@
-export function smartSortImages(f1, f2) {
+export function smartSortImages(f1: string, f2: string) {
 	let t1 = f1.split('/');
 	let t2 = f2.split('/');
 
@@ -15,12 +15,12 @@ export function smartSortImages(f1, f2) {
 		if(t1.length > 1) t1.pop();
 		if(t2.length > 1) t2.pop();
 
-		n1 = parseInt(t1.join('.'), 10);
-		n2 = parseInt(t2.join('.'), 10);
+		let nn1 = parseInt(t1.join('.'), 10);
+		let nn2 = parseInt(t2.join('.'), 10);
 
-		if(!isNaN(n1) && !isNaN(n2)) {
-			if(n1 === n2) return 0;
-			return n1 > n2 ? 1 : -1;
+		if(!isNaN(nn1) && !isNaN(nn2)) {
+			if(nn1 === nn2) return 0;
+			return nn1 > nn2 ? 1 : -1;
 		}
 	}
 
@@ -28,7 +28,7 @@ export function smartSortImages(f1, f2) {
 	return f1 > f2 ? 1 : -1;
 }
 
-export function cleanPrefix(str) {
+export function cleanPrefix(str: string) {
 	let parts = str.split(".");
 	if(parts.length > 1) parts.pop();
 	str = parts.join(".");
@@ -46,7 +46,7 @@ export function cleanPrefix(str) {
 	return str + lastDigit;
 }
 
-export function removeFromArray(arr, item) {
+export function removeFromArray(arr: any[], item: any) {
 	const idx = arr.indexOf(item);
 
 	if (idx !== -1) {
@@ -54,7 +54,7 @@ export function removeFromArray(arr, item) {
 	}
 }
 
-export function deepClone(obj) {
+export function deepClone(obj:any):any {
 	if (obj === null || typeof obj !== 'object') {
 		return obj;
 	}
@@ -67,7 +67,7 @@ export function deepClone(obj) {
 		return newArray;
 	}
 
-	const newObj = {};
+	const newObj:any = {};
 	for (const key in obj) {
 		if (Object.hasOwn(obj, key)) {
 			newObj[key] = deepClone(obj[key]);
@@ -77,6 +77,6 @@ export function deepClone(obj) {
 	return newObj;
 }
 
-export function isNullOrUndefined(val) {
+export function isNullOrUndefined(val: any) {
 	return val === null || val === undefined;
 }

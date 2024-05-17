@@ -11,7 +11,8 @@
 		"baseUrl": "./src",
 		"paths": {
 			"*": ["client/*"]
-		}
+		},
+		"resolveJsonModule": true
 	},
 	"exclude": [
         "node_modules"

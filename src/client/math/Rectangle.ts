@@ -1,4 +1,9 @@
 class Rectangle {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+
 	constructor(x=0, y=0, width=0, height=0) {
 		this.x = x;
 		this.y = y;
@@ -10,11 +15,11 @@ class Rectangle {
 		return new Rectangle(this.x, this.y, this.width, this.height);
 	}
 
-	hitTest(other) {
+	hitTest(other: Rectangle) {
 		return Rectangle.hitTest(this, other);
 	}
 
-	static hitTest(a, b) {
+	static hitTest(a: Rectangle, b: Rectangle) {
 		return a.x >= b.x && a.y >= b.y && a.x+a.width <= b.x+b.width && a.y+a.height <= b.y+b.height;
 	}
 }

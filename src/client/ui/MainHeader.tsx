@@ -1,25 +1,21 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
-import appInfo from '../../../package.json';
-import languages from '../resources/static/localization/languages.json';
-import StatsInfo from './StatsInfo.jsx';
+import * as appInfo from '../../../package.json';
+import * as languages from '../resources/static/localization/languages.json';
+import StatsInfo from './StatsInfo';
 
 class MainHeader extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	/* showAbout() {
 		Observer.emit(GLOBAL_EVENT.SHOW_ABOUT);
 	} */
 
-	changeLanguage = (e) => {
+	changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		Observer.emit(GLOBAL_EVENT.CHANGE_LANG, e.target.value);
 	}
 
-	showSplitter() {
+	showSplitter = () => {
 		Observer.emit(GLOBAL_EVENT.SHOW_SHEET_SPLITTER);
 	}
 

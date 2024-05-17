@@ -1,7 +1,13 @@
+import { Rect, SplitterRect } from 'types';
 import Splitter from './Splitter';
 
+class Point {
+	x: number;
+	y: number;
+}
+
 class Spine extends Splitter {
-	static doCheck(data, cb) {
+	doCheck(data: string, cb: (checked: boolean) => void) {
 		let lines = data.split('\n');
 		if(lines[0] === undefined || String(lines[0]).trim() !== '') cb(false);
 
@@ -10,8 +16,8 @@ class Spine extends Splitter {
 		cb(lines[2] && lines[2].trim().indexOf('size:') === 0);
 	}
 
-	static finalizeItem(item) {
-		if(item.offset) {
+	static finalizeItem(item:SplitterRect):Rect {
+		/*if(item.offset) {
 			item.spriteSourceSize = {
 				x: item.offset.x,
 				y: item.offset.y,
@@ -21,19 +27,19 @@ class Spine extends Splitter {
 		}
 		else {
 			item.spriteSourceSize = {x: 0, y: 0, w: item.frame.w, h: item.frame.h};
-		}
+		}*/
 
 		item.trimmed = item.frame.w !== item.sourceSize.w || item.frame.h !== item.sourceSize.h;
 
-		return item;
+		return item as Rect;
 	}
 
-	static doSplit(data, options, cb) {
-		let res = [];
+	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+		let res:Rect[] = [];
 
 		let lines = data.split('\n');
 
-		let currentItem = null;
+		let currentItem:SplitterRect = null;
 
 		for(let i=6; i<lines.length; i++) {
 			let line = lines[i];
@@ -45,7 +51,29 @@ class Spine extends Splitter {
 					res.push(Spine.finalizeItem(currentItem));
 				}
 
-				currentItem = {name: Splitter.fixFileName(line.trim())};
+				currentItem = {
+					name: Splitter.fixFileName(line.trim()),
+					spriteSourceSize: {
+						x: 0,
+						y: 0,
+						w: -1,
+						h: -1
+					},
+					frame: {
+						x: -1,
+						y: -1,
+						w: -1,
+						h: -1
+					},
+					sourceSize: {
+						w: -1,
+						h: -1,
+						frameWidth: -1,
+						frameHeight: -1
+					},
+					trimmed: false,
+					rotated: false
+				};
 			}
 			else {
 				line = line.trim();
@@ -63,26 +91,24 @@ class Spine extends Splitter {
 						currentItem.rotated = val === 'true';
 						break;
 					case "xy":
-						if(!currentItem.frame) currentItem.frame = {};
 						currentItem.frame.x = parseInt(valParts[0], 10);
 						currentItem.frame.y = parseInt(valParts[1], 10);
 						break;
 					case "size":
-						if(!currentItem.frame) currentItem.frame = {};
 						currentItem.frame.w = parseInt(valParts[0], 10);
 						currentItem.frame.h = parseInt(valParts[1], 10);
+						currentItem.spriteSourceSize.w = currentItem.frame.w;
+						currentItem.spriteSourceSize.h = currentItem.frame.h;
 						break;
 					case "orig":
-						if(!currentItem.sourceSize) currentItem.sourceSize = {};
 						currentItem.sourceSize.w = parseInt(valParts[0], 10);
 						currentItem.sourceSize.h = parseInt(valParts[1], 10);
 						currentItem.sourceSize.frameWidth = currentItem.sourceSize.w;
 						currentItem.sourceSize.frameHeight = currentItem.sourceSize.h;
 						break;
 					case "offset":
-						if(!currentItem.offset) currentItem.offset = {};
-						currentItem.offset.x = parseInt(valParts[0], 10);
-						currentItem.offset.y = parseInt(valParts[1], 10);
+						currentItem.spriteSourceSize.x = parseInt(valParts[0], 10);
+						currentItem.spriteSourceSize.y = parseInt(valParts[1], 10);
 						break;
 					default:
 						break;
@@ -97,11 +123,11 @@ class Spine extends Splitter {
 		cb(res);
 	}
 
-	static get name() {
+	get splitterName() {
 		return 'Spine';
 	}
 
-	static get inverseRotation() {
+	get inverseRotation() {
 		return true;
 	}
 }

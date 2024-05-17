@@ -1,4 +1,12 @@
+import { LoadedImages } from "types";
+
 class Base64ImagesLoader {
+	data: any[];
+	loaded: LoadedImages;
+	loadedCnt: number;
+	onProgress: (loaded: number) => void;
+	onEnd: (data: LoadedImages) => void;
+
 	constructor() {
 		this.loaded = {};
 
@@ -8,7 +16,7 @@ class Base64ImagesLoader {
 		this.waitImages = this.waitImages.bind(this);
 	}
 
-	load(data, onProgress=null, onEnd=null) {
+	load(data: any[], onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) {
 		this.data = data.slice();
 
 		this.onProgress = onProgress;

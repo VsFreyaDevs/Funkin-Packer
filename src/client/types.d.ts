@@ -25,36 +25,37 @@ declare type Options = {
 	packerMethod?: string;
 }
 
-declare type Rect = {
-	trimmed?: boolean;
-	frame?: {
-		x: number;
-		y: number;
-		w: number;
-		h: number;
-		offsetX?: number;
-		offsetY?: number;
-	};
-	spriteSourceSize?: {
+declare type SplitterRect = {
+	name: string;
+	trimmed: boolean;
+	frame: {
 		x: number;
 		y: number;
 		w: number;
 		h: number;
 	};
-	sourceSize?: {
+	spriteSourceSize: {
+		x: number;
+		y: number;
 		w: number;
 		h: number;
-		frameWidth?: number;
-		frameHeight?: number;
+	};
+	sourceSize: {
+		w: number;
+		h: number;
+		frameWidth: number;
+		frameHeight: number;
 		mw?: number;
 		mh?: number;
 	};
+	rotated: boolean;
+}
+
+declare type Rect = SplitterRect & {
 	file?: string;
-	rotated?: boolean;
 	originalFile?: string;
 	cloned?: boolean;
 	image?: HTMLImageElement;
-	name?: string;
 	path?: string;
 	folder?: string;
 	trimmedImage?: Uint8ClampedArray;
@@ -64,3 +65,10 @@ declare type Rect = {
 
 declare type LoadedImage = HTMLImageElement;
 declare type LoadedImages = { [key: string]: LoadedImage };
+
+declare type PackResultsData = {
+	renderer: {
+		width: number;
+		height: number;
+	};
+};

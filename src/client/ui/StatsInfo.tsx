@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
+import { PackResultsData } from 'types';
 
-function formatBytes(bytes, decimals = 2, si=1024) {
+function formatBytes(bytes: number, decimals: number = 2, si: number = 1024) {
 	if (bytes === 0) return '0 B';
 
 	const k = si;
@@ -14,10 +15,21 @@ function formatBytes(bytes, decimals = 2, si=1024) {
 
 	return parseFloat((bytes / k**i).toFixed(dm)) + ' ' + sizes[i];
 }
-window.formatBytes = formatBytes;
+(globalThis as any).formatBytes = formatBytes;
 
-class StatsInfo extends React.Component {
-	constructor(props) {
+type StatsInfoEvent = {
+	packResults: PackResultsData[];
+}
+
+interface Props {}
+
+interface State {
+	info: StatsInfoEvent;
+	si: number;
+}
+
+class StatsInfo extends React.Component<Props, State> {
+	constructor(props:Props) {
 		super(props);
 
 		this.state = {
@@ -38,19 +50,19 @@ class StatsInfo extends React.Component {
 		Observer.off(GLOBAL_EVENT.STATS_INFO_SET_SI, this.setSI, this);
 	}
 
-	updateStatsInfo = (statsInfo) => {
+	updateStatsInfo = (statsInfo: StatsInfoEvent) => {
 		this.setState({ info: statsInfo });
 	};
 
-	setSI = (si) => {
+	setSI = (si: number) => {
 		this.setState({ si });
 	};
 
 	render() {
-		var sizes = this.state.info.packResults.map((res) => ({ width: res.renderer.width, height: res.renderer.height }));
-		var ramSize = sizes.reduce((acc, res) => acc + res.width * res.height * 4, 0);
-		var sizeText = sizes.map((res) => res.width + "x" + res.height).join(" + ");
-		var ramText = formatBytes(ramSize, 3, this.state.si);
+		let sizes = this.state.info.packResults.map((res) => ({ width: res.renderer.width, height: res.renderer.height }));
+		let ramSize = sizes.reduce((acc, res) => acc + res.width * res.height * 4, 0);
+		let sizeText = sizes.map((res) => res.width + "x" + res.height).join(" + ");
+		let ramText = formatBytes(ramSize, 3, this.state.si);
 		if (sizes.length === 0) {
 			sizeText = "? x ?";
 			ramText = "? B";
