@@ -91,10 +91,10 @@ class SheetSplitter extends React.Component {
 	}
 
 	doRepack = () => {
-		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
 		if(!this.frames || !this.frames.length) {
-			Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_FRAMES'));
 
 			return;
@@ -199,16 +199,16 @@ class SheetSplitter extends React.Component {
 
 		//Downloader.run(files, this.fileName + '.zip');
 
-		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 		Observer.emit(GLOBAL_EVENT.HIDE_SHEET_SPLITTER); // Close the spritesheet splitter
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, ImagesList.i.state.images);
 	}
 
 	doExport = () => {
-		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
 		if(!this.frames || !this.frames.length) {
-			Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_FRAMES'));
 
 			return;
@@ -279,19 +279,19 @@ class SheetSplitter extends React.Component {
 
 		Downloader.run(files, this.fileName + '.zip');
 
-		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 
 	selectTexture = (e) => {
 		if(e.target.files.length) {
-			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
 			let loader = new LocalImagesLoader();
 			loader.load(e.target.files, null, data => {
 				let keys = Object.keys(data);
 
 				if(keys.length === 0) {
-					Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+					Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 					Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f('SPLITTER_ERROR_NO_TEXTURE'));
 					return;
 				}
@@ -303,7 +303,7 @@ class SheetSplitter extends React.Component {
 
 				this.updateView();
 
-				Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 			});
 		}
 	}
@@ -466,7 +466,7 @@ class SheetSplitter extends React.Component {
 		}
 
 		return (
-			<div className="sheet-splitter-shader">
+			<div className="sheet-splitter-cover">
 				<div className="sheet-splitter-content">
 					<div className="sheet-splitter-top">
 						<table>

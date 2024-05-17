@@ -5,7 +5,7 @@ import MainHeader from './MainHeader.jsx';
 import PackProperties from './PackProperties.jsx';
 import PackResults from './PackResults.jsx';
 import MessageBox from './MessageBox.jsx';
-import ProcessingShader from './ProcessingShader.jsx';
+import ProcessingCover from './ProcessingCover.jsx';
 import OldBrowserBlocker from './OldBrowserBlocker.jsx';
 //import About from './About.jsx';
 //import Updater from '../platform/electron/Updater.jsx';
@@ -20,7 +20,7 @@ class MainLayout extends React.Component {
 
 		this.state = {
 			messageBox: false,
-			shader: false,
+			processing: false,
 			//about: false,
 			editCustomExporter: false,
 			updater: false,
@@ -31,8 +31,8 @@ class MainLayout extends React.Component {
 
 	componentDidMount = () => {
 		Observer.on(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
-		Observer.on(GLOBAL_EVENT.SHOW_SHADER, this.showShader, this);
-		Observer.on(GLOBAL_EVENT.HIDE_SHADER, this.hideShader, this);
+		Observer.on(GLOBAL_EVENT.SHOW_PROCESSING, this.showProcessing, this);
+		Observer.on(GLOBAL_EVENT.HIDE_PROCESSING, this.hideProcessing, this);
 		//Observer.on(GLOBAL_EVENT.SHOW_ABOUT, this.showAbout, this);
 		//Observer.on(GLOBAL_EVENT.HIDE_ABOUT, this.hideAbout, this);
 		Observer.on(GLOBAL_EVENT.SHOW_EDIT_CUSTOM_EXPORTER, this.showEditCustomExporter, this);
@@ -45,8 +45,8 @@ class MainLayout extends React.Component {
 
 	componentWillUnmount = () => {
 		Observer.off(GLOBAL_EVENT.SHOW_MESSAGE, this.showMessage, this);
-		Observer.off(GLOBAL_EVENT.SHOW_SHADER, this.showShader, this);
-		Observer.off(GLOBAL_EVENT.HIDE_SHADER, this.hideShader, this);
+		Observer.off(GLOBAL_EVENT.SHOW_PROCESSING, this.showProcessing, this);
+		Observer.off(GLOBAL_EVENT.HIDE_PROCESSING, this.hideProcessing, this);
 		//Observer.off(GLOBAL_EVENT.SHOW_ABOUT, this.showAbout, this);
 		//Observer.off(GLOBAL_EVENT.HIDE_ABOUT, this.hideAbout, this);
 		Observer.off(GLOBAL_EVENT.SHOW_EDIT_CUSTOM_EXPORTER, this.showEditCustomExporter, this);
@@ -76,12 +76,12 @@ class MainLayout extends React.Component {
 		this.setState({messageBox: null});
 	}
 
-	showShader = () => {
-		this.setState({shader: true});
+	showProcessing = () => {
+		this.setState({processing: true});
 	}
 
-	hideShader = () => {
-		this.setState({shader: false});
+	hideProcessing = () => {
+		this.setState({processing: false});
 	}
 
 	/*showAbout() {
@@ -123,7 +123,7 @@ class MainLayout extends React.Component {
 					{this.state.editCustomExporter ? (<EditCustomExporter/>) : null}
 					{this.state.sheetSplitter ? (<SheetSplitter/>) : null}
 					{/* this.state.updater ? (<Updater data={this.state.updater}/>) : null */}
-					{this.state.shader ? (<ProcessingShader/>) : null}
+					{this.state.processing ? (<ProcessingCover/>) : null}
 					{this.state.messageBox}
 				</div>
 			</div>

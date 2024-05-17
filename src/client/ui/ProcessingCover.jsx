@@ -3,22 +3,22 @@ import ReactDOM from 'react-dom';
 
 import I18 from '../utils/I18';
 
-class ProcessingShader extends React.Component {
+class ProcessingCover extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.shaderRef = React.createRef();
+		this.coverRef = React.createRef();
 
 		this.showTimer = null;
 	}
 
 	componentDidMount = () => {
-		let shader = this.shaderRef.current;
-		if(shader) {
-			shader.style.visibility = "hidden";
+		let cover = this.coverRef.current;
+		if(cover) {
+			cover.style.visibility = "hidden";
 
 			this.showTimer = setTimeout(() => {
-				shader.style.visibility = "visible";
+				cover.style.visibility = "visible";
 			}, 100);
 		}
 	}
@@ -29,7 +29,7 @@ class ProcessingShader extends React.Component {
 
 	render() {
 		return (
-			<div ref={this.shaderRef} className="processing-shader color-white">
+			<div ref={this.coverRef} className="processing-cover color-white">
 				<div className="processing-content">
 					{I18.f("PLEASE_WAIT")}
 				</div>
@@ -38,4 +38,4 @@ class ProcessingShader extends React.Component {
 	}
 }
 
-export default ProcessingShader;
+export default ProcessingCover;

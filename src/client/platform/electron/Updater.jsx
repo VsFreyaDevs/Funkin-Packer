@@ -56,7 +56,7 @@ class Updater extends React.Component {
 
 	render() {
 		return (
-			<div className="updater-shader">
+			<div className="updater-cover">
 				<div className="updater-content">
 
 					<div className="updater-header">{I18.f("UPDATER_TITLE", this.props.data.releaseName)}</div>

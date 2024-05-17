@@ -6,7 +6,7 @@ class OldBrowserBlocker extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.shaderRef = React.createRef();
+		this.coverRef = React.createRef();
 	}
 
 	static isSupported() {
@@ -28,7 +28,7 @@ class OldBrowserBlocker extends React.Component {
 
 	render() {
 		return (
-			<div ref={this.shaderRef} className="old-browser-shader">
+			<div ref={this.coverRef} className="old-browser-cover">
 				<div className="old-browser-content">
 					<div className="old-browser-header">{I18.f("OLD_BROWSER_MESSAGE1")}</div>
 					<br/>

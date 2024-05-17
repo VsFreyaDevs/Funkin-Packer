@@ -93,7 +93,7 @@ class ImagesList extends React.Component {
 
 	addImages = (e) => {
 		if(e.target.files.length) {
-			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
 			let loader = new LocalImagesLoader();
 			loader.load(e.target.files, null, data => {
@@ -105,7 +105,7 @@ class ImagesList extends React.Component {
 	addZip = (e) => {
 		let file = e.target.files[0];
 		if(file) {
-			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
 			let loader = new ZipLoader();
 			loader.load(file, null, data => this.loadImagesComplete(data));
@@ -113,12 +113,12 @@ class ImagesList extends React.Component {
 	}
 
 	addImagesFs = () => {
-		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 		FileSystem.addImages(this.loadImagesComplete);
 	}
 
 	addFolderFs = () => {
-		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 		FileSystem.addFolder(this.loadImagesComplete);
 	}
 
@@ -170,7 +170,7 @@ class ImagesList extends React.Component {
 
 	loadImagesComplete = (data=[]) => {
 
-		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 
 		if(PLATFORM === "web") {
 			this.addImagesInputRef.current.value = "";

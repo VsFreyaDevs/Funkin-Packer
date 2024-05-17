@@ -504,7 +504,7 @@ html, body {
 	min-width: 50px;
 }
 
-.processing-shader {
+.processing-cover {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -526,7 +526,7 @@ html, body {
 	font-weight: bold;
 }
 
-.old-browser-shader {
+.old-browser-cover {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -563,7 +563,7 @@ html, body {
 	margin: 12px;
 }
 
-.about-shader {
+.about-cover {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -651,7 +651,7 @@ html, body {
 	margin-top: 10px;
 }
 
-.updater-shader {
+.updater-cover {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -782,7 +782,7 @@ html, body {
 	border-color: rgba(0,0,0,0.2);
 }
 
-.edit-custom-exporter-shader {
+.edit-custom-exporter-cover {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -836,7 +836,7 @@ html, body {
 	margin-right: 8px;
 }
 
-.sheet-splitter-shader {
+.sheet-splitter-cover {
 	position: fixed;
 	left: 0;
 	top: 0;

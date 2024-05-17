@@ -56,7 +56,7 @@ class APP {
 		let keys = Object.keys(this.images);
 
 		if (keys.length > 0) {
-			Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 			setTimeout(() => this.doPack(), 0);
 		}
 		else {
@@ -82,11 +82,11 @@ class APP {
 		}
 
 		Observer.emit(GLOBAL_EVENT.PACK_COMPLETE, this.packResult);
-		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 
 	onPackError = (err) => {
-		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, err.description);
 	}
 
@@ -101,7 +101,7 @@ class APP {
 		//    return;
 		//}
 
-		Observer.emit(GLOBAL_EVENT.SHOW_SHADER);
+		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 		setTimeout(() => this.doExport(), 0);
 	}
 
@@ -130,7 +130,7 @@ class APP {
 				imageData = await Tinifyer.start(imageData, this.packOptions);
 			}
 			catch (e) {
-				Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 				Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, e);
 				return;
 			}*/
@@ -170,7 +170,7 @@ class APP {
 				});
 			}
 			catch (e) {
-				Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 				Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("EXPORTER_ERROR", e));
 				return;
 			}
@@ -179,7 +179,7 @@ class APP {
 		}
 
 		Downloader.run(files, this.packOptions.fileName, this.packOptions.savePath);
-		Observer.emit(GLOBAL_EVENT.HIDE_SHADER);
+		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 }
 
