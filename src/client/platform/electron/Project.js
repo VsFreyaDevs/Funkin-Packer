@@ -6,6 +6,7 @@ import Controller from 'platform/Controller';
 import appInfo from '../../../../package.json';
 import I18 from '../../utils/I18';
 import { Observer, GLOBAL_EVENT } from "../../Observer";
+import TypedObserver from 'TypedObserver';
 
 const RECENT_PROJECTS_KEY = "recent-projects";
 
@@ -16,13 +17,13 @@ class Project {
 	static startObserv() {
 		Project.stopObserv();
 
-		Observer.on(GLOBAL_EVENT.IMAGES_LIST_CHANGED, Project.onProjectChanged);
+		TypedObserver.imagesListChanged.on(Project.onImagesListChanged);
 		Observer.on(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, Project.onProjectChanged);
 		Observer.on(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, Project.onProjectChanged);
 	}
 
 	static stopObserv() {
-		Observer.off(GLOBAL_EVENT.IMAGES_LIST_CHANGED, Project.onProjectChanged);
+		TypedObserver.imagesListChanged.off(Project.onImagesListChanged);
 		Observer.off(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, Project.onProjectChanged);
 		Observer.off(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, Project.onProjectChanged);
 	}

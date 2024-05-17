@@ -8,7 +8,7 @@ import Sparrow from './Sparrow';
 import { isNullOrUndefined } from '../utils/common';
 import { GLOBAL_EVENT, Observer } from '../Observer';
 import Splitter, { SplitterOptions } from './Splitter';
-import { Options, Rect } from 'types';
+import { PackOptions, Rect } from 'types';
 
 const GridSplitter = new Grid();
 

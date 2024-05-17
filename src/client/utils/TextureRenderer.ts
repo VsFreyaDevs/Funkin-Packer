@@ -1,4 +1,4 @@
-import { Options, PROFILER, Rect } from "types";
+import { PackOptions, Rect } from "types";
 
 class TextureRenderer {
 	buffer: HTMLCanvasElement;
@@ -14,7 +14,7 @@ class TextureRenderer {
 		this.render(data, options);
 	}
 
-	static getSize(data:Rect[], options:Options={}) {
+	static getSize(data:Rect[], options:PackOptions={}) {
 		let width = options.width || 0;
 		let height = options.height || 0;
 
@@ -66,7 +66,7 @@ class TextureRenderer {
 		return {width, height};
 	}
 
-	render(data:Rect[], options:Options={}) {
+	render(data:Rect[], options:PackOptions={}) {
 		let ctx = this.buffer.getContext("2d");
 
 		if(PROFILER)
@@ -171,7 +171,7 @@ class TextureRenderer {
 
 	}*/
 
-	renderItem(ctx: CanvasRenderingContext2D, item: Rect, _options: Options) {
+	renderItem(ctx: CanvasRenderingContext2D, item: Rect, _options: PackOptions) {
 		if(item.skipRender) return;
 
 		let img = item.image;
@@ -185,7 +185,7 @@ class TextureRenderer {
 			//this.renderExtrude(ctx, item, options);
 
 			ctx.drawImage(
-				img,
+				img.image,
 				item.spriteSourceSize.x, item.spriteSourceSize.y,
 				item.spriteSourceSize.w, item.spriteSourceSize.h,
 				0, 0,
@@ -198,7 +198,7 @@ class TextureRenderer {
 			//this.renderExtrude(ctx, item, options);
 
 			ctx.drawImage(
-				img,
+				img.image,
 				item.spriteSourceSize.x, item.spriteSourceSize.y,
 				item.spriteSourceSize.w, item.spriteSourceSize.h,
 				item.frame.x, item.frame.y,

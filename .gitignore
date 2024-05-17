@@ -7,7 +7,6 @@ package-lock.json
 
 .DS_Store
 dist/*
-./dist
 ./dist/
 index.js
 index.js.map

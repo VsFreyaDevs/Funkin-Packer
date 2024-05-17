@@ -6,13 +6,17 @@ import ZipLoader from '../utils/ZipLoader';
 import I18 from '../utils/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import ImagesTree, { TreeListItem } from './ItemTree';
+import ItemTreePart, { TreeListItem } from './ItemTree';
 
 //import * as FileSystem from './platform/FileSystem';
 
 import Globals from '../utils/Globals';
 import {smartSortImages} from '../utils/common';
-import { LoadedImage, LoadedImages, PLATFORM } from 'types';
+import { LoadedImages } from 'types';
+import TypedObserver from 'TypedObserver';
+import CustomImage from 'data/CustomImage';
+
+// TODO: make this not use CustomImage.selected + CustomImage.current
 
 let INSTANCE:ImagesList = null;
 
@@ -31,11 +35,12 @@ interface Props {
 }
 
 interface State {
-	images: MapOfImages
+	images: LoadedImages
 };
 
 class ImagesList extends React.Component<Props, State> {
 	imagesTreeRef: React.RefObject<HTMLDivElement>;
+	imagesTreePartRef: React.RefObject<ItemTreePart>;
 	dropHelpRef: React.RefObject<HTMLDivElement>;
 	addImagesInputRef: React.RefObject<HTMLInputElement>;
 	addZipInputRef: React.RefObject<HTMLInputElement>;
@@ -50,6 +55,7 @@ class ImagesList extends React.Component<Props, State> {
 		INSTANCE = this;
 
 		this.imagesTreeRef = React.createRef();
+		this.imagesTreePartRef = React.createRef();
 		this.dropHelpRef = React.createRef();
 		this.addImagesInputRef = React.createRef();
 		this.addZipInputRef = React.createRef();
@@ -96,14 +102,26 @@ class ImagesList extends React.Component<Props, State> {
 
 	handleKeys = (e:KeyboardEvent) => {
 		if(e) {
-			let key = e.code || e.keyCode || e.which;
-			if(key === 65 && e.ctrlKey) this.selectAllImages();
+			// e.key
+			if(e.key === "KeyA" && e.ctrlKey) {
+				this.selectAllImages();
+				e.preventDefault();
+				return;
+			}
+
+			// deprecated backwards compatibility
+			let key = e.keyCode || e.which;
+			if(key === 65 && e.ctrlKey) {
+				this.selectAllImages();
+				e.preventDefault();
+				return;
+			}
 		}
 	}
 
-	setImages = (images: MapOfImages) => {
+	setImages = (images: LoadedImages) => {
 		this.setState({images: images});
-		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, images);
+		TypedObserver.imagesListChanged.emit(images);
 	}
 
 	onFilesDrop = (e: DragEvent) => {
@@ -168,7 +186,7 @@ class ImagesList extends React.Component<Props, State> {
 		if(data.event === "unlink" && image) {
 			delete images[imageKey];
 			this.setState({images: images});
-			Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, images);
+			TypedObserver.imagesListChanged.emit(images);
 		}
 
 		if(data.event === "add" || data.event === "change") {
@@ -211,28 +229,29 @@ class ImagesList extends React.Component<Props, State> {
 			let images = this.state.images;
 
 			for (let name of names) {
-				images[name] = {
-					img: data[name],
+				images[name] = data[name];
+				/*images[name] = {
+					image: data[name],
 					name: name,
 					path: name,
 					isFolder: false,
 					selected: false,
 					current: false,
-				}
+				}*/
 			}
 
 			images = this.sortImages(images);
 
 			this.setState({images: images});
-			Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, images);
+			TypedObserver.imagesListChanged.emit(images);
 		}
 	}
 
-	sortImages = (images:MapOfImages) => {
+	sortImages = (images:LoadedImages) => {
 		let names = Object.keys(images);
 		names.sort(smartSortImages);
 
-		let sorted:MapOfImages = {};
+		let sorted:LoadedImages = {};
 
 		for(let name of names) {
 			sorted[name] = images[name];
@@ -254,7 +273,7 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	doClear = () => {
-		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, {});
+		TypedObserver.imagesListChanged.emit({});
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, []);
 		Globals.didClearImageList();
 		this.setState({images: {}});
@@ -275,6 +294,9 @@ class ImagesList extends React.Component<Props, State> {
 		for(let key in images) {
 			images[key].selected = false;
 		}
+
+		this.setState({images: this.state.images});
+		this.emitSelectedChanges();
 	}
 
 	getCurrentImage = () => {
@@ -286,7 +308,7 @@ class ImagesList extends React.Component<Props, State> {
 		return null;
 	}
 
-	getImageIdx = (image:TreeListItem) => {
+	getImageIdx = (image:CustomImage) => {
 		let idx = 0;
 
 		let images = this.state.images;
@@ -298,7 +320,7 @@ class ImagesList extends React.Component<Props, State> {
 		return -1;
 	}
 
-	bulkSelectImages = (to:TreeListItem) => {
+	bulkSelectImages = (to:CustomImage) => {
 		let current = this.getCurrentImage();
 		if(!current) {
 			to.selected = true;
@@ -315,6 +337,7 @@ class ImagesList extends React.Component<Props, State> {
 			if(fromIx > toIx && ix <= fromIx && ix >= toIx) images[key].selected = true;
 			ix++;
 		}
+		this.emitSelectedChanges();
 	}
 
 	selectImagesFolder = (path: string, selected: boolean) => {
@@ -331,6 +354,7 @@ class ImagesList extends React.Component<Props, State> {
 				images[key].selected = selected;
 			}
 		}
+		this.emitSelectedChanges();
 	}
 
 	clearCurrentImage = () => {
@@ -405,7 +429,6 @@ class ImagesList extends React.Component<Props, State> {
 		}
 
 		this.setState({images: images});
-
 		this.emitSelectedChanges();
 	}
 
@@ -426,6 +449,7 @@ class ImagesList extends React.Component<Props, State> {
 		}
 
 		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, selected);
+		//this.imagesTreePartRef.current.setState({selected: selected});
 	}
 
 	createImagesFolder(name="", path=""):TreeListItem {
@@ -485,12 +509,12 @@ class ImagesList extends React.Component<Props, State> {
 			let img = this.state.images[key];
 
 			folder.items.push({
-				img: img.img,
+				img: img,
 				path: key,
 				name: name,
 				isFolder: false,
-				selected: false,
-				current: false
+				selected: img.selected,
+				current: img.current
 			});
 
 			if(this.state.images[key].selected) folder.selected = true;
@@ -516,7 +540,8 @@ class ImagesList extends React.Component<Props, State> {
 			images = this.sortImages(images);
 
 			this.setState({images: images});
-			Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, images);
+			TypedObserver.imagesListChanged.emit(images);
+			this.emitSelectedChanges();
 		}
 	}
 
@@ -553,6 +578,8 @@ class ImagesList extends React.Component<Props, State> {
 	render() {
 		let data = this.getImagesTree();
 
+		console.log(data, this.state.images);
+
 		let dropHelp = Object.keys(this.state.images).length > 0 ? null : (<div ref={this.dropHelpRef} className="image-drop-help">{I18.f("IMAGE_DROP_HELP")}</div>);
 
 		return (
@@ -576,7 +603,7 @@ class ImagesList extends React.Component<Props, State> {
 				</div>
 
 				<div ref={this.imagesTreeRef} className="images-tree">
-					<ImagesTree data={data} />
+					<ItemTreePart ref={this.imagesTreePartRef} {...data} />
 					{dropHelp}
 				</div>
 

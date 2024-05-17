@@ -1,9 +1,11 @@
-import { PackerClass } from "packers/Packer";
+import CustomImage from "data/CustomImage";
+import { PackerClass } from "./packers/Packer";
+import TextureRenderer from "./utils/TextureRenderer";
 
-declare var PLATFORM: string;
-declare var PROFILER: boolean;
+//declare var PLATFORM: string;
+//declare var PROFILER: boolean;
 
-declare type Options = {
+declare type PackOptions = {
 	width?: number;
 	height?: number;
 	allowRotation?: boolean;
@@ -16,13 +18,18 @@ declare type Options = {
 	textureFormat?: string;
 	trimMode?: string;
 	sortExportedRows?: boolean;
-	exporter?: string;
 	fileName?: string;
 	powerOfTwo?: boolean;
 	fixedSize?: boolean;
+	filter?: string;
+	removeFileExtension?: boolean;
+	prependFolderName?: boolean;
+	base64Export?: boolean;
+	savePath?: string;
 
 	packer?: PackerClass;
 	packerMethod?: string;
+	exporter?: any; // TODO: type this
 }
 
 declare type SplitterRect = {
@@ -55,7 +62,7 @@ declare type Rect = SplitterRect & {
 	file?: string;
 	originalFile?: string;
 	cloned?: boolean;
-	image?: HTMLImageElement;
+	image?: CustomImage;
 	path?: string;
 	folder?: string;
 	trimmedImage?: Uint8ClampedArray;
@@ -63,12 +70,15 @@ declare type Rect = SplitterRect & {
 	skipRender?: boolean;
 }
 
-declare type LoadedImage = HTMLImageElement;
+declare type LoadedImage = CustomImage;
 declare type LoadedImages = { [key: string]: LoadedImage };
 
 declare type PackResultsData = {
-	renderer: {
-		width: number;
-		height: number;
-	};
+	data: Rect[];
+	buffer: HTMLCanvasElement;
+	renderer: TextureRenderer;
+};
+
+declare type MessageBoxData = {
+	description: string;
 };

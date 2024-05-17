@@ -1,3 +1,4 @@
+import CustomImage from "../data/CustomImage";
 import { LoadedImages } from "types";
 
 class LocalImagesLoader {
@@ -41,8 +42,6 @@ class LocalImagesLoader {
 		let item = this.data.shift();
 
 		if (types.indexOf(item.type) >= 0) {
-			let img = new Image();
-
 			let path = item.name;
 			let name = item.name;
 
@@ -51,16 +50,12 @@ class LocalImagesLoader {
 				name = path.split("/").pop();
 			}
 
-			img.fsPath = {
-				name,
-				path,
-				folder: ""
-			};
+			let img = new CustomImage(new Image(), name, path, "");
 
 			let reader = new FileReader();
 			reader.onload = e => {
 				img.src = e.target.result as string;
-				img._base64 = e.target.result as string;
+				img.base64 = e.target.result as string;
 
 				this.loaded[item.name] = img;
 				this.loadedCnt++;

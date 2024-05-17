@@ -3,6 +3,7 @@ import * as JSZip from 'jszip';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from './I18';
 import { LoadedImages } from 'types';
+import CustomImage from '../data/CustomImage';
 
 class ZipLoader {
 	data: File[];
@@ -71,25 +72,24 @@ class ZipLoader {
 
 		let name = this.filesList.shift();
 
-		this.zip.file(name).async("base64").
-			then((d: string) => {
-				let ext = name.split(".").pop().toLowerCase();
-				let content = "data:image/"+ext+";base64," + d;
+		this.zip.file(name).async("base64").then((d: string) => {
+			let ext = name.split(".").pop().toLowerCase();
+			let content = "data:image/"+ext+";base64," + d;
 
-				let img = new Image();
+			let img = new CustomImage(new Image());
 
-				img.src = content;
-				img._base64 = content;
+			img.src = content;
+			img.base64 = content;
 
-				this.loaded[name] = img;
-				this.loadedCnt++;
+			this.loaded[name] = img;
+			this.loadedCnt++;
 
-				if(this.onProgress) {
-					this.onProgress(this.loadedCnt / (this.loadedCnt + this.filesList.length));
-				}
+			if(this.onProgress) {
+				this.onProgress(this.loadedCnt / (this.loadedCnt + this.filesList.length));
+			}
 
-				this.loadNext();
-			});
+			this.loadNext();
+		});
 	}
 
 	waitImages() {

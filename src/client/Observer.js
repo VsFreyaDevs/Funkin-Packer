@@ -1,9 +1,11 @@
 import EventEmitter from 'eventemitter3';
 
+// TODO: make these types
+
 let Observer = new EventEmitter();
 
 let GLOBAL_EVENT = {
-	IMAGES_LIST_CHANGED          : "IMAGES_LIST_CHANGED",
+	//IMAGES_LIST_CHANGED          : "IMAGES_LIST_CHANGED",
 	IMAGES_LIST_SELECTED_CHANGED : "IMAGES_LIST_SELECTED_CHANGED",
 	IMAGE_ITEM_SELECTED          : "IMAGE_ITEM_SELECTED",
 	IMAGE_CLEAR_SELECTION        : "IMAGE_CLEAR_SELECTION",

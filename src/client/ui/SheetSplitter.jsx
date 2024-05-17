@@ -8,9 +8,9 @@ import I18 from '../utils/I18';
 import { SplitterMaster } from '../splitters';
 import LocalImagesLoader from "../utils/LocalImagesLoader";
 import Downloader from "platform/Downloader";
-import ImagesList from "./ImagesList.jsx";
+import ImagesList from "./ImagesList";
 import { cleanPrefix } from '../utils/common';
-import PackProperties from '../ui/PackProperties.jsx';
+import PackProperties from '../ui/PackProperties';
 
 /**
  * @type {SplitterMaster}
@@ -201,7 +201,7 @@ class SheetSplitter extends React.Component {
 
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 		Observer.emit(GLOBAL_EVENT.HIDE_SHEET_SPLITTER); // Close the spritesheet splitter
-		Observer.emit(GLOBAL_EVENT.IMAGES_LIST_CHANGED, ImagesList.i.state.images);
+		TypedObserver.imagesListChanged.emit(ImagesList.i.state.images);
 	}
 
 	doExport = () => {

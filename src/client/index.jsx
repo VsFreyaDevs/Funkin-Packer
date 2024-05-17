@@ -21,6 +21,15 @@ let layoutRef = null;
 const STORAGE_LANGUAGE_KEY = "language";
 
 function run() {
+	Object.defineProperty(
+		HTMLImageElement.prototype,'toDataURL',
+		{enumerable:false,configurable:false,writable:false,value:(m,q) => {
+			let c=document.createElement('canvas');
+			c.width=this.naturalWidth; c.height=this.naturalHeight;
+			c.getContext('2d').drawImage(this,0,0); return c.toDataURL(m,q);
+		}}
+	);
+
 	Controller.init();
 	if(PLATFORM === "electron") {
 		injectCss("static/css/index-electron.css");

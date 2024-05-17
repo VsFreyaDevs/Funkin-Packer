@@ -3,7 +3,7 @@ import FileSaver from 'file-saver';
 
 class Downloader {
 
-	static run(files, fileName) {
+	static run(files, fileName, _savePath) {
 
 		let zip = new JSZip();
 

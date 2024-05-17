@@ -1,4 +1,4 @@
-import { PROFILER, Rect } from "types";
+import { Rect } from "types";
 
 let cns = document.createElement("canvas");
 let ctx = cns.getContext("2d", {willReadFrequently: true});
@@ -9,7 +9,6 @@ function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) 
 }
 
 class Trimmer {
-
 	static getLeftSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		for(let x=0; x<width; x++) {
 			for(let y=0; y<height; y++) {
@@ -78,7 +77,7 @@ class Trimmer {
 
 				ctx.clearRect(0, 0, img.width, img.height);
 
-				ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
+				ctx.drawImage(img.image, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
 
 				let {data} = ctx.getImageData(0, 0, img.width, img.height);
 

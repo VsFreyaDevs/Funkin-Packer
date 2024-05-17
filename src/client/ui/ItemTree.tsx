@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from "../Observer";
 import { PropsWithChildren } from 'react';
+import CustomImage from 'data/CustomImage';
 
 export interface TreeListItem {
 	isFolder: boolean;
@@ -8,18 +9,21 @@ export interface TreeListItem {
 	name: string;
 	selected: boolean;
 	current: boolean;
-	img: HTMLImageElement;
+	img: CustomImage;
 	items?: TreeListItem[];
 }
 
-interface TreeItemProps {
+export type TreeListItems = {
+	[key: string]: TreeListItem
+};
+
+type TreeItemProps = {
 	data: TreeListItem;
-	items?: TreeListItem[];
 }
 
-class ItemTreePart extends React.Component<TreeItemProps> {
 
-	constructor(props: TreeItemProps) {
+class ItemTreePart extends React.Component<TreeListItem> {
+	constructor(props: TreeListItem) {
 		super(props);
 	}
 
@@ -35,14 +39,14 @@ class ItemTreePart extends React.Component<TreeItemProps> {
 
 					if(item.isFolder) {
 						return (
-							<ItemTreeView key={"tree-folder-" + key} data={item}>
-								<ItemTreePart data={item}/>
+							<ItemTreeView key={"tree-folder-" + key} {...item}>
+								<ItemTreePart {...item}/>
 							</ItemTreeView>
 						);
 					}
 
 					return (
-						<ItemTreeItem key={"tree-item-" + key} data={item}/>
+						<ItemTreeItem key={"tree-item-" + key} {...item}/>
 					);
 				})}
 			</div>
@@ -50,15 +54,35 @@ class ItemTreePart extends React.Component<TreeItemProps> {
 	}
 }
 
-class ItemTreeItem extends React.Component<TreeItemProps> {
-	constructor(props:TreeItemProps) {
+interface ItemTreeItemState {
+	selected: boolean;
+	current: boolean;
+}
+
+class ItemTreeItem extends React.Component<TreeListItem, ItemTreeItemState> {
+	constructor(props:TreeListItem) {
 		super(props);
+
+		this.state = {
+			selected: false,
+			current: false
+		};
+	}
+
+	componentDidUpdate(prevProps: Readonly<TreeListItem>, prevState: Readonly<ItemTreeItemState>, snapshot?: any): void {
+		if(prevProps.selected !== this.props.selected) {
+			this.setState({selected: this.props.selected});
+		}
+
+		if(prevProps.current !== this.props.current) {
+			this.setState({current: this.props.current});
+		}
 	}
 
 	onSelect = (e: React.MouseEvent<HTMLDivElement>) => {
 		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
 			isFolder: false,
-			path: this.props.data.path,
+			path: this.props.path,
 			ctrlKey: e.ctrlKey,
 			shiftKey: e.shiftKey
 		});
@@ -70,12 +94,12 @@ class ItemTreeItem extends React.Component<TreeItemProps> {
 
 	render() {
 		return (
-			<div className={"image-list-item" + (this.props.data.selected ? " back-400" : "") + (this.props.data.current ? " image-list-item-current" : "")} onClick={this.onSelect} >
+			<div className={"image-list-item" + (this.state.selected ? " back-400" : "") + (this.state.current ? " image-list-item-current" : "")} onClick={this.onSelect} >
 				<div className="image-list-image-container">
-					<img src={this.props.data.img.src} className="image-list-image" />
+					<img src={this.props.img.src} className="image-list-image" />
 				</div>
 				<div className="image-list-name-container">
-					{this.props.data.name}
+					{this.props.name}
 				</div>
 			</div>
 		);
@@ -86,9 +110,9 @@ interface TreeViewState {
 	collapsed: boolean;
 }
 
-class ItemTreeView extends React.Component<PropsWithChildren<TreeItemProps>, TreeViewState> {
+class ItemTreeView extends React.Component<PropsWithChildren<TreeListItem>, TreeViewState> {
 
-	constructor(props: PropsWithChildren<TreeItemProps>) {
+	constructor(props: PropsWithChildren<TreeListItem>) {
 		super(props);
 
 		this.state = {
@@ -107,7 +131,7 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeItemProps>, Tre
 	handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
 			isFolder: true,
-			path: this.props.data.path,
+			path: this.props.path,
 			ctrlKey: e.ctrlKey,
 			shiftKey: e.shiftKey
 		});
@@ -119,7 +143,7 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeItemProps>, Tre
 
 	render() {
 		let collapsed = this.state.collapsed;
-		let label = this.props.data.name;
+		let label = this.props.name;
 		let children = this.props.children;
 
 		let arrowClass = 'tree-view-arrow';
@@ -134,7 +158,7 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeItemProps>, Tre
 
 		return (
 			<div className="tree-view" onClick={this.handleClick}>
-				<div className={'tree-view-item' + (this.props.data.selected ? " back-400" : "")}>
+				<div className={'tree-view-item' + (this.props.selected ? " back-400" : "")}>
 					{arrow}
 					{folderIcon}
 					{label}

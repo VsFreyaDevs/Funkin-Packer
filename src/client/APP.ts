@@ -6,10 +6,17 @@ import I18 from './utils/I18';
 import { startExporter } from './exporters';
 //import Tinifyer from 'platform/Tinifyer';
 import Downloader from 'platform/Downloader';
+import { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
+import TypedObserver from 'TypedObserver';
 
-let INSTANCE = null;
+let INSTANCE:APP = null;
 
 class APP {
+	images: LoadedImages;
+	packOptions: PackOptions;
+	packResult: PackResultsData[];
+	naturalWidth: number;
+	naturalHeight: number;
 
 	constructor() {
 		INSTANCE = this;
@@ -18,37 +25,28 @@ class APP {
 		this.packOptions = {};
 		this.packResult = null;
 
-		Observer.on(GLOBAL_EVENT.IMAGES_LIST_CHANGED, this.onImagesListChanged, this);
+		TypedObserver.imagesListChanged.on(this.onImagesListChanged, this);
 		Observer.on(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, this.onPackOptionsChanged, this);
 		Observer.on(GLOBAL_EVENT.PACK_EXPORTER_CHANGED, this.onPackExporterOptionsChanged, this);
 		Observer.on(GLOBAL_EVENT.START_EXPORT, this.startExport, this);
-
-		Object.defineProperty(
-			HTMLImageElement.prototype,'toDataURL',
-			{enumerable:false,configurable:false,writable:false,value:(m,q) => {
-				let c=document.createElement('canvas');
-				c.width=this.naturalWidth; c.height=this.naturalHeight;
-				c.getContext('2d').drawImage(this,0,0); return c.toDataURL(m,q);
-			}}
-		);
 	}
 
 	static get i() {
 		return INSTANCE;
 	}
 
-	onImagesListChanged(data) {
+	onImagesListChanged(data: LoadedImages) {
 		this.images = data;
 		//console.log(this.images);
 		this.pack();
 	}
 
-	onPackOptionsChanged(data) {
+	onPackOptionsChanged(data: PackOptions) {
 		this.packOptions = data;
 		this.pack();
 	}
 
-	onPackExporterOptionsChanged(data) {
+	onPackExporterOptionsChanged(data: PackOptions) {
 		this.packOptions = data;
 	}
 
@@ -68,7 +66,7 @@ class APP {
 		PackProcessor.pack(this.images, this.packOptions, this.onPackComplete, this.onPackError);
 	}
 
-	onPackComplete = (res) => {
+	onPackComplete = (res:Rect[][]) => {
 		this.packResult = [];
 
 		for (let data of res) {
@@ -85,7 +83,7 @@ class APP {
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 
-	onPackError = (err) => {
+	onPackError = (err: MessageBoxData) => {
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, err.description);
 	}

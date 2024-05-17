@@ -1,3 +1,4 @@
+import CustomImage from "data/CustomImage";
 import { LoadedImages } from "types";
 
 class Base64ImagesLoader {
@@ -23,9 +24,9 @@ class Base64ImagesLoader {
 		this.onEnd = onEnd;
 
 		for(let item of data) {
-			let img = new Image();
+			let img = new CustomImage(new Image(), item.fsPath.name, item.fsPath.path, item.fsPath.folder);
 			img.src = item.url;
-			img._base64 = item.url;
+			img.base64 = item.url;
 			img.fsPath = item.fsPath;
 
 			this.loaded[item.name] = img;

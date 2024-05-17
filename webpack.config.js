@@ -127,6 +127,7 @@ if (target === 'electron-renderer') {
 	};
 }
 config.resolve.alias.types = path.resolve(__dirname, './src/client/types');
+config.resolve.alias.TypedObserver = path.resolve(__dirname, './src/client/TypedObserver');
 config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js'];
 
 module.exports = config;

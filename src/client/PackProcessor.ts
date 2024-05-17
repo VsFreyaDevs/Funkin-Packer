@@ -5,7 +5,8 @@ import Trimmer from './utils/Trimmer';
 import TextureRenderer from './utils/TextureRenderer';
 
 import I18 from './utils/I18';
-import { Options, PROFILER, Rect } from 'types';
+import { LoadedImages, PackOptions, Rect } from 'types';
+import { TreeListItem, TreeListItems } from 'ui/ItemTree';
 
 class PackProcessor {
 	static detectIdentical(rects: Rect[], didTrim: boolean) {
@@ -36,7 +37,7 @@ class PackProcessor {
 
 	static compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
 		if(!didTrim) {
-			if(rect1.image._base64 === rect2.image._base64) {
+			if(rect1.image.base64 === rect2.image.base64) {
 				return true;
 			}
 			return rect1.image.src === rect2.image.src;
@@ -95,10 +96,11 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:{[key:string]:HTMLImageElement}, options: Options = {}, onComplete:Function = null, onError:Function = null) {
+	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:Function = null, onError:Function = null, onProgress:Function = null) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
+		console.log(images);
 		let rects:Rect[] = [];
 
 		let spritePadding = options.spritePadding || 0;
@@ -237,7 +239,7 @@ class PackProcessor {
 			// Optimize?
 			let _identical = packerCombos.length > 1 ? identical.map(rect => {
 				for (let rect2 of _rects) {
-					if (rect.identical.image._base64 === rect2.image._base64) {
+					if (rect.identical.image.base64 === rect2.image.base64) {
 						return { ...rect, identical: rect2};
 					}
 				}
