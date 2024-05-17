@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 import LocalImagesLoader from '../utils/LocalImagesLoader';
 import ZipLoader from '../utils/ZipLoader';
@@ -103,7 +102,7 @@ class ImagesList extends React.Component<Props, State> {
 	handleKeys = (e:KeyboardEvent) => {
 		if(e) {
 			// e.key
-			if(e.key === "KeyA" && e.ctrlKey) {
+			if((e.code === "KeyA") && e.ctrlKey) {
 				this.selectAllImages();
 				e.preventDefault();
 				return;
@@ -263,10 +262,10 @@ class ImagesList extends React.Component<Props, State> {
 	clear = () => {
 		let keys = Object.keys(this.state.images);
 		if(keys.length) {
-			let buttons = {
-				"yes": {caption: I18.f("YES"), callback: this.doClear},
-				"no": {caption: I18.f("NO")}
-			};
+			let buttons = [
+				{name: "yes", caption: I18.f("YES"), callback: this.doClear},
+				{name: "no", caption: I18.f("NO")}
+			];
 
 			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("CLEAR_WARNING"), buttons);
 		}

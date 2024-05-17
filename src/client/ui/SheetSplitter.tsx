@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from "react-dom";
+import * as React from 'react';
 import APP from '../APP';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
@@ -9,16 +8,50 @@ import { SplitterMaster } from '../splitters';
 import LocalImagesLoader from "../utils/LocalImagesLoader";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList";
-import { cleanPrefix } from '../utils/common';
 import PackProperties from '../ui/PackProperties';
+import { LoadedImages, Rect } from 'types';
+import Splitter from 'splitters/Splitter';
+import TypedObserver from 'TypedObserver';
+import CustomImage from '../data/CustomImage';
 
 /**
  * @type {SplitterMaster}
  */
 var splitterMaster = new SplitterMaster();
 
-class SheetSplitter extends React.Component {
-	constructor(props) {
+interface Props {
+}
+
+interface State {
+	splitter: Splitter;
+	textureBack: string;
+	scale: number;
+	updateFileName: boolean;
+}
+
+class SheetSplitter extends React.Component<Props, State> {
+	disableUntrimRef: React.RefObject<HTMLInputElement>;
+	updateFileNameRef: React.RefObject<HTMLInputElement>;
+	dataFormatRef: React.RefObject<HTMLSelectElement>;
+	selectTextureInputRef: React.RefObject<HTMLInputElement>;
+	dataFileNameRef: React.RefObject<HTMLInputElement>;
+	fileNameRef: React.RefObject<HTMLInputElement>;
+	viewRef: React.RefObject<HTMLCanvasElement>;
+	paddingRef: React.RefObject<HTMLInputElement>;
+	widthRef: React.RefObject<HTMLInputElement>;
+	heightRef: React.RefObject<HTMLInputElement>;
+	textureBackColors: string[];
+	step: number;
+	rangeRef: React.RefObject<HTMLInputElement>;
+	wheelRef: React.RefObject<HTMLInputElement>;
+	texture: CustomImage;
+	data: string;
+	frames: Rect[];
+	fileName: string;
+	dataName: string;
+	buffer: HTMLCanvasElement;
+
+	constructor(props: Props) {
 		super(props);
 
 		this.disableUntrimRef = React.createRef();
@@ -61,10 +94,10 @@ class SheetSplitter extends React.Component {
 	}
 
 	componentWillUnmount = () => {
-		this.wheelRef.current.removeEventListener('wheel', this.handleWheel, { passive: false });
+		this.wheelRef.current.removeEventListener('wheel', this.handleWheel);
 	}
 
-	handleWheel = (event) => {
+	handleWheel = (event: WheelEvent) => {
 		if(!event.ctrlKey) return;
 
 		let value = this.state.scale;
@@ -83,7 +116,7 @@ class SheetSplitter extends React.Component {
 		}
 
 		// update range component
-		this.rangeRef.current.value = value;
+		this.rangeRef.current.value = value.toString(10);
 
 		event.preventDefault();
 		event.stopPropagation();
@@ -147,7 +180,7 @@ class SheetSplitter extends React.Component {
 					let dx = trimmed ? item.spriteSourceSize.y - item.spriteSourceSize.h/2 : -item.spriteSourceSize.h/2;
 					let dy = trimmed ? -(item.spriteSourceSize.x + item.spriteSourceSize.w/2) : -item.spriteSourceSize.w/2;
 
-					ctx.drawImage(this.texture,
+					ctx.drawImage(this.texture.image,
 						item.frame.x, item.frame.y,
 						item.frame.h, item.frame.w,
 						dx, dy,
@@ -158,7 +191,7 @@ class SheetSplitter extends React.Component {
 					let dx = trimmed ? 0 : item.spriteSourceSize.x;
 					let dy = trimmed ? 0 : item.spriteSourceSize.y;
 
-					ctx.drawImage(this.texture,
+					ctx.drawImage(this.texture.image,
 						item.frame.x, item.frame.y,
 						item.frame.w, item.frame.h,
 						dx, dy,
@@ -183,12 +216,12 @@ class SheetSplitter extends React.Component {
 		}
 
 		//console.log(ImagesList.i);
-		var images = [];
+		var images: LoadedImages = {};
 
 		for(let file of files) {
-			var image = new Image();
+			var image = new CustomImage(new Image());
 			image.src = file.base64;
-			image._base64 = file.base64;
+			image.base64 = file.base64;
 
 			images[file.name] = image;
 
@@ -241,7 +274,7 @@ class SheetSplitter extends React.Component {
 				let dx = trimmed ? item.spriteSourceSize.y - item.spriteSourceSize.h/2 : -item.spriteSourceSize.h/2;
 				let dy = trimmed ? -(item.spriteSourceSize.x + item.spriteSourceSize.w/2) : -item.spriteSourceSize.w/2;
 
-				ctx.drawImage(this.texture,
+				ctx.drawImage(this.texture.image,
 					item.frame.x, item.frame.y,
 					item.frame.h, item.frame.w,
 					dx, dy,
@@ -254,7 +287,7 @@ class SheetSplitter extends React.Component {
 				let dx = trimmed ? 0 : item.spriteSourceSize.x;
 				let dy = trimmed ? 0 : item.spriteSourceSize.y;
 
-				ctx.drawImage(this.texture,
+				ctx.drawImage(this.texture.image,
 					item.frame.x, item.frame.y,
 					item.frame.w, item.frame.h,
 					dx, dy,
@@ -277,12 +310,12 @@ class SheetSplitter extends React.Component {
 			});
 		}
 
-		Downloader.run(files, this.fileName + '.zip');
+		Downloader.run(files, this.fileName + '.zip', "");
 
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 
-	selectTexture = (e) => {
+	selectTexture = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if(e.target.files.length) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
@@ -318,7 +351,7 @@ class SheetSplitter extends React.Component {
 
 			let ctx = canvas.getContext('2d');
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(this.texture, 0, 0);
+			ctx.drawImage(this.texture.image, 0, 0);
 
 			canvas.className = this.state.textureBack;
 			this.updateTextureScale();
@@ -328,16 +361,20 @@ class SheetSplitter extends React.Component {
 		}
 	}
 
-	selectDataFile = (e) => {
+	selectDataFile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if(e.target.files.length) {
 			let item = e.target.files[0];
 
 			let reader = new FileReader();
 			reader.onload = e => {
-				let content = e.target.result;
-				content = content.split(',');
-				content.shift();
-				content = atob(content);
+				let content = e.target.result as string;
+				// this code here doesnt look like it would work
+				// data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==
+				// into SGVsbG8sIFdvcmxkIQ==
+				let splitContent = content.split(',');
+				splitContent.shift();
+				if(splitContent.length == 1)
+					content = atob(splitContent.join(','));
 
 				this.data = content;
 
@@ -362,9 +399,9 @@ class SheetSplitter extends React.Component {
 		splitterMaster.splitData(this.data, {
 			textureWidth: this.texture.width,
 			textureHeight: this.texture.height,
-			width: this.widthRef.current.value * 1 || 32,
-			height: this.heightRef.current.value * 1 || 32,
-			padding: this.paddingRef.current.value * 1 || 0
+			width: +this.widthRef.current.value * 1 || 32,
+			height: +this.heightRef.current.value * 1 || 32,
+			padding: +this.paddingRef.current.value * 1 || 0
 		}, frames => {
 			if(frames) {
 				this.frames = frames;
@@ -403,15 +440,15 @@ class SheetSplitter extends React.Component {
 		this.updateFrames();
 	}
 
-	changeSplitter = (e) => {
+	changeSplitter = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		let splitter = splitterMaster.getSplitterFromName(e.target.value);
 
 		this.setState({splitter: splitter});
 		this.updateView();
 	}
 
-	setBack = (e) => {
-		let classNames = e.target.className.split(" ");
+	setBack = (e: React.MouseEvent<HTMLDivElement>) => {
+		let classNames = (e.target as HTMLDivElement).className.split(" ");
 		for(let name of classNames) {
 			if(this.textureBackColors.indexOf(name) >= 0) {
 				this.setState({textureBack: name});
@@ -435,13 +472,13 @@ class SheetSplitter extends React.Component {
 		}
 	}
 
-	changeScale = (e) => {
+	changeScale = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let val = Number(e.target.value);
 		this.setState({scale: val});
 		this.updateTextureScale(val);
 	}
 
-	onUpdateFileNameChange = (e) => {
+	onUpdateFileNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let val = e.target.checked;
 		this.setState({updateFileName: val});
 		PackProperties.i.packOptions.repackUpdateFileName = val;
@@ -454,7 +491,7 @@ class SheetSplitter extends React.Component {
 	}
 
 	render() {
-		let currentSplitterName = splitterMaster.getCurrentSplitter().name;
+		let currentSplitterName = splitterMaster.getCurrentSplitter().splitterName;
 
 		let displayGridProperties = 'none';
 

@@ -69,16 +69,6 @@ class ItemTreeItem extends React.Component<TreeListItem, ItemTreeItemState> {
 		};
 	}
 
-	componentDidUpdate(prevProps: Readonly<TreeListItem>, prevState: Readonly<ItemTreeItemState>, snapshot?: any): void {
-		if(prevProps.selected !== this.props.selected) {
-			this.setState({selected: this.props.selected});
-		}
-
-		if(prevProps.current !== this.props.current) {
-			this.setState({current: this.props.current});
-		}
-	}
-
 	onSelect = (e: React.MouseEvent<HTMLDivElement>) => {
 		Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {
 			isFolder: false,

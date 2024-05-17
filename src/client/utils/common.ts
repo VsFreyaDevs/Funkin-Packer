@@ -46,7 +46,7 @@ export function cleanPrefix(str: string) {
 	return str + lastDigit;
 }
 
-export function removeFromArray(arr: any[], item: any) {
+export function removeFromArray<T>(arr: T[], item: T) {
 	const idx = arr.indexOf(item);
 
 	if (idx !== -1) {

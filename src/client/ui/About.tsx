@@ -1,13 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 
-import appInfo from '../../../package.json';
-import exporters from "../exporters";
+import * as appInfo from '../../../package.json';
 
 class About extends React.Component {
-	constructor(props) {
+	constructor(props:any) {
 		super(props);
 	}
 
@@ -97,8 +96,7 @@ class About extends React.Component {
 												return (
 													<a key={'contributor-' + contributor.name} href={contributor.homepage} target="_blank" className="color-800">{contributor.name}</a>
 												)
-											}).
-											reduce((prev, curr) => [prev, ', ', curr])
+											}).reduce((prev, curr) => <>{prev}, {curr}</>)
 										}
 									</td>
 								</tr>

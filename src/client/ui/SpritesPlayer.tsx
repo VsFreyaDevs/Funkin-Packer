@@ -1,12 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 import I18 from '../utils/I18';
 import { Observer, GLOBAL_EVENT } from "../Observer";
-import {cleanPrefix, smartSortImages} from '../utils/common';
+import { smartSortImages} from '../utils/common';
+import { PackResultsData, Rect } from 'types';
 
-class SpritesPlayer extends React.Component {
+interface Props {
+	start?: boolean;
+	textureBack?: string;
+	data?: PackResultsData[];
+}
 
-	constructor(props) {
+type Texture = {
+	config: Rect,
+	baseTexture: HTMLCanvasElement
+}
+
+class SpritesPlayer extends React.Component<Props> {
+	fpsRef: React.RefObject<HTMLInputElement>;
+	speedRef: React.RefObject<HTMLInputElement>;
+	bufferRef: React.RefObject<HTMLCanvasElement>;
+	viewRef: React.RefObject<HTMLCanvasElement>;
+	playerContainerRef: React.RefObject<HTMLDivElement>;
+	containerRef: React.RefObject<HTMLDivElement>;
+	textures: Texture[];
+	currentTextures: Texture[];
+	currentFrame: number;
+	width: number;
+	height: number;
+	selectedImages: string[];
+
+	updateTimer: any;
+
+	constructor(props: Props) {
 		super(props);
 
 		this.fpsRef = React.createRef();
@@ -40,7 +65,8 @@ class SpritesPlayer extends React.Component {
 		this.stop();
 	}
 
-	onImagesSelected = (list=[]) => {
+	onImagesSelected = (list: string[] = []) => {
+		if(!list) list = [];
 		this.selectedImages = list;
 		this.updateCurrentTextures();
 	}
@@ -89,17 +115,28 @@ class SpritesPlayer extends React.Component {
 		this.updateCurrentTextures();
 	}
 
-	forceUpdate = (e) => {
+	eventForceUpdate = (e: KeyboardEvent) => {
+		if(!e) return;
+
+		if(e.code === "Enter" && e.ctrlKey) {
+			this.updateCurrentTextures();
+			e.preventDefault();
+			return;
+		}
+
 		let key = e.keyCode || e.which;
-		if(key === 13) this.updateCurrentTextures();
+		if(key === 13) {
+			this.updateCurrentTextures();
+			e.preventDefault();
+		}
 	}
 
-	onSpeedChange = (e) => {
+	onSpeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.fpsRef.current.textContent = e.target.value + " fps";
 	}
 
 	updateCurrentTextures = () => {
-		let textures = [];
+		let textures:Texture[] = [];
 
 		for(let tex of this.textures) {
 			if(!tex.config.cloned && this.selectedImages.indexOf(tex.config.file) >= 0) {
@@ -120,10 +157,10 @@ class SpritesPlayer extends React.Component {
 		this.update(true);
 	}
 
-	update = (skipFrameUpdate) => {
+	update = (skipFrameUpdate:boolean) => {
 		clearTimeout(this.updateTimer);
 
-		if(!skipFrameUpdate){
+		if(!skipFrameUpdate) {
 			this.currentFrame++;
 			if(this.currentFrame >= this.currentTextures.length) {
 				this.currentFrame = 0;
@@ -131,7 +168,7 @@ class SpritesPlayer extends React.Component {
 		}
 		this.renderTexture();
 
-		this.updateTimer = setTimeout(this.update, 1000 / this.speedRef.current.value);
+		this.updateTimer = setTimeout(this.update, 1000 / +this.speedRef.current.value);
 	}
 
 	renderTexture = () => {
@@ -141,6 +178,8 @@ class SpritesPlayer extends React.Component {
 
 		let texture = this.currentTextures[this.currentFrame];
 		if(!texture) return;
+
+		// TODO: maybe make this draw directly to the canvas instead of to a buffer
 
 		//console.log(texture.config);
 

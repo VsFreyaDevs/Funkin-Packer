@@ -6,7 +6,7 @@ import Globals from './utils/Globals';
 
 import I18 from './utils/I18';
 import APP from './APP';
-import MainLayout from './ui/MainLayout.jsx';
+import MainLayout from './ui/MainLayout';
 
 import Storage from './utils/Storage';
 import { Observer, GLOBAL_EVENT } from './Observer';

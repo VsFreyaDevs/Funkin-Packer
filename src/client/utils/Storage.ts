@@ -11,7 +11,7 @@ class Storage {
 		localStorage.setItem(key, value);
 	}
 
-	static load(key:string, isJson:boolean = true) {
+	static load(key:string, isJson:boolean = true):any {
 		key = PREFIX + key;
 
 		let value = localStorage.getItem(key);

@@ -1,9 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 
 import I18 from '../utils/I18';
 
 class OldBrowserBlocker extends React.Component {
-	constructor(props) {
+	coverRef: React.RefObject<HTMLDivElement>;
+
+	constructor(props:any) {
 		super(props);
 
 		this.coverRef = React.createRef();

@@ -1,6 +1,6 @@
 import APP from '../../APP';
-import PackProperties from '../../ui/PackProperties.jsx';
-import ImagesList from '../../ui/ImagesList.jsx';
+import PackProperties from '../../ui/PackProperties';
+import ImagesList from '../../ui/ImagesList';
 import FileSystem from 'platform/FileSystem';
 import Controller from 'platform/Controller';
 import appInfo from '../../../../package.json';
@@ -127,11 +127,11 @@ class Project {
 
 	static saveChanges(cb = null) {
 		if (CURRENT_PROJECT_MODIFIED) {
-			let buttons = {
-				"yes": { caption: I18.f("YES"), callback: () => { Project.save(); if (cb) cb(); } },
-				"no": { caption: I18.f("NO"), callback: () => { if (cb) cb(); } },
-				"cancel": { caption: I18.f("CANCEL") }
-			};
+			let buttons = [
+				{ name: "yes", caption: I18.f("YES"), callback: () => { Project.save(); if (cb) cb(); } },
+				{ name: "no", caption: I18.f("NO"), callback: () => { if (cb) cb(); } },
+				{ name: "cancel", caption: I18.f("CANCEL") }
+			];
 
 			Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("SAVE_CHANGES_CONFIRM"), buttons);
 		}

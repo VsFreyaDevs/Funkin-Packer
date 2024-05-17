@@ -6,6 +6,7 @@ import TextureRenderer from "./utils/TextureRenderer";
 //declare var PROFILER: boolean;
 
 declare type PackOptions = {
+	repackUpdateFileName?: boolean;
 	width?: number;
 	height?: number;
 	allowRotation?: boolean;
@@ -27,9 +28,12 @@ declare type PackOptions = {
 	base64Export?: boolean;
 	savePath?: string;
 
-	packer?: PackerClass;
+	packerCls?: PackerClass;
+	packer?: string;
 	packerMethod?: string;
 	exporter?: any; // TODO: type this
+
+	statsSI?: number;
 }
 
 declare type SplitterRect = {

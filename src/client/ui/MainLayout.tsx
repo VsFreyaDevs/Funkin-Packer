@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 
 import ImagesList from './ImagesList';
 import MainHeader from './MainHeader';
 import PackProperties from './PackProperties';
 import PackResults from './PackResults';
-import MessageBox from './MessageBox';
-import ProcessingCover from './ProcessingCover';
+import MessageBox, { ButtonData } from './MessageBox';
+import ProcessingOverlay from './ProcessingOverlay';
 import OldBrowserBlocker from './OldBrowserBlocker';
 //import About from './About';
 //import Updater from '../platform/electron/Updater';
@@ -14,12 +14,24 @@ import SheetSplitter from './SheetSplitter';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 
-class MainLayout extends React.Component {
-	constructor(props) {
+interface Props {}
+
+interface State {
+	messageBox: React.ReactNode;
+	processing: boolean;
+	//about: boolean;
+	editCustomExporter: boolean;
+	updater: boolean;
+	sheetSplitter: boolean;
+	browserBlocker: boolean;
+}
+
+class MainLayout extends React.Component<Props, State> {
+	constructor(props:Props) {
 		super(props);
 
 		this.state = {
-			messageBox: false,
+			messageBox: null,
 			processing: false,
 			//about: false,
 			editCustomExporter: false,
@@ -65,7 +77,7 @@ class MainLayout extends React.Component {
 		this.setState({updater: null});
 	} */
 
-	showMessage = (content, buttons=null) => {
+	showMessage = (content: string, buttons: ButtonData[] = null) => {
 		if(this.state.messageBox) return;
 
 		let box = (<MessageBox content={content} buttons={buttons} closeCallback={this.closeMessage} />);
@@ -110,7 +122,6 @@ class MainLayout extends React.Component {
 
 	render() {
 		return (
-
 			<div className="main-wrapper">
 				<MainHeader/>
 
@@ -123,7 +134,7 @@ class MainLayout extends React.Component {
 					{this.state.editCustomExporter ? (<EditCustomExporter/>) : null}
 					{this.state.sheetSplitter ? (<SheetSplitter/>) : null}
 					{/* this.state.updater ? (<Updater data={this.state.updater}/>) : null */}
-					{this.state.processing ? (<ProcessingCover/>) : null}
+					{this.state.processing ? (<ProcessingOverlay/>) : null}
 					{this.state.messageBox}
 				</div>
 			</div>

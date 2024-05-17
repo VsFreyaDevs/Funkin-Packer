@@ -1,10 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 
 import I18 from '../utils/I18';
 
-class ProcessingCover extends React.Component {
-	constructor(props) {
+class ProcessingOverlay extends React.Component {
+	coverRef: React.RefObject<HTMLDivElement>;
+	showTimer: any;
+
+	constructor(props:any) {
 		super(props);
 
 		this.coverRef = React.createRef();
@@ -38,4 +40,4 @@ class ProcessingCover extends React.Component {
 	}
 }
 
-export default ProcessingCover;
+export default ProcessingOverlay;

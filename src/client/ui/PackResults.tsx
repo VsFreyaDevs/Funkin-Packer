@@ -1,11 +1,29 @@
-import React from 'react';
+import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import TextureView from './TextureView';
 import SpritesPlayer from './SpritesPlayer';
 import I18 from '../utils/I18';
+import { PackResultsData } from 'types';
 
-class PackResults extends React.Component {
-	constructor(props) {
+interface Props {}
+
+interface State {
+	packResult: PackResultsData[];
+	textureBack: string;
+	displayOutline: boolean;
+	selectedImages: string[];
+	playerVisible: boolean;
+	scale: number;
+}
+
+class PackResults extends React.Component<Props, State> {
+	spritesPlayerRef: React.RefObject<SpritesPlayer>;
+	rangeRef: React.RefObject<HTMLInputElement>;
+	wheelRef: React.RefObject<HTMLInputElement>;
+	textureBackColors: string[];
+	step: number;
+
+	constructor(props: Props) {
 		super(props);
 
 		this.spritesPlayerRef = React.createRef();
@@ -32,11 +50,11 @@ class PackResults extends React.Component {
 		Observer.on(GLOBAL_EVENT.IMAGES_LIST_SELECTED_CHANGED, this.onImagesSelected, this);
 	}
 
-	onImagesSelected = (data) => {
+	onImagesSelected = (data: string[]) => {
 		this.setState({selectedImages: data});
 	}
 
-	updatePackResult = (data) => {
+	updatePackResult = (data: PackResultsData[]) => {
 		//console.log(data);
 		Observer.emit(GLOBAL_EVENT.STATS_INFO, {
 			packResults: data
@@ -44,8 +62,8 @@ class PackResults extends React.Component {
 		this.setState({packResult: data});
 	}
 
-	setBack = (e) => {
-		let classNames = e.target.className.split(" ");
+	setBack = (e: React.MouseEvent<HTMLDivElement>) => {
+		let classNames = (e.target as HTMLDivElement).className.split(" ");
 		for(let name of classNames) {
 			if(this.textureBackColors.indexOf(name) >= 0) {
 				this.setState({textureBack: name});
@@ -60,11 +78,11 @@ class PackResults extends React.Component {
 		Observer.emit(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, null);
 	}
 
-	handleWheel = (event) => {
-		if(!event.ctrlKey) return;
+	handleWheel = (e: WheelEvent) => {
+		if(!e.ctrlKey) return;
 
 		let value = this.state.scale;
-		if (event.deltaY >= 0) {
+		if (e.deltaY >= 0) {
 			if (this.state.scale > 0.1) {
 				value = Number((this.state.scale - this.step).toPrecision(2));
 				if (value < 0.1) {
@@ -80,18 +98,18 @@ class PackResults extends React.Component {
 		}
 
 		// update range component
-		this.rangeRef.current.value = value;
+		this.rangeRef.current.value = value.toString(10);
 
-		event.preventDefault();
-		event.stopPropagation();
+		e.preventDefault();
+		e.stopPropagation();
 		return false;
 	}
 
-	changeOutlines = (e) => {
+	changeOutlines = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.setState({displayOutline: e.target.checked});
 	}
 
-	changeScale = (e) => {
+	changeScale = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.setState({scale: Number(e.target.value)});
 	}
 

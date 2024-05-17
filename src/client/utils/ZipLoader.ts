@@ -12,7 +12,7 @@ class ZipLoader {
 	onProgress: (loaded: number) => void;
 	onEnd: (data: LoadedImages) => void;
 	zip: JSZip;
-	filesList: any[];
+	filesList: string[];
 
 	constructor() {
 		this.onProgress = null;

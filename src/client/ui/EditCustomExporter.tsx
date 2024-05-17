@@ -1,16 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 import Storage from '../utils/Storage';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import { getExporterByType } from '../exporters';
-import mustache from 'mustache';
-import appInfo from '../../../package.json';
+import * as mustache from 'mustache';
+import * as appInfo from '../../../package.json';
 
 const STORAGE_CUSTOM_EXPORTER_KEY = "custom-exporter";
 
 class EditCustomExporter extends React.Component {
-	constructor(props) {
+	contentRef: React.RefObject<HTMLTextAreaElement>;
+	allowTrimRef: React.RefObject<HTMLInputElement>;
+	allowRotationRef: React.RefObject<HTMLInputElement>;
+	fileExtRef: React.RefObject<HTMLInputElement>;
+
+	constructor(props: any) {
 		super(props);
 
 		this.contentRef = React.createRef();
@@ -65,10 +69,10 @@ class EditCustomExporter extends React.Component {
 
 					<div>
 						<b>{I18.f("ALLOW_TRIM")}</b>
-						<input ref={this.allowTrimRef} className="border-color-gray" type="checkbox" defaultChecked={exporter.allowTrim ? "checked" : ""}/>
+						<input ref={this.allowTrimRef} className="border-color-gray" type="checkbox" defaultChecked={exporter.allowTrim}/>
 
 						<b>{I18.f("ALLOW_ROTATION")}</b>
-						<input ref={this.allowRotationRef} className="border-color-gray" type="checkbox" defaultChecked={exporter.allowRotation ? "checked" : ""}/>
+						<input ref={this.allowRotationRef} className="border-color-gray" type="checkbox" defaultChecked={exporter.allowRotation}/>
 
 						<b>{I18.f("FILE_EXT")}</b>
 						<input ref={this.fileExtRef} className="border-color-gray" type="text" defaultValue={exporter.fileExt}/>

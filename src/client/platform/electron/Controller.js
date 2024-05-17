@@ -7,8 +7,8 @@ import languages from '../../resources/static/localization/languages.json';
 
 import Project from 'platform/Project';
 
-import PackProperties from '../../ui/PackProperties.jsx';
-import ImagesList from "../../ui/ImagesList.jsx";
+import PackProperties from '../../ui/PackProperties';
+import ImagesList from "../../ui/ImagesList";
 
 class Controller {
 	static init() {

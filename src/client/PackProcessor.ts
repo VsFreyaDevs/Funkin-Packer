@@ -1,6 +1,6 @@
 import MaxRectsBinPack from './packers/MaxRectsBin';
 import OptimalPacker from './packers/OptimalPacker';
-import allPackers from './packers';
+import allPackers, { getPackerByType } from './packers';
 import Trimmer from './utils/Trimmer';
 import TextureRenderer from './utils/TextureRenderer';
 
@@ -207,7 +207,7 @@ class PackProcessor {
 			return methods;
 		};
 
-		let packerClass = options.packer || MaxRectsBinPack;
+		let packerClass = getPackerByType(options.packer) || MaxRectsBinPack;
 		let packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
 		let packerCombos = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
 

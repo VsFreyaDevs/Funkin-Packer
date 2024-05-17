@@ -31,10 +31,10 @@ class Updater extends React.Component {
 	}
 
 	skip = () => {
-		let buttons = {
-			"yes": {caption: I18.f("YES"), callback: this.doSkip},
-			"no": {caption: I18.f("NO")}
-		};
+		let buttons = [
+			{name: "yes", caption: I18.f("YES"), callback: this.doSkip},
+			{name: "no", caption: I18.f("NO")}
+		];
 
 		Observer.emit(GLOBAL_EVENT.SHOW_MESSAGE, I18.f("SKIP_VERSION_CONFIRM"), buttons);
 	}

@@ -1,9 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
+import { PackResultsData, Rect } from 'types';
 
-class TextureView extends React.Component {
-	constructor(props) {
+interface TextureViewProps {
+	data: PackResultsData;
+	scale: number;
+	selectedImages: string[];
+	displayOutline: boolean;
+	textureBack: string;
+}
+
+class TextureView extends React.Component<TextureViewProps> {
+	backRef: React.RefObject<HTMLDivElement>;
+	viewRef: React.RefObject<HTMLCanvasElement>;
+
+	constructor(props: TextureViewProps) {
 		super(props);
 
 		this.backRef = React.createRef();
@@ -78,7 +89,7 @@ class TextureView extends React.Component {
 		}
 	}
 
-	drawOutline(ctx, item) {
+	drawOutline(ctx: CanvasRenderingContext2D, item: Rect) {
 		let frame = item.frame;
 		let w = frame.w, h = frame.h;
 		if(item.rotated) {
@@ -98,7 +109,7 @@ class TextureView extends React.Component {
 		ctx.stroke();
 	}
 
-	onViewClick = (e) => {
+	onViewClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
 		let selectedItem = null;
 
 		let canvas = this.viewRef.current;
@@ -140,7 +151,7 @@ class TextureView extends React.Component {
 		return false;
 	}
 
-	selectCloned = (selectedItem) => {
+	selectCloned = (selectedItem: Rect) => {
 		for (let item of this.props.data.data) {
 			if(item.cloned && item.file === selectedItem.file) {
 				Observer.emit(GLOBAL_EVENT.IMAGE_ITEM_SELECTED, {

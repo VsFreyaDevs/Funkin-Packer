@@ -485,7 +485,7 @@ class MaxRectsBin extends Packer {
 			}
 	}
 
-	static get type() {
+	static get packerName() {
 		return "MaxRectsBin";
 	}
 
