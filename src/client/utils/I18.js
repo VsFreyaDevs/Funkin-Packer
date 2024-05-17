@@ -87,7 +87,7 @@ class I18 {
 
 			for(let part of parts) {
 				let keyVal = part.split(I18.iniSeparator);
-				if(keyVal[0].trim()) strings[keyVal[0].trim()] = keyVal[1].trim();
+				if(keyVal[0].trim()) strings[keyVal[0].trim()] = keyVal[1].trim().replace(/\\n/g, "\n");
 			}
 		}
 

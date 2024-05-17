@@ -26,10 +26,18 @@ class MainHeader extends React.Component {
 	render() {
 		return (
 			<div className="main-header back-900 color-white">
-				<div className="main-header-app-name">
-					<img src="static/images/logo.png" alt="Logo" />
-					{appInfo.displayName} {appInfo.version}
-					<div className='based-on'>Based on Free Texture Packer</div>
+				<div className='left-align'>
+					<div className="main-header-app-name">
+						<img src="static/images/logo.png" alt="Logo" />
+						{appInfo.displayName} {appInfo.version}
+						<div className='based-on'>Based on Free Texture Packer</div>
+					</div>
+
+					<div className='main-header-github'>
+						<a href="https://github.com/NeeEoo/FunkinPacker" target="_blank">
+							<img src="static/images/github-mark-white.png" height="25" alt="Github" />
+						</a>
+					</div>
 				</div>
 
 				{/* <div className="main-header-about" onClick={this.showAbout}>
@@ -43,29 +51,25 @@ class MainHeader extends React.Component {
 
 				<StatsInfo />
 
-				<div className='main-header-github'>
-					<a href="https://github.com/NeeEoo/funkin-tex-packer">
-						<img src="static/images/github-mark-white.png" height="25" alt="Github" />
-					</a>
-				</div>
+				<div className='right-align'>
+					<div className="main-header-controls">
+						<div className="btn back-700 border-color-gray color-white" onClick={this.showSplitter}>{I18.f("SPLITTER")}</div>
+					</div>
 
-				<div className="main-header-language border-color-gray">
-					{I18.f("LANGUAGE")}
-					<select defaultValue={I18.currentLocale} onChange={this.changeLanguage}>
-						{
-							languages.map((item) => {
-								return (
-									<option key={"localization_" + item.lang} value={item.lang}>
-										{item.name}
-									</option>
-								)
-							})
-						}
-					</select>
-				</div>
-
-				<div className="main-header-controls">
-					<div className="btn back-700 border-color-gray color-white" onClick={this.showSplitter}>{I18.f("SPLITTER")}</div>
+					<div className="main-header-language border-color-gray">
+						{I18.f("LANGUAGE")}
+						<select defaultValue={I18.currentLocale} onChange={this.changeLanguage}>
+							{
+								languages.map((item) => {
+									return (
+										<option key={"localization_" + item.lang} value={item.lang}>
+											{item.name}
+										</option>
+									)
+								})
+							}
+						</select>
+					</div>
 				</div>
 			</div>
 		);

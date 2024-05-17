@@ -47,14 +47,10 @@ class Sparrow extends Splitter {
 
 				let list = atlas.TextureAtlas.SubTexture;
 
-				//var firstName = null;
-
 				for(let item of list) {
 					item = item.$;
 
 					let name = Splitter.fixFileName(item.name);
-
-					//if(firstName === null) firstName = name;
 
 					let rotated = item.rotated === 'true';
 					if(rotated) {

@@ -33,7 +33,7 @@ class SheetSplitter extends React.Component {
 		this.heightRef = React.createRef();
 
 		this.textureBackColors = ["grid-back", "white-back", "pink-back", "black-back"];
-		this.step = 0.1;
+		this.step = 0.01;
 
 		this.state = {
 			splitter: null,
@@ -561,8 +561,8 @@ class SheetSplitter extends React.Component {
 									<td>
 										{I18.f("SCALE")}
 									</td>
-									<td>
-										<input ref={this.rangeRef} type="range" min="0.1" max="2" step={this.step} defaultValue="1" onChange={this.changeScale}/>
+									<td style={{width: "65%"}}>
+										<input ref={this.rangeRef} style={{width: "100%"}} type="range" min="0.1" max="2" step={this.step} defaultValue="1" onChange={this.changeScale}/>
 									</td>
 								</tr>
 							</tbody>

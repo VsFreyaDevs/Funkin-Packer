@@ -142,7 +142,7 @@ class SpritesPlayer extends React.Component {
 		let texture = this.currentTextures[this.currentFrame];
 		if(!texture) return;
 
-		console.log(texture.config);
+		//console.log(texture.config);
 
 		//var w = Math.max(texture.config.sourceSize.mw, texture.config.sourceSize.w);
 		//var h = Math.max(texture.config.sourceSize.mh, texture.config.sourceSize.h);

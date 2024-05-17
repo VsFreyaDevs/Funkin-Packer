@@ -145,3 +145,7 @@ SORT_EXPORT_TITLE;Sort Exported Rows
 SORT_EXPORT;Sort Exported Rows:
 UPDATE_FILENAME;Update Filename:
 SPLITTER_ERROR_NO_TEXTURE;No textures found. Please, try again.
+STATS_SIZE;Size
+STATS_RAM;RAM
+STATS_SI_TITLE;SI units (Used for ram usage stat)\nCodename Engine SI = 1024\nPsych 0.7+ SI = 1024\nPsych 0.6 and below SI = 1000
+STATS_SI;SI units:

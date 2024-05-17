@@ -65,6 +65,8 @@ class PackProperties extends React.Component {
 		this.powerOfTwoRef = React.createRef();
 		this.trimModeRef = React.createRef();
 		this.alphaThresholdRef = React.createRef();
+
+		this.statsSIRef = React.createRef();
 	}
 
 	componentDidMount = () => {
@@ -132,6 +134,7 @@ class PackProperties extends React.Component {
 		data.sortExportedRows = data.sortExportedRows === undefined ? true : data.sortExportedRows;
 		data.packer = getPackerByType(data.packer) ? data.packer : packers[2].type;
 		data.repackUpdateFileName = data.repackUpdateFileName === undefined ? true : data.repackUpdateFileName;
+		data.statsSI = data.statsSI === undefined ? 1024 : data.statsSI;
 
 		let methodValid = false;
 		let packer = getPackerByType(data.packer);
@@ -182,8 +185,11 @@ class PackProperties extends React.Component {
 		data.packer = (this.packerRef.current).value;
 		data.packerMethod = (this.packerMethodRef.current).value;
 		data.sortExportedRows = (this.sortExportedRowsRef.current).value;
+		data.statsSI = Number((this.statsSIRef.current).value);
 
 		this.packOptions = this.applyOptionsDefaults(data);
+
+		Observer.emit(GLOBAL_EVENT.STATS_INFO_SET_SI, data.statsSI);
 	}
 
 	refreshPackOptions = () => {
@@ -212,6 +218,7 @@ class PackProperties extends React.Component {
 		(this.packerRef.current).value = this.packOptions.packer;
 		(this.packerMethodRef.current).value = this.packOptions.packerMethod;
 		(this.sortExportedRowsRef.current).value = this.packOptions.sortExportedRows;
+		(this.statsSIRef.current).value = this.packOptions.statsSI;
 	}
 
 	getPackOptions = () => {
@@ -223,6 +230,7 @@ class PackProperties extends React.Component {
 
 	emitChanges = () => {
 		Observer.emit(GLOBAL_EVENT.PACK_OPTIONS_CHANGED, this.getPackOptions());
+		Observer.emit(GLOBAL_EVENT.STATS_INFO_SET_SI, this.packOptions.statsSI);
 	}
 
 	onPackerChange = (e) => {
@@ -273,6 +281,13 @@ class PackProperties extends React.Component {
 		}
 	}
 
+	forceUpdateExporter = (e) => {
+		if(e) {
+			let key = e.keyCode || e.which;
+			if (key === 13) this.onExporterPropChanged();
+		}
+	}
+
 	startExport = () => {
 		Observer.emit(GLOBAL_EVENT.START_EXPORT);
 	}
@@ -294,7 +309,6 @@ class PackProperties extends React.Component {
 	}
 
 	render() {
-
 		let exporter = getExporterByType(this.packOptions.exporter);
 		let allowRotation = this.packOptions.allowRotation && exporter.allowRotation;
 		let exporterRotationDisabled = exporter.allowRotation ? "" : "disabled";
@@ -306,6 +320,11 @@ class PackProperties extends React.Component {
 				<div className="pack-properties-containter">
 					<table>
 						<tbody>
+							<tr>
+								<td colSpan="3" className="center-align">
+									Export Options
+								</td>
+							</tr>
 							<tr title={I18.f("FILE_NAME_TITLE")} style={{display: PLATFORM === 'web' ? '' : 'none'}}>
 								<td>{I18.f("FILE_NAME")}</td>
 								<td><input ref={this.fileNameRef} className="border-color-gray" type="text" defaultValue={this.packOptions.fileName} onBlur={this.onExporterPropChanged} /></td>
@@ -374,6 +393,11 @@ class PackProperties extends React.Component {
 							<tr>
 								<td colSpan="3" className="center-align">
 									<div className="btn back-800 border-color-gray color-white" onClick={this.startExport}>{I18.f("EXPORT")}</div>
+								</td>
+							</tr>
+							<tr>
+								<td colSpan="3" className="center-align">
+									Pack Options
 								</td>
 							</tr>
 
@@ -447,7 +471,7 @@ class PackProperties extends React.Component {
 
 							<tr title={I18.f("SORT_EXPORT_TITLE")}>
 								<td>{I18.f("SORT_EXPORT")}</td>
-								<td><input ref={this.sortExportedRowsRef} type="checkbox" className="border-color-gray" onChange={this.onPropChanged} defaultChecked={this.packOptions.sortExportedRows ? "checked" : ""} /></td>
+								<td><input ref={this.sortExportedRowsRef} type="checkbox" className="border-color-gray" onChange={this.onExporterChanged} defaultChecked={this.packOptions.sortExportedRows ? "checked" : ""} /></td>
 								<td></td>
 							</tr>
 
@@ -485,6 +509,11 @@ class PackProperties extends React.Component {
 										})}
 									</select>
 								</td>
+								<td></td>
+							</tr>
+							<tr title={I18.f("STATS_SI_TITLE")}>
+								<td>{I18.f("STATS_SI")}</td>
+								<td><input ref={this.statsSIRef} type="number" className="border-color-gray" defaultValue={this.packOptions.statsSI} min="0" onBlur={this.onExporterPropChanged} onChange={this.onExporterPropChanged} onKeyDown={this.forceUpdateExporter}/></td>
 								<td></td>
 							</tr>
 						</tbody>

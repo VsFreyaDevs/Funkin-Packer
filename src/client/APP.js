@@ -31,53 +31,6 @@ class APP {
 				c.getContext('2d').drawImage(this,0,0); return c.toDataURL(m,q);
 			}}
 		);
-
-		// IDK WHERE TO PUT THIS
-		setTimeout(() => {
-			function formatBytes(bytes, decimals = 2, si=1024) {
-				if (bytes === 0) return '0 Bytes';
-
-				const k = si;
-				const dm = decimals < 0 ? 0 : decimals;
-				const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-				const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-				return parseFloat((bytes / k**i).toFixed(dm)) + ' ' + sizes[i];
-			}
-			window.formatBytes = formatBytes;
-
-			const sizeElement = document.createElement("div");
-			sizeElement.style = "font-size: 20px; pointer-events: none;";
-			sizeElement.textContent = "0x0";
-
-			const ramSize = document.createElement("div");
-			ramSize.style = "font-size: 16px;position: relative;top: -90px; pointer-events: none;";
-			ramSize.textContent = "0 Bytes";
-
-			const header = document.getElementsByClassName("main-header")[0];
-
-			header.appendChild(sizeElement);
-			header.appendChild(ramSize);
-
-			const config = { attributes: true, childList: true, subtree: true };
-
-			const callback = function(_mutationList, _observer) {
-				const sizes = [...document.getElementsByClassName("texture-view")].map((v) => `${v.children[0].width}x${v.children[0].height}`);
-				let ramTotal = 0;
-				[...document.getElementsByClassName("texture-view")].forEach((v) => {
-					ramTotal+=parseInt(v.children[0].width,10)*parseInt(v.children[0].height,10)*4;
-				});
-				sizeElement.textContent = sizes.join(" + ");
-				if(sizeElement.textContent.length > 60) {
-				sizeElement.style = "font-size: 20px;";} else {sizeElement.style = "font-size: 14px;";}
-				ramSize.textContent = formatBytes(ramTotal, 3) + " | " + formatBytes(ramTotal, 3, 1000);
-			};
-
-			const observer = new MutationObserver(callback);
-			observer.observe(document.getElementsByClassName("results-view")[0], config);
-
-		}, 2000);
 	}
 
 	static get i() {
@@ -86,7 +39,7 @@ class APP {
 
 	onImagesListChanged(data) {
 		this.images = data;
-		console.log(this.images);
+		//console.log(this.images);
 		this.pack();
 	}
 

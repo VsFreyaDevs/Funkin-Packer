@@ -13,7 +13,7 @@ class PackResults extends React.Component {
 		this.wheelRef = React.createRef();
 
 		this.textureBackColors = ["grid-back", "white-back", "pink-back", "black-back"];
-		this.step = 0.1;
+		this.step = 0.01;
 
 		this.state = {
 			packResult: null,
@@ -37,6 +37,10 @@ class PackResults extends React.Component {
 	}
 
 	updatePackResult = (data) => {
+		//console.log(data);
+		Observer.emit(GLOBAL_EVENT.STATS_INFO, {
+			packResults: data
+		});
 		this.setState({packResult: data});
 	}
 
@@ -143,8 +147,8 @@ class PackResults extends React.Component {
 									<td>
 										{I18.f("SCALE")}
 									</td>
-									<td>
-										<input ref={this.rangeRef} type="range" min="0.1" max="2" step={this.step} defaultValue="1" onChange={this.changeScale}/>
+									<td style={{width: "50%"}}>
+										<input ref={this.rangeRef} style={{width: "100%"}} type="range" min="0.1" max="4" step={this.step} defaultValue="1" onChange={this.changeScale}/>
 									</td>
 									<td>
 										<div className="btn back-800 border-color-gray color-white" onClick={this.toggleSpritesPlayer}>{I18.f("SHOW_SPRITES")}</div>

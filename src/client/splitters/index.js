@@ -92,7 +92,7 @@ export class SplitterMaster {
 			throw new Error("No splitter found");
 		}
 
-		console.log(this.currentSplitter.name, "is parsing data", data, options);
+		//console.log(this.currentSplitter.name, "is parsing data", data, options);
 
 		this.currentSplitter.doSplit(data, options, (res) => {
 			let maxSizes = {};
