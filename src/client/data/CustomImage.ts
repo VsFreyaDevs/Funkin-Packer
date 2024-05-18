@@ -1,3 +1,5 @@
+import { dataURItoBlob } from "../utils/common";
+
 export type FileSystemPath = {
 	name: string;
 	path: string;
@@ -23,11 +25,16 @@ class CustomImage {
 
 	fsPath: FileSystemPath;
 
+	private _blobString:string;
+	private _blob:Blob;
+
 	constructor(image: HTMLImageElement, name?: string, path?: string, folder?: string) {
 		this.image = image;
 		if(name && path && folder) {
 			this.fsPath = { name, path, folder };
 		}
+		this._blobString = null;
+		this._blob = null;
 		//this.name = name;
 		//this.path = path;
 		//this.folder = folder;
@@ -47,6 +54,15 @@ class CustomImage {
 
 	set height(value) {
 		this.image.height = value;
+	}
+
+	get blobSrc() {
+		if(!globalThis.Blob) return this.image.src; // fallback
+		if(this._blob === null) {
+			this._blob = dataURItoBlob(this.src);
+			this._blobString = URL.createObjectURL(this._blob);
+		}
+		return this._blobString;
 	}
 
 	get src() {

@@ -13,17 +13,17 @@ class OldBrowserBlocker extends React.Component {
 
 	static isSupported() {
 		//check local storage
-		if(!window.localStorage) return false;
+		if(!globalThis.localStorage) return false;
 
 		//check file reader
-		if(!window.FileReader) return false;
+		if(!globalThis.FileReader) return false;
 
 		//check canvas
 		let canvas = document.createElement("canvas");
 		if(!canvas.getContext) return false;
 
 		//check ajax
-		//if(!window.XMLHttpRequest) return false;
+		//if(!globalThis.XMLHttpRequest) return false;
 
 		return true;
 	}

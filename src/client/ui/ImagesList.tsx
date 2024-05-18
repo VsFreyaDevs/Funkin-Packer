@@ -61,7 +61,7 @@ class ImagesList extends React.Component<Props, State> {
 		Observer.on(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		//Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
 
-		window.addEventListener("keydown", this.handleKeys, false);
+		globalThis.addEventListener("keydown", this.handleKeys, false);
 
 		let dropZone = this.imagesTreeRef.current;
 		if(dropZone) {
@@ -86,7 +86,7 @@ class ImagesList extends React.Component<Props, State> {
 		Observer.off(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		//Observer.off(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
 
-		window.removeEventListener("keydown", this.handleKeys, false);
+		globalThis.removeEventListener("keydown", this.handleKeys, false);
 	}
 
 	handleKeys = (e:KeyboardEvent) => {

@@ -64,7 +64,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/NeeEoo/FunkinPacker.git"
+		"url": "git+https://github.com/NeeEoo/Funkin-Packer.git"
 	},
 	"keywords": [
 		"texture",

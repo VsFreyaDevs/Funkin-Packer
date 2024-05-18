@@ -4,7 +4,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 //const argv = require('optimist').argv;
 
 let entry = [
-	'core-js/stable',
 	'./src/client/index.jsx'
 ];
 
@@ -20,6 +19,10 @@ let prod = !debug;
 const argv = {
 	build: prod
 }
+
+//if(true) {
+	entry.unshift('core-js/stable');
+//}
 
 let PLATFORM = argv.platform || 'web';
 let mode = prod ? 'production' : 'development';//argv.build ? 'production' : 'development';
@@ -46,8 +49,8 @@ if (argv.build) {
 
 	plugins.push(new CopyPlugin({
 		patterns: [
-			{from: 'src/client/resources', to: outputDir}
-		]
+			{from: 'src/client/resources', to: outputDir, globOptions: {ignore: ['**/.DS_Store']}}
+		],
 	}));
 
 	devtool = false;
@@ -58,8 +61,8 @@ else {
 	entry.push('webpack-dev-server/client?http://localhost:4000');
 	plugins.push(new CopyPlugin({
 		patterns: [
-			{from: 'src/client/resources', to: ''}
-		]
+			{from: 'src/client/resources', to: '', globOptions: {ignore: ['**/.DS_Store']}},
+		],
 	}));
 }
 

@@ -80,3 +80,18 @@ export function deepClone(obj:any):any {
 export function isNullOrUndefined(val: any) {
 	return val === null || val === undefined;
 }
+
+export function dataURItoBlob(dataURI: string) {
+	var split = dataURI.split(',');
+	var byteString = atob(split[1]);
+	var mimeString = split[0].split(':')[1].split(';')[0]
+	var ab = new ArrayBuffer(byteString.length);
+	var ia = new Uint8Array(ab);
+
+	for (var i = 0; i < byteString.length; i++) {
+		ia[i] = byteString.charCodeAt(i);
+	}
+
+	var blob = new Blob([ab], {type: mimeString});
+	return blob;
+}

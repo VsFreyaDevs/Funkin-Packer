@@ -4,57 +4,57 @@ let cns = document.createElement("canvas");
 let ctx = cns.getContext("2d", {willReadFrequently: true});
 
 /*#__PURE__*/
-function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) {
+/*function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) {
 	return data[((y * (width * 4)) + (x * 4)) + 3];
-}
+}*/
 
 class Trimmer {
-	static getLeftSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
-		for(let x=0; x<width; x++) {
-			for(let y=0; y<height; y++) {
-				if(getAlpha(data, width, x, y) > threshold) {
-					return x;
+	static getSpacing(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
+		const stride = width * 4;
+		let left = width, top = height;
+		let right = width, bottom = height;
+
+		// Left Right
+		for (let y = 0; y < height; y++) {
+			for (let x = 0; x < left; x++) {
+				const alpha = data[(y * stride) + (x * 4) + 3];
+				if (alpha > threshold) {
+					if (x < left) left = x;
+					break;
+				}
+			}
+			for (let x = 0; x < right; x++) {
+				const rx = width - x - 1;
+				const alpha = data[(y * stride) + (rx * 4) + 3];
+				if (alpha > threshold) {
+					if (x < right) right = x;
+					break;
 				}
 			}
 		}
 
-		return width;
-	}
+		// TODO: add a optimization here
 
-	static getRightSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
-		for(let x=width-1; x>=0; x--) {
-			for(let y=0; y<height; y++) {
-				if(getAlpha(data, width, x, y) > threshold) {
-					return width-x-1;
+		// Top Bottom
+		for (let x = 0; x < width; x++) {
+			for (let y = 0; y < top; y++) {
+				const alpha = data[(y * stride) + (x * 4) + 3];
+				if (alpha > threshold) {
+					if (y < top) top = y;
+					break;
+				}
+			}
+			for (let y = 0; y < bottom; y++) {
+				const ry = height - y - 1;
+				const alpha = data[(ry * stride) + (x * 4) + 3];
+				if (alpha > threshold) {
+					if (y < bottom) bottom = y;
+					break;
 				}
 			}
 		}
 
-		return width;
-	}
-
-	static getTopSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
-		for(let y=0; y<height; y++) {
-			for(let x=0; x<width; x++) {
-				if(getAlpha(data, width, x, y) > threshold) {
-					return y;
-				}
-			}
-		}
-
-		return height;
-	}
-
-	static getBottomSpace(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
-		for(let y=height-1; y>=0; y--) {
-			for(let x=0; x<width; x++) {
-				if(getAlpha(data, width, x, y) > threshold) {
-					return height-y-1;
-				}
-			}
-		}
-
-		return height;
+		return { left, right, top, bottom };
 	}
 
 	static trim(rects:Rect[], threshold:number=0) {
@@ -81,13 +81,15 @@ class Trimmer {
 
 				let {data} = ctx.getImageData(0, 0, img.width, img.height);
 
-				spaces.left = this.getLeftSpace(data, img.width, img.height, threshold);
+				spaces = this.getSpacing(data, img.width, img.height, threshold);
+
+				/*spaces.left = this.getLeftSpace(data, img.width, img.height, threshold);
 
 				if(spaces.left !== img.width) { // was able to trim it
 					spaces.right = this.getRightSpace(data, img.width, img.height, threshold);
 					spaces.top = this.getTopSpace(data, img.width, img.height, threshold);
 					spaces.bottom = this.getBottomSpace(data, img.width, img.height, threshold);
-				}
+				}*/
 			}
 
 			//console.log(spaces);

@@ -3,6 +3,12 @@
 		[
 			"@babel/preset-env",
 			{
+				"useBuiltIns": "usage",
+				"corejs": "3.22",
+				"debug": true
+			}
+			//,
+			/*{
 				"targets": {
 					"edge": "17",
 					"firefox": "60",
@@ -10,8 +16,9 @@
 					"safari": "11.1"
 				},
 				"useBuiltIns": "usage",
-				"corejs": "3.6.5"
-			}
-		]
+				"corejs": "3.21"
+			}*/
+		],
+		"@babel/preset-react"
 	]
 }

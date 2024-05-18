@@ -77,7 +77,7 @@ class ItemTreeItem extends React.Component<TreeListItem> {
 		return (
 			<div className={"image-list-item" + (this.props.selected ? " back-400" : "") + (this.props.current ? " image-list-item-current" : "")} onClick={this.onSelect} >
 				<div className="image-list-image-container">
-					<img src={this.props.img.src} className="image-list-image" />
+					<img src={this.props.img.blobSrc} className="image-list-image" />
 				</div>
 				<div className="image-list-name-container">
 					{this.props.name}
