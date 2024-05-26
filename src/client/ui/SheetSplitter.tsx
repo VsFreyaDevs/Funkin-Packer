@@ -13,7 +13,7 @@ import { LoadedImages, Rect } from 'types';
 import Splitter from 'splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
-import { formatBytes } from '../utils/common';
+import { fixManualOffsets, formatBytes, setMaxSizes } from '../utils/common';
 
 /**
  * @type {SplitterMaster}
@@ -147,14 +147,19 @@ class SheetSplitter extends React.Component<Props, State> {
 		const disableUntrim = this.disableUntrimRef.current.checked;
 
 		if(this.state.updateFileName) {
+			// TODO: clean this up
 			let filename = this.fileName;
-			const parts = filename.split(".");
-			if(parts.length > 1) parts.pop();
-			filename = parts.join(".");
+			const di = filename.lastIndexOf(".");
+			if (di !== -1) {
+				filename = filename.substring(0, di);
+			}
 			PackProperties.i.packOptions.fileName = filename;
 			TypedObserver.packExporterChanged.emit(PackProperties.i.getPackOptions());
 			PackProperties.i.refreshPackOptions();
 		}
+
+		fixManualOffsets(this.frames);
+		setMaxSizes(this.frames);
 
 		for(const item of this.frames) {
 			const trimmed = item.trimmed ? disableUntrim : false;
@@ -219,7 +224,7 @@ class SheetSplitter extends React.Component<Props, State> {
 
 			files.push({
 				name: item.name,
-				content: base64,
+				//content: base64,
 				base64: base64,
 				rect: item
 			});
@@ -268,6 +273,9 @@ class SheetSplitter extends React.Component<Props, State> {
 		const files = [];
 
 		const disableUntrim = this.disableUntrimRef.current.checked;
+
+		setMaxSizes(this.frames);
+		// dont fix offsets if we are exporting to a zip
 
 		for(let item of this.frames) {
 			const trimmed = item.trimmed ? disableUntrim : false;

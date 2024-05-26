@@ -61,6 +61,7 @@ declare type SplitterRect = {
 		h: number;
 	};
 	rotated: boolean;
+	manualOffset?: boolean;
 }
 
 declare type Rect = SplitterRect & {

@@ -5,7 +5,7 @@ import JsonArray from './JsonArray';
 import UIKit from './UIKit';
 import Spine from './Spine';
 import Sparrow from './Sparrow';
-import { setMaxSizes } from '../utils/common';
+import { getDummyRect, setMaxSizes } from '../utils/common';
 import Splitter, { SplitterOptions } from './Splitter';
 import { Rect } from 'types';
 import TypedObserver from 'TypedObserver';
@@ -35,13 +35,13 @@ export class SplitterMaster {
 		this._storedSplitterOrder = null;
 	}
 
-	getListOfSplitters() {
+	getListOfSplitters = () => {
 		return list;
 	}
 
 	getListOfSplittersNames = () => {
-		let names = [];
-		for(let item of list) {
+		const names = [];
+		for(const item of list) {
 			names.push(item.splitterName);
 		}
 		return names;
@@ -54,7 +54,7 @@ export class SplitterMaster {
 	}
 
 	getSplitterFromName = (name: string) => {
-		for(let item of list) {
+		for(const item of list) {
 			if(item.splitterName === name) {
 				return item;
 			}
@@ -63,7 +63,7 @@ export class SplitterMaster {
 	}
 
 	findSplitter = (data: string) => {
-		for(let item of list) {
+		for(const item of list) {
 			if(item.splitterName === GridSplitter.splitterName) continue;
 
 			let isValid = false;
@@ -116,11 +116,9 @@ export class SplitterMaster {
 
 			const order = [];
 
-			for(let item of res) {
+			for(const item of res) {
 				order.push(item.name);
 			}
-
-			setMaxSizes(res);
 
 			this._storedSplitterOrder = order;
 

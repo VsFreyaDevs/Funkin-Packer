@@ -27,3 +27,5 @@
 - [ ] Make it so repacking stores all of the previous repacks to to provide more accurate stats
 - [ ] Add haxe xml parser
 - [ ] Rewrite css to sass or something else
+- [ ] export individual frames from a spritesheet
+- [ ] Make ctrl keybinds use command key on mac

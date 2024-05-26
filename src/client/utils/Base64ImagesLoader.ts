@@ -13,11 +13,9 @@ class Base64ImagesLoader {
 
 		this.onProgress = null;
 		this.onEnd = null;
-
-		this.waitImages = this.waitImages.bind(this);
 	}
 
-	load(data: any[], onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) {
+	load = (data: any[], onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) => {
 		this.data = data.slice();
 
 		this.onProgress = onProgress;
@@ -35,7 +33,7 @@ class Base64ImagesLoader {
 		this.waitImages();
 	}
 
-	waitImages() {
+	waitImages = () => {
 		let ready = true;
 		let loaded = 0;
 		let keys = Object.keys(this.loaded);

@@ -15,11 +15,9 @@ class LocalImagesLoader {
 
 		this.onProgress = null;
 		this.onEnd = null;
-
-		this.waitImages = this.waitImages.bind(this);
 	}
 
-	load(data: FileList, onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) {
+	load = (data: FileList, onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) => {
 		this.data = [];
 
 		for (let i = 0; i < data.length; i++) {
@@ -32,7 +30,7 @@ class LocalImagesLoader {
 		this.loadNext();
 	}
 
-	loadNext() {
+	loadNext = () => {
 		if (!this.data.length) {
 			this.waitImages();
 			return;
@@ -74,7 +72,7 @@ class LocalImagesLoader {
 		}
 	}
 
-	waitImages() {
+	waitImages = () => {
 		let ready = true;
 
 		for (let key of Object.keys(this.loaded)) {

@@ -86,12 +86,11 @@ class SpritesPlayer extends React.Component<Props> {
 		this.width = 0;
 		this.height = 0;
 
-		for(let part of this.props.data) {
-			let baseTexture = part.buffer;
+		for(const part of this.props.data) {
+			const baseTexture = part.buffer;
 
-			for (let config of part.data) {
-				const w = config.sourceSize.mw;
-				const h = config.sourceSize.mh;
+			for (const config of part.data) {
+				let {w, h} = SpritesPlayer.getFrameSize(config);
 
 				//console.log(w, h, config, config.sourceSize);
 
@@ -113,6 +112,30 @@ class SpritesPlayer extends React.Component<Props> {
 		canvas.height = this.height;
 
 		this.updateCurrentTextures();
+	}
+
+	private static getFrameSize(config:Rect) {
+		let w = config.sourceSize.mw;
+		let h = config.sourceSize.mh;
+
+		if(config.frame !== null) {
+			let width = config.frameSize.w;
+			let height = config.frameSize.h;
+			let x = config.frameSize.x;
+			let y = config.frameSize.y;
+			if(x < 0) {
+				width -= x;
+				x = 0;
+			}
+			if(y < 0) {
+				height -= y;
+				y = 0;
+			}
+
+			w = Math.max(width, w);
+			h = Math.max(height, h);
+		}
+		return {w, h};
 	}
 
 	eventForceUpdate = (e: KeyboardEvent) => {
@@ -172,11 +195,11 @@ class SpritesPlayer extends React.Component<Props> {
 	}
 
 	renderTexture = () => {
-		let ctx = this.viewRef.current.getContext("2d");
+		const ctx = this.viewRef.current.getContext("2d");
 
 		ctx.clearRect(0, 0, this.width, this.height);
 
-		let texture = this.currentTextures[this.currentFrame];
+		const texture = this.currentTextures[this.currentFrame];
 		if(!texture) return;
 
 		// TODO: maybe make this draw directly to the canvas instead of to a buffer
@@ -185,29 +208,47 @@ class SpritesPlayer extends React.Component<Props> {
 
 		//let w = Math.max(texture.config.sourceSize.mw, texture.config.sourceSize.w);
 		//let h = Math.max(texture.config.sourceSize.mh, texture.config.sourceSize.h);
-		const w = texture.config.sourceSize.mw;
-		const h = texture.config.sourceSize.mh;
+		let {w, h} = SpritesPlayer.getFrameSize(texture.config);
 
-		let buffer = this.bufferRef.current;
+		const buffer = this.bufferRef.current;
 		buffer.width = w;
 		buffer.height = h;
 
-		let bufferCtx = buffer.getContext("2d");
+		const bufferCtx = buffer.getContext("2d");
 		bufferCtx.clearRect(0, 0, w, h);
 
-		let x = this.width/2, y = this.height/2;
+		let frameX = texture.config.spriteSourceSize.x;
+		let frameY = texture.config.spriteSourceSize.y;
+		let frameW = texture.config.spriteSourceSize.w;
+		let frameH = texture.config.spriteSourceSize.h;
+		if(texture.config.frameSize !== null) {
+			// todo make this append the frameSize to the sprite source size
+			frameX += texture.config.frameSize.x;
+			frameY += texture.config.frameSize.y;
+			frameW = texture.config.frameSize.w;
+			frameH = texture.config.frameSize.h;
+			//console.log(texture.config.spriteSourceSize, texture.config.frameSize);
+		}
+		if(frameX < 0) {
+			frameW -= frameX;
+			frameX = 0;
+		}
+		if(frameY < 0) {
+			frameH -= frameY;
+			frameY = 0;
+		}
 
 		if(texture.config.rotated) {
 			bufferCtx.save();
 
-			bufferCtx.translate(texture.config.spriteSourceSize.x + texture.config.spriteSourceSize.w/2, texture.config.spriteSourceSize.y + texture.config.spriteSourceSize.h/2);
+			bufferCtx.translate(frameX + frameW/2, frameY + frameH/2);
 			bufferCtx.rotate(-Math.PI/2);
 
 			bufferCtx.drawImage(texture.baseTexture,
 				texture.config.frame.x, texture.config.frame.y,
 				texture.config.frame.h, texture.config.frame.w,
-				-texture.config.spriteSourceSize.h/2, -texture.config.spriteSourceSize.w/2,
-				texture.config.spriteSourceSize.h, texture.config.spriteSourceSize.w);
+				-frameH/2, -frameW/2,
+				texture.config.frame.h, texture.config.frame.w);
 
 			bufferCtx.restore();
 		}
@@ -215,9 +256,11 @@ class SpritesPlayer extends React.Component<Props> {
 			bufferCtx.drawImage(texture.baseTexture,
 				texture.config.frame.x, texture.config.frame.y,
 				texture.config.frame.w, texture.config.frame.h,
-				texture.config.spriteSourceSize.x, texture.config.spriteSourceSize.y,
-				texture.config.spriteSourceSize.w, texture.config.spriteSourceSize.h);
+				frameX, frameY,
+				texture.config.frame.w, texture.config.frame.h);
 		}
+
+		const x = this.width/2, y = this.height/2;
 
 		ctx.drawImage(buffer,
 			0, 0,

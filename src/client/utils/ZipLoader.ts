@@ -22,11 +22,9 @@ class ZipLoader {
 		this.filesList = [];
 		this.loaded = {};
 		this.loadedCnt = 0;
-
-		this.waitImages = this.waitImages.bind(this);
 	}
 
-	load(file: File, onProgress: (loaded: number) => void = null, onEnd: (data: LoadedImages) => void = null) {
+	load = (file: File, onProgress: (loaded: number) => void = null, onEnd: (data: LoadedImages) => void = null) => {
 		this.onProgress = onProgress;
 		this.onEnd = onEnd;
 
@@ -42,18 +40,16 @@ class ZipLoader {
 		);
 	}
 
-	parseZip() {
+	parseZip = () => {
+		const files = Object.keys(this.zip.files);
+		const extensions = ["png", "jpg", "jpeg", "gif"];
 
-		let extensions = ["png", "jpg", "jpeg", "gif"];
 		this.filesList = [];
-
-		let files = Object.keys(this.zip.files);
-
-		for(let name of files) {
-			let file = this.zip.files[name];
+		for(const name of files) {
+			const file = this.zip.files[name];
 
 			if(!file.dir) {
-				let ext = name.split(".").pop().toLowerCase();
+				const ext = name.split(".").pop().toLowerCase();
 				if(extensions.indexOf(ext) >= 0 && name.toUpperCase().indexOf("__MACOSX") < 0) {
 					this.filesList.push(name);
 				}
@@ -65,19 +61,19 @@ class ZipLoader {
 		this.loadNext();
 	}
 
-	loadNext() {
+	loadNext = () => {
 		if(!this.filesList.length) {
 			this.waitImages();
 			return;
 		}
 
-		let name = this.filesList.shift();
+		const name = this.filesList.shift();
 
 		this.zip.file(name).async("base64").then((d: string) => {
-			let ext = name.split(".").pop().toLowerCase();
-			let content = "data:image/"+ext+";base64," + d;
+			const ext = name.split(".").pop().toLowerCase();
+			const content = "data:image/"+ext+";base64," + d;
 
-			let img = new CustomImage(new Image());
+			const img = new CustomImage(new Image());
 
 			img.src = content;
 			img.base64 = content;
@@ -93,10 +89,10 @@ class ZipLoader {
 		});
 	}
 
-	waitImages() {
+	waitImages = () => {
 		let ready = true;
 
-		for(let key of Object.keys(this.loaded)) {
+		for(const key of Object.keys(this.loaded)) {
 			if(!this.loaded[key].complete) {
 				ready = false;
 				break;

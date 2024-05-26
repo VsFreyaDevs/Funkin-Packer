@@ -167,3 +167,36 @@ export function setMaxSizes(rects:Rect[]) {
 		item.sourceSize.mh = maxSizes[prefix].mh;
 	}
 }
+
+export function isManuallyOffset(rects:Rect[]) {
+	for(let item of rects) {
+		if(item.frameSize.x < 0 || item.frameSize.y < 0) {
+			return true;
+		} else if(item.frameSize.w + item.frameSize.x > item.sourceSize.w) {
+			return true;
+		} else if(item.frameSize.h + item.frameSize.y > item.sourceSize.h) {
+			return true;
+		}
+	}
+	return false;
+}
+
+export function fixManualOffsetOnRect(rect:Rect) {
+	let dummy = getDummyRect(rect.name, rect.frame.w, rect.frame.h);
+	rect.spriteSourceSize.x = dummy.spriteSourceSize.x;
+	rect.spriteSourceSize.y = dummy.spriteSourceSize.y;
+	rect.spriteSourceSize.w = dummy.spriteSourceSize.w;
+	rect.spriteSourceSize.h = dummy.spriteSourceSize.h;
+	rect.sourceSize.w = dummy.sourceSize.w;
+	rect.sourceSize.h = dummy.sourceSize.h
+	rect.manualOffset = true;
+}
+
+export function fixManualOffsets(rects:Rect[]) {
+	if(isManuallyOffset(rects)) {
+		for(let i = 0; i < rects.length; i++) {
+			fixManualOffsetOnRect(rects[i]);
+		}
+		console.log('Removed offsets from all frames, reapplying when exporting');
+	}
+}
