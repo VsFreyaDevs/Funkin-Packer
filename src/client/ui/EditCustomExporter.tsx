@@ -57,7 +57,7 @@ class EditCustomExporter extends React.Component {
 		let exporter = getExporterByType("custom");
 
 		return (
-			<div className="edit-custom-exporter-cover">
+			<div className="edit-custom-exporter-overlay">
 				<div className="edit-custom-exporter-content">
 
 					<div>

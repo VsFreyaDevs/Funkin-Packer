@@ -34,7 +34,7 @@ class About extends React.Component {
 
 	render() {
 		return (
-			<div className="about-cover">
+			<div className="about-overlay">
 				<div className="about-content">
 
 					<div className="about-logo"></div>

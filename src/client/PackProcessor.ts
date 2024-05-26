@@ -136,11 +136,10 @@ class PackProcessor {
 				sourceSize: {
 					w: img.width,
 					h: img.height,
-					frameWidth: img.width,
-					frameHeight: img.height,
-					mw: img.width,
-					mh: img.height
+					mw: img.rect.sourceSize.mw,
+					mh: img.rect.sourceSize.mh
 				},
+				frameSize: img.rect.frameSize,
 				name,
 				file: key,
 				image: img

@@ -8,9 +8,9 @@
 - [ ] Add more caching
 - [ ] Make the app more optimized when selecting stuff
 - [ ] Make the frame object be passed in to the packer
-- [ ] Find a way to optimize images
+- [ ] Find a way to optimize images (half done. uses blobs now)
 - [ ] Bruteforce the width and height
-- [ ] Make a thing that says if it should retrim and such, or only repack (what?)
+- [ ] Make a thing that says if it should retrim and such, or only repack, (observer) for caching and performance
 - [ ] APNG support
 - [ ] GIF support
 - [ ] Fix the width height not being exact when non fixed size
@@ -20,10 +20,10 @@
 - [ ] Make zip loading async, by loading files in parallel
 - [ ] Make the app more responsive
 - [ ] Image Editor? to remove stray pixels
-- [ ] Rename cover to overlay
 - [ ] CLI program to repack
 - [ ] Convert filters to typescript
 - [ ] Get corejs to only include what is needed
 - [ ] Make it store Duplicates only once
 - [ ] Make it so repacking stores all of the previous repacks to to provide more accurate stats
 - [ ] Add haxe xml parser
+- [ ] Rewrite css to sass or something else

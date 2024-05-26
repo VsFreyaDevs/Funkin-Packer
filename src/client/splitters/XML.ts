@@ -1,4 +1,4 @@
-import { Rect } from 'types';
+import { Rect, SplitterRect } from 'types';
 import Splitter from './Splitter';
 
 import * as xmlParser from 'xml2js';
@@ -34,7 +34,7 @@ class XML extends Splitter {
 					return;
 				}
 
-				let res = [];
+				let res: SplitterRect[] = [];
 
 				let list = atlas.TextureAtlas.sprite;
 
@@ -68,9 +68,13 @@ class XML extends Splitter {
 						},
 						sourceSize: {
 							w: item.oW,
-							h: item.oH,
-							frameWidth: item.oW,
-							frameHeight: item.oH
+							h: item.oH
+						},
+						frameSize: {
+							x: item.oX,
+							y: item.oY,
+							w: item.oW,
+							h: item.oH
 						},
 						rotated: item.r === 'y',
 						trimmed

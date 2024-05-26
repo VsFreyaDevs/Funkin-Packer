@@ -3,12 +3,12 @@ import * as React from 'react';
 import I18 from '../utils/I18';
 
 class OldBrowserBlocker extends React.Component {
-	coverRef: React.RefObject<HTMLDivElement>;
+	overlayRef: React.RefObject<HTMLDivElement>;
 
 	constructor(props:any) {
 		super(props);
 
-		this.coverRef = React.createRef();
+		this.overlayRef = React.createRef();
 	}
 
 	static isSupported() {
@@ -30,7 +30,7 @@ class OldBrowserBlocker extends React.Component {
 
 	render() {
 		return (
-			<div ref={this.coverRef} className="old-browser-cover">
+			<div ref={this.overlayRef} className="old-browser-overlay">
 				<div className="old-browser-content">
 					<div className="old-browser-header">{I18.f("OLD_BROWSER_MESSAGE1")}</div>
 					<br/>

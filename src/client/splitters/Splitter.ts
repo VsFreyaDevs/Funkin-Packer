@@ -1,5 +1,4 @@
 import { Rect } from 'types';
-import { cleanPrefix as _cleanPrefix } from '../utils/common';
 
 export type SplitterOptions = {
 	textureWidth: number,
@@ -26,10 +25,6 @@ class Splitter {
 
 	get splitterName() {
 		return 'Default';
-	}
-
-	cleanPrefix(str: string) {
-		return _cleanPrefix(str);
 	}
 
 	static fixFileName(name: string) {

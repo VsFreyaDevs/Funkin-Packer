@@ -217,7 +217,8 @@ class SheetSplitter extends React.Component<Props, State> {
 			files.push({
 				name: item.name,
 				content: base64,
-				base64: base64
+				base64: base64,
+				rect: item
 			});
 		}
 
@@ -228,6 +229,7 @@ class SheetSplitter extends React.Component<Props, State> {
 			var image = new CustomImage(new Image());
 			image.src = file.base64;
 			image.base64 = file.base64;
+			image.rect = file.rect;
 
 			images[file.name] = image;
 
@@ -452,11 +454,11 @@ class SheetSplitter extends React.Component<Props, State> {
 							manualOffsets++;
 							frameHasManualOffsets = true;
 							//console.log('manual offsets', item);
-						} else if(item.spriteSourceSize.w + item.spriteSourceSize.x > item.sourceSize.frameWidth) {
+						} else if(item.spriteSourceSize.w + item.spriteSourceSize.x > item.frameSize.w) {
 							weirdSize++;
 							frameHasWeirdSize = true;
 							//console.log('weird size', item, item.spriteSourceSize.w + item.spriteSourceSize.x, item.sourceSize.frameWidth);
-						} else if(item.spriteSourceSize.h + item.spriteSourceSize.y > item.sourceSize.frameHeight) {
+						} else if(item.spriteSourceSize.h + item.spriteSourceSize.y > item.frameSize.h) {
 							weirdSize++;
 							frameHasWeirdSize = true;
 							//console.log('weird size', item, item.spriteSourceSize.h + item.spriteSourceSize.y, item.sourceSize.frameHeight);
@@ -501,7 +503,7 @@ class SheetSplitter extends React.Component<Props, State> {
 				if(weirdSize > 0) {
 					addMessage(<><span style={{color: "rgb("+WEIRD_SIZE_COLOR+")"}}>Unexpected Frame size detected, possible manual offsets for {weirdSize} frames.</span></>);
 				}
-				this.setState({message: <>{splitterMessage}</>});
+				this.setState({message: <>{splitterMessage.map((a, i) => <span key={"splitter-message-" + i}>{a}</span>)}</>});
 
 				// packer detection
 				let detectedPackers: string[] = [];
@@ -696,7 +698,7 @@ class SheetSplitter extends React.Component<Props, State> {
 		}
 
 		return (
-			<div className="sheet-splitter-cover">
+			<div className="sheet-splitter-overlay">
 				<div className="sheet-splitter-content">
 					<div className="sheet-splitter-top">
 						<table>

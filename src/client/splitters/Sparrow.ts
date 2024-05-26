@@ -4,6 +4,18 @@ import Splitter from './Splitter';
 
 import * as xmlParser from 'xml2js';
 
+type SparrowFrame = {
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	frameX?: number,
+	frameY?: number,
+	frameWidth?: number,
+	frameHeight?: number,
+	rotated?: boolean
+}
+
 class Sparrow extends Splitter {
 	cleanData(data: string): string {
 		if(isNullOrUndefined(data)) {
@@ -51,34 +63,40 @@ class Sparrow extends Splitter {
 
 				let list = atlas.TextureAtlas.SubTexture;
 
-				for(let item of list) {
-					item = item.$;
+				for(let li of list) {
+					let attribs = li.$;
 
-					let name = Splitter.fixFileName(item.name);
+					let name = Splitter.fixFileName(attribs.name);
 
-					let rotated = item.rotated === 'true';
+					let rotated = attribs.rotated === 'true';
 					if(rotated) {
 						// Unsure if i should swap the offsets too?
-						let temp = item.width;
-						item.width = item.height;
-						item.height = temp;
+						let temp = attribs.width;
+						attribs.width = attribs.height;
+						attribs.height = temp;
 					}
 
-					item.x = parseInt(item.x, 10);
-					item.y = parseInt(item.y, 10);
-					item.width = parseInt(item.width, 10);
-					item.height = parseInt(item.height, 10);
-					if(!isNullOrUndefined(item.frameX)) {
-						item.frameX = -parseInt(item.frameX, 10);
-						item.frameY = -parseInt(item.frameY, 10);
-						item.frameWidth = parseInt(item.frameWidth, 10);
-						item.frameHeight = parseInt(item.frameHeight, 10);
+					let item: SparrowFrame = {
+						x: parseInt(attribs.x, 10),
+						y: parseInt(attribs.y, 10),
+						width: parseInt(attribs.width, 10),
+						height: parseInt(attribs.height, 10),
+						rotated: rotated
+					};
+
+					if(!isNullOrUndefined(attribs.frameX)) {
+						item.frameX = -parseInt(attribs.frameX, 10);
+						item.frameY = -parseInt(attribs.frameY, 10);
+						item.frameWidth = parseInt(attribs.frameWidth, 10);
+						item.frameHeight = parseInt(attribs.frameHeight, 10);
 					} else {
 						item.frameX = 0;
 						item.frameY = 0;
 						item.frameWidth = item.width;
 						item.frameHeight = item.height;
 					}
+
+					//console.log(name, item);
 
 					let trimmed = item.width < item.frameWidth || item.height < item.frameHeight;
 
@@ -102,9 +120,13 @@ class Sparrow extends Splitter {
 						},
 						sourceSize: {
 							w: item.frameWidth,
-							h: item.frameHeight,
-							frameWidth: item.frameWidth,
-							frameHeight: item.frameHeight
+							h: item.frameHeight
+						},
+						frameSize: {
+							x: item.frameX,
+							y: item.frameY,
+							w: item.frameWidth,
+							h: item.frameHeight
 						},
 						rotated,
 						trimmed

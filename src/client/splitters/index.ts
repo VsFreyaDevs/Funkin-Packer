@@ -5,7 +5,7 @@ import JsonArray from './JsonArray';
 import UIKit from './UIKit';
 import Spine from './Spine';
 import Sparrow from './Sparrow';
-import { isNullOrUndefined } from '../utils/common';
+import { isNullOrUndefined, setMaxSizes } from '../utils/common';
 import { GLOBAL_EVENT, Observer } from '../Observer';
 import Splitter, { SplitterOptions } from './Splitter';
 import { PackOptions, Rect } from 'types';
@@ -115,37 +115,13 @@ export class SplitterMaster {
 			if(res === false)
 				return cb([]);
 
-			let maxSizes:{
-				[key: string]: {
-					mw: number,
-					mh: number,
-				}
-			} = {};
 			const order = [];
 
 			for(let item of res) {
-				let prefix = this.currentSplitter.cleanPrefix(item.name);
 				order.push(item.name);
-
-				if(isNullOrUndefined(maxSizes[prefix])) {
-					maxSizes[prefix] = {
-						mw: -Infinity,
-						mh: -Infinity,
-					};
-				}
-
-				maxSizes[prefix].mw = Math.max(item.sourceSize.w, maxSizes[prefix].mw);
-				maxSizes[prefix].mh = Math.max(item.sourceSize.h, maxSizes[prefix].mh);
-				//maxSizes[prefix].mw = Math.max(item.orig.width, maxSizes[prefix].mw);
-				//maxSizes[prefix].mh = Math.max(item.orig.height, maxSizes[prefix].mh);
 			}
 
-			for(let item of res) {
-				let prefix = this.currentSplitter.cleanPrefix(item.name);
-
-				item.sourceSize.mw = maxSizes[prefix].mw;
-				item.sourceSize.mh = maxSizes[prefix].mh;
-			}
+			setMaxSizes(res);
 
 			this._storedSplitterOrder = order;
 

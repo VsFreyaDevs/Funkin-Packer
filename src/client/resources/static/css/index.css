@@ -504,7 +504,7 @@ html, body {
 	min-width: 50px;
 }
 
-.processing-cover {
+.processing-overlay {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -526,7 +526,7 @@ html, body {
 	font-weight: bold;
 }
 
-.old-browser-cover {
+.old-browser-overlay {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -563,7 +563,7 @@ html, body {
 	margin: 12px;
 }
 
-.about-cover {
+.about-overlay {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -651,7 +651,7 @@ html, body {
 	margin-top: 10px;
 }
 
-.updater-cover {
+.updater-overlay {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -782,7 +782,7 @@ html, body {
 	border-color: rgba(0,0,0,0.2);
 }
 
-.edit-custom-exporter-cover {
+.edit-custom-exporter-overlay {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -836,7 +836,7 @@ html, body {
 	margin-right: 8px;
 }
 
-.sheet-splitter-cover {
+.sheet-splitter-overlay {
 	position: fixed;
 	left: 0;
 	top: 0;

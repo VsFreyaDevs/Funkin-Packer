@@ -65,9 +65,13 @@ class UIKit extends Splitter {
 					},
 					sourceSize: {
 						w: item.oW as number,
-						h: item.oH as number,
-						frameWidth: item.oW as number,
-						frameHeight: item.oH as number
+						h: item.oH as number
+					},
+					frameSize: {
+						x: item.oX as number,
+						y: item.oY as number,
+						w: item.oW as number,
+						h: item.oH as number
 					},
 					trimmed,
 					rotated: false

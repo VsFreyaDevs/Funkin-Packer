@@ -7,7 +7,7 @@ class Grid extends Splitter {
 	}
 
 	doSplit(data: string, cb: (res: Rect[] | false) => void) {
-		let res = [];
+		let res:Rect[] = [];
 
 		let fw = (this.options.width + this.options.padding * 2);
 		let fh = (this.options.height + this.options.padding * 2);
@@ -39,9 +39,13 @@ class Grid extends Splitter {
 					},
 					sourceSize: {
 						w: this.options.width,
-						h: this.options.height,
-						frameWidth: this.options.width,
-						frameHeight: this.options.height
+						h: this.options.height
+					},
+					frameSize: {
+						x: 0,
+						y: 0,
+						w: this.options.width,
+						h: this.options.height
 					},
 					trimmed: false,
 					rotated: false

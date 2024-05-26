@@ -67,9 +67,13 @@ class Spine extends Splitter {
 					},
 					sourceSize: {
 						w: -1,
-						h: -1,
-						frameWidth: -1,
-						frameHeight: -1
+						h: -1
+					},
+					frameSize: {
+						x: -1,
+						y: -1,
+						w: -1,
+						h: -1
 					},
 					trimmed: false,
 					rotated: false
@@ -103,12 +107,14 @@ class Spine extends Splitter {
 					case "orig":
 						currentItem.sourceSize.w = parseInt(valParts[0], 10);
 						currentItem.sourceSize.h = parseInt(valParts[1], 10);
-						currentItem.sourceSize.frameWidth = currentItem.sourceSize.w;
-						currentItem.sourceSize.frameHeight = currentItem.sourceSize.h;
+						currentItem.frameSize.w = currentItem.sourceSize.w;
+						currentItem.frameSize.h = currentItem.sourceSize.h;
 						break;
 					case "offset":
 						currentItem.spriteSourceSize.x = parseInt(valParts[0], 10);
 						currentItem.spriteSourceSize.y = parseInt(valParts[1], 10);
+						currentItem.frameSize.x = currentItem.spriteSourceSize.x;
+						currentItem.frameSize.y = currentItem.spriteSourceSize.y;
 						break;
 					default:
 						break;

@@ -1,3 +1,5 @@
+import { Rect } from "types";
+
 export function smartSortImages(f1: string, f2: string) {
 	let t1 = f1.split('/');
 	let t2 = f2.split('/');
@@ -106,4 +108,62 @@ export function formatBytes(bytes: number, decimals: number = 2, si: number = 10
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
 
 	return parseFloat((bytes / k**i).toFixed(dm)) + ' ' + sizes[i];
+}
+
+export function getDummyRect(name:string, width: number, height: number):Rect {
+	return {
+		name: name,
+		frame: {
+			x: 0,
+			y: 0,
+			w: width,
+			h: height
+		},
+		spriteSourceSize: {
+			x: 0,
+			y: 0,
+			w: width,
+			h: height
+		},
+		sourceSize: {
+			w: width,
+			h: height
+		},
+		frameSize: {
+			x: 0,
+			y: 0,
+			w: width,
+			h: height
+		},
+		rotated: false,
+		trimmed: false
+	}
+}
+
+export function setMaxSizes(rects:Rect[]) {
+	let maxSizes:{
+		[key: string]: {
+			mw: number,
+			mh: number,
+		}
+	} = {};
+	for(let item of rects) {
+		let prefix = cleanPrefix(item.name);
+		if(isNullOrUndefined(maxSizes[prefix])) {
+			maxSizes[prefix] = {
+				mw: -Infinity,
+				mh: -Infinity,
+			};
+		}
+
+		maxSizes[prefix].mw = Math.max(item.sourceSize.w, maxSizes[prefix].mw);
+		maxSizes[prefix].mh = Math.max(item.sourceSize.h, maxSizes[prefix].mh);
+	}
+
+	for(let item of rects) {
+		let prefix = cleanPrefix(item.name);
+
+		item.sourceSize.mw = maxSizes[prefix].mw;
+		item.sourceSize.mh = maxSizes[prefix].mh;
+	}
 }

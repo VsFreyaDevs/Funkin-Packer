@@ -10,7 +10,7 @@ import ItemTreePart, { TreeListItem } from './ItemTree';
 //import * as FileSystem from './platform/FileSystem';
 
 import Globals from '../utils/Globals';
-import {smartSortImages} from '../utils/common';
+import {getDummyRect, isNullOrUndefined, setMaxSizes, smartSortImages} from '../utils/common';
 import { LoadedImages, SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
 import CustomImage from 'data/CustomImage';
@@ -219,6 +219,8 @@ class ImagesList extends React.Component<Props, State> {
 
 			for (let name of names) {
 				images[name] = data[name];
+				var img = images[name];
+				if(isNullOrUndefined(img.rect)) img.rect = getDummyRect(name, img.width, img.height);
 				/*images[name] = {
 					image: data[name],
 					name: name,
@@ -228,6 +230,9 @@ class ImagesList extends React.Component<Props, State> {
 					current: false,
 				}*/
 			}
+
+			var rects = names.map(name => images[name].rect);
+			setMaxSizes(rects);
 
 			images = this.sortImages(images);
 

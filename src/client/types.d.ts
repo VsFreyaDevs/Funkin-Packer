@@ -54,10 +54,14 @@ declare type SplitterRect = {
 	sourceSize: {
 		w: number;
 		h: number;
-		frameWidth: number;
-		frameHeight: number;
 		mw?: number;
 		mh?: number;
+	};
+	frameSize: { // frameX frameY frameWidth frameHeight
+		x: number;
+		y: number;
+		w: number;
+		h: number;
 	};
 	rotated: boolean;
 }

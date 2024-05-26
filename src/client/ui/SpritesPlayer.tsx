@@ -235,8 +235,8 @@ class SpritesPlayer extends React.Component<Props> {
 			<div ref={this.containerRef} className="player-container">
 				<div className="player-window border-color-gray">
 					<div ref={this.playerContainerRef}>
-						<canvas ref={this.viewRef}> </canvas>
-						<canvas ref={this.bufferRef} className="player-buffer"> </canvas>
+						<canvas ref={this.viewRef}></canvas>
+						<canvas ref={this.bufferRef} className="player-buffer"></canvas>
 					</div>
 					<div>
 						<table>

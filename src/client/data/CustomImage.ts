@@ -1,3 +1,4 @@
+import { Rect } from "types";
 import { dataURItoBlob } from "../utils/common";
 
 export type FileSystemPath = {
@@ -22,6 +23,7 @@ class CustomImage {
 	image: HTMLImageElement;
 	selected: boolean;
 	current: boolean;
+	rect: Rect;
 
 	fsPath: FileSystemPath;
 
