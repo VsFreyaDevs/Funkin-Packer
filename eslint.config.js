@@ -22,6 +22,7 @@ module.exports = [
 				PLATFORM: "readonly",
 				APP: "readonly",
 				PROFILER: "readonly",
+				DEBUG: "readonly",
 			},
 		},
 		plugins: {

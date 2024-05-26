@@ -5,6 +5,13 @@ import Splitter from './Splitter';
 import * as xmlParser from 'xml2js';
 
 class Sparrow extends Splitter {
+	cleanData(data: string): string {
+		if(isNullOrUndefined(data)) {
+			return data;
+		}
+		return (data.startsWith("ï»¿")) ? data.slice(3) : data;
+	}
+
 	doCheck(data: string, cb: (checked: boolean) => void) {
 		if(isNullOrUndefined(data)) {
 			cb(false);
@@ -12,8 +19,6 @@ class Sparrow extends Splitter {
 		}
 
 		try {
-			if(data.startsWith("ï»¿")) data = data.slice(3);
-
 			xmlParser.parseString(data, (err, atlas) => {
 				if(err) {
 					cb(false);
@@ -38,8 +43,6 @@ class Sparrow extends Splitter {
 		let res: SplitterRect[] = [];
 
 		try {
-			if(data.startsWith("ï»¿")) data = data.slice(3);
-
 			xmlParser.parseString(data, (err, atlas) => {
 				if(err) {
 					cb(res);
@@ -80,8 +83,8 @@ class Sparrow extends Splitter {
 					let trimmed = item.width < item.frameWidth || item.height < item.frameHeight;
 
 					// TODO: make this only happen visually, since users have reported issues with this
-					item.frameWidth = Math.max(item.frameWidth, item.width + item.frameX);
-					item.frameHeight = Math.max(item.frameHeight, item.height + item.frameY);
+					//item.frameWidth = Math.max(item.frameWidth, item.width + item.frameX);
+					//item.frameHeight = Math.max(item.frameHeight, item.height + item.frameY);
 
 					res.push({
 						name,

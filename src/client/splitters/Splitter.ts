@@ -20,6 +20,10 @@ class Splitter {
 		throw new Error('doSplit not implemented');
 	}
 
+	cleanData(_data: string) {
+		return _data;
+	}
+
 	get splitterName() {
 		return 'Default';
 	}

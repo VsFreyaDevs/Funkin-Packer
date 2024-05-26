@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import I18 from '../utils/I18';
+import { isNullOrUndefined } from '../utils/common';
 
 interface Props {
 	content: string;
@@ -29,13 +30,12 @@ class MessageBox extends React.Component<Props> {
 				btns.push({...btn, parentBox: this});
 			}
 		}
-		this.buttons = btns;
-
-		if(!this.buttons) {
-			this.buttons = [
-				{name: "ok", caption: I18.f("OK")}
+		if(btns.length == 0) {
+			btns = [
+				{name: "ok", caption: I18.f("OK"), parentBox: this}
 			]
 		}
+		this.buttons = btns;
 	}
 
 	close = () => {

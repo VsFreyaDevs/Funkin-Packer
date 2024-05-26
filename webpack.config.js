@@ -33,7 +33,8 @@ if (PLATFORM === 'electron') target = 'electron-renderer';
 plugins.push(new webpack.DefinePlugin({
 	'process.env.NODE_ENV': JSON.stringify(mode),
 	'PLATFORM': JSON.stringify(PLATFORM),
-	'PROFILER': JSON.stringify(profiler)
+	'PROFILER': JSON.stringify(profiler),
+	'DEBUG': JSON.stringify(debug)
 }));
 
 if (argv.build) {

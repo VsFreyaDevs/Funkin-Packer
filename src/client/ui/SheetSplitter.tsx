@@ -13,6 +13,7 @@ import { LoadedImages, Rect } from 'types';
 import Splitter from 'splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
+import { formatBytes } from '../utils/common';
 
 /**
  * @type {SplitterMaster}
@@ -27,6 +28,9 @@ interface State {
 	textureBack: string;
 	scale: number;
 	updateFileName: boolean;
+
+	message: React.ReactNode;
+	detectedPacker: string;
 }
 
 class SheetSplitter extends React.Component<Props, State> {
@@ -72,7 +76,9 @@ class SheetSplitter extends React.Component<Props, State> {
 			splitter: null,
 			textureBack: this.textureBackColors[0],
 			scale: 1,
-			updateFileName: APP.i.packOptions.repackUpdateFileName === undefined ? true : APP.i.packOptions.repackUpdateFileName
+			updateFileName: APP.i.packOptions.repackUpdateFileName === undefined ? true : APP.i.packOptions.repackUpdateFileName,
+			message: null,
+			detectedPacker: ''
 		};
 
 		this.rangeRef = React.createRef();
@@ -227,6 +233,12 @@ class SheetSplitter extends React.Component<Props, State> {
 
 			//ImagesList.i.state.images[file.name] = image;
 		}
+
+		TypedObserver.repackInfo.emit({
+			width: this.texture.width,
+			height: this.texture.height,
+			totalFrames: this.frames.length
+		});
 
 		ImagesList.i.loadImagesComplete(images);
 
@@ -395,6 +407,8 @@ class SheetSplitter extends React.Component<Props, State> {
 		if(!this.texture) return;
 		if(this.data === null) return;
 
+		//console.log(this.data);
+
 		splitterMaster.loadSplitter(this.state.splitter);
 		splitterMaster.splitData(this.data, {
 			textureWidth: this.texture.width,
@@ -403,14 +417,29 @@ class SheetSplitter extends React.Component<Props, State> {
 			height: +this.heightRef.current.value * 1 || 32,
 			padding: +this.paddingRef.current.value * 1 || 0
 		}, frames => {
+			let cleanData = splitterMaster.cleanData(this.data);
+
 			if(frames) {
 				this.frames = frames;
 
 				let canvas = this.viewRef.current;
 				let ctx = canvas.getContext('2d');
 
+				const isSparrow = splitterMaster.currentSplitter.splitterName === 'Sparrow';
+
+				//let detectedPacker = '';
+
+				let manualOffsets = 0;
+				let weirdSize = 0;
+				let totalFrames = 0;
+
+				const MANUAL_OFFSETS_COLOR = "160,32,240";
+				const WEIRD_SIZE_COLOR = "227,164,39";
+
 				for(let item of this.frames) {
 					let frame = item.frame;
+					let frameHasManualOffsets = false;
+					let frameHasWeirdSize = false;
 
 					let w = frame.w, h = frame.h;
 					if(item.rotated) {
@@ -418,8 +447,31 @@ class SheetSplitter extends React.Component<Props, State> {
 						h = frame.w;
 					}
 
-					ctx.strokeStyle = "#00F";
-					ctx.fillStyle = "rgba(0,0,255,0.25)";
+					if(isSparrow) {
+						if(item.spriteSourceSize.x < 0 || item.spriteSourceSize.y < 0) {
+							manualOffsets++;
+							frameHasManualOffsets = true;
+							//console.log('manual offsets', item);
+						} else if(item.spriteSourceSize.w + item.spriteSourceSize.x > item.sourceSize.frameWidth) {
+							weirdSize++;
+							frameHasWeirdSize = true;
+							//console.log('weird size', item, item.spriteSourceSize.w + item.spriteSourceSize.x, item.sourceSize.frameWidth);
+						} else if(item.spriteSourceSize.h + item.spriteSourceSize.y > item.sourceSize.frameHeight) {
+							weirdSize++;
+							frameHasWeirdSize = true;
+							//console.log('weird size', item, item.spriteSourceSize.h + item.spriteSourceSize.y, item.sourceSize.frameHeight);
+						}
+					}
+
+					let color = "0,0,255";
+					if(frameHasManualOffsets) {
+						color = MANUAL_OFFSETS_COLOR;
+					} else if(frameHasWeirdSize) {
+						color = WEIRD_SIZE_COLOR;
+					}
+
+					ctx.strokeStyle = "rgba(" + color + ",1.0)";
+					ctx.fillStyle = "rgba(" + color + ",0.25)";
 					ctx.lineWidth = 1;
 
 					ctx.beginPath();
@@ -429,8 +481,149 @@ class SheetSplitter extends React.Component<Props, State> {
 					ctx.lineTo(frame.x + w, frame.y + h);
 					ctx.stroke();
 
+					totalFrames++;
 				}
 
+				let splitterMessage: React.ReactNode[] = [];
+				const addMessage = (msg: React.ReactNode) => {
+					if(splitterMessage.length > 0) {
+						splitterMessage.push(<br/>);
+					}
+					splitterMessage.push(msg);
+				};
+				let si = APP.i.packOptions.statsSI;
+				let ramUsage = canvas.width * canvas.height * 4;
+				addMessage(<><span>Ram Usage: {formatBytes(ramUsage, 3, si)}</span></>);
+				addMessage(<><span>Total Frames: {totalFrames}</span></>);
+				if(manualOffsets > 0) {
+					addMessage(<><span style={{color: "rgb("+MANUAL_OFFSETS_COLOR+")"}}>Manual offsets detected, for {manualOffsets} frames.</span></>);
+				}
+				if(weirdSize > 0) {
+					addMessage(<><span style={{color: "rgb("+WEIRD_SIZE_COLOR+")"}}>Unexpected Frame size detected, possible manual offsets for {weirdSize} frames.</span></>);
+				}
+				this.setState({message: <>{splitterMessage}</>});
+
+				// packer detection
+				let detectedPackers: string[] = [];
+				if(isSparrow) {
+					let data = cleanData;
+
+					let packers = 0;
+
+					const HAS_CREDIT				= 1;
+
+					const ADOBE_ANIMATE				= 1+0;
+					const FUNKIN_PACKER				= 2+1;
+					const FREE_TEX_PACKER			= 3+2;
+					const LESHY_PACKER				= 4+3;
+					const CODENWEB_TEXTURE_PACKER	= 5+4;
+					const UNCERTAINPROD_PACKER_WEB	= 6+5;
+					const UNCERTAINPROD_PACKER_APP	= 7+6;
+
+					let header_is_animate = false;
+					let header_is_common = false;
+					let header_is_leshy = false;
+
+					// 0bPCPCPCPC // P = packer, C = credit
+
+					const isCredited = (packer: number) => (packers & ((1 << packer) >> HAS_CREDIT)) != 0;
+					const hasPacker = (packer: number) => (packers & (1 << packer)) != 0;
+					const setPacker = (packer: number) => 1 << packer;
+					const setCreditedPacker = (packer: number) => (1 << packer) | ((1 << packer) >> HAS_CREDIT);
+					const setCredit = (packer: number) => (1 << packer) >> HAS_CREDIT;
+					const removePacker = (packer: number) => ~(1 << packer);
+
+					const commonPackers = setPacker(FUNKIN_PACKER) | setPacker(FREE_TEX_PACKER) | setPacker(CODENWEB_TEXTURE_PACKER);
+
+					if(data.startsWith('<?xml version="1.0" encoding="UTF-8"?>')) {
+						packers |= commonPackers;
+						header_is_common = true;
+					} else if(data.startsWith('<?xml version="1.0" encoding="utf-8"?>')) {
+						packers |= setPacker(ADOBE_ANIMATE);
+						header_is_animate = true;
+					} else if(data.startsWith("<?xml version='1.0' encoding='utf-8'?>")) {
+						packers |= setPacker(UNCERTAINPROD_PACKER_APP);
+					} else if(/<textureatlas xmlns="http:\/\/www\.w3\.org\/1999\/xhtml" imagepath="[^"]+"/i.test(data)) {
+						packers |= setPacker(LESHY_PACKER);
+						header_is_leshy = true;
+					}
+
+					// Credits, might not exist due to manual removal
+					if(data.includes("Created with Funkin Packer")) {
+						packers &= ~commonPackers;
+						packers |= setCreditedPacker(FUNKIN_PACKER);
+					}
+					if(data.includes("Created with Free texture packer")) {
+						packers &= ~commonPackers;
+						packers |= setCreditedPacker(FREE_TEX_PACKER);
+					}
+					if(data.includes("Created with Adobe Animate")) {
+						packers |= setCreditedPacker(ADOBE_ANIMATE);
+					}
+					if(data.includes("Created with TexturePacker https")) {
+						packers |= setCreditedPacker(CODENWEB_TEXTURE_PACKER);
+					}
+					if(data.includes("Created using the Spritesheet and XML generator")) {
+						packers |= setCreditedPacker(UNCERTAINPROD_PACKER_WEB);
+						packers &= removePacker(ADOBE_ANIMATE);
+					}
+
+					// <?xml version="1.0" encoding="UTF-8"?> // Funkin Packer
+					// <?xml version="1.0" encoding="utf-8"?> // Adobe Animate
+					// <TextureAtlas imagePath="renderIntro.png" width="2676" height="2381"></TextureAtlas> // FreeTexPacker / Funkin Packer
+					// <!-- Created with Adobe Animate version 21.0.1.37179 --> version
+					// Created with Free texture packer v0.6.7
+					// TODO: detect out of order attributes => Haxe-based Packer
+					// Make it print version number of packer
+					// TODO: add haxe xml parser
+					if(/ {4}<SubTexture/.test(data)) {
+						packers &= ~commonPackers;
+						packers |= setPacker(CODENWEB_TEXTURE_PACKER);
+					} else if(/ {2}<SubTexture/.test(data) || /y="[^"]+"  width="[^"]+"/.test(data)) {
+						packers &= ~commonPackers;
+						packers |= setPacker(FREE_TEX_PACKER);
+					}
+
+					if(hasPacker(FUNKIN_PACKER)) {
+						detectedPackers.push('Funkin Packer' + (isCredited(FUNKIN_PACKER) ? '' : ' (Uncredited)'));
+					}
+					if(hasPacker(ADOBE_ANIMATE)) {
+						detectedPackers.push('Adobe Animate' + (isCredited(ADOBE_ANIMATE) ? '' : ' (Uncredited)'));
+					}
+					if(hasPacker(FREE_TEX_PACKER)) {
+						detectedPackers.push('FreeTexturePacker' + (isCredited(FREE_TEX_PACKER) ? '' : ' (Uncredited)'));
+					}
+					if(hasPacker(LESHY_PACKER)) {
+						detectedPackers.push('Leshy Packer');
+					}
+					if(hasPacker(CODENWEB_TEXTURE_PACKER)) {
+						let str = 'CodeAndWeb TexturePacker';
+						const credited = isCredited(CODENWEB_TEXTURE_PACKER);
+						if(!credited) {
+							if(header_is_animate)
+								str += ' (Uncredited, Could be Adobe Animate)';
+							else
+								str += ' (Uncredited, prob: 0.45)';
+						}
+						detectedPackers.push(str);
+					}
+					if(hasPacker(UNCERTAINPROD_PACKER_WEB)) {
+						detectedPackers.push('UncertainProd Web Packer' + (isCredited(UNCERTAINPROD_PACKER_WEB) ? '' : ' (Uncredited)'));
+					}
+					if(hasPacker(UNCERTAINPROD_PACKER_APP)) {
+						detectedPackers.push('UncertainProd Packer Desktop');
+					}
+
+					//if(DEBUG) {
+					//	console.log(packers.toString(2));
+					//}
+				}
+
+				if(detectedPackers.length > 0) {
+					this.setState({detectedPacker: detectedPackers.join(', ')});
+				} else {
+					this.setState({detectedPacker: ''});
+				}
 			}
 		});
 	}
@@ -581,6 +774,37 @@ class SheetSplitter extends React.Component<Props, State> {
 								</tr>
 							</tbody>
 						</table>
+					</div>
+
+					<div className="sheet-splitter-info">
+						{this.state.message ? <table>
+							<thead>
+								<tr>
+									<th>Info:</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										{this.state.message}
+									</td>
+								</tr>
+							</tbody>
+						</table> : null}
+						{this.state.detectedPacker ? <table>
+							<thead>
+								<tr>
+									<th>Detected Packer:</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										{this.state.detectedPacker}
+									</td>
+								</tr>
+							</tbody>
+						</table> : null}
 					</div>
 
 					<div className="sheet-splitter-bottom">

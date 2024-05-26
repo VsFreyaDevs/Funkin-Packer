@@ -1,5 +1,6 @@
 import { LoadedImages, PackOptions, PackResultsData, SelectedEvent } from "types";
 import { ButtonData } from "./ui/MessageBox";
+import { RepackInfoEvent } from "./ui/StatsInfo";
 
 type Callback<T> = (...args: T[]) => void;
 
@@ -40,4 +41,5 @@ export default {
 	imageSelected: new TypedObserver<SelectedEvent>(),
 	changeLanguage: new TypedObserver<string>(),
 	storedOrderChanged: new TypedObserver<string[]>(),
+	repackInfo: new TypedObserver<RepackInfoEvent>(),
 };

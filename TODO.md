@@ -4,17 +4,26 @@
 - [ ] Allow people to edit the offsets in app
 - [ ] Allow people to rename the frames in app
 - [ ] Make scaling happen before packing, not at export, make sure to scale offsets too
+- [ ] Make trimming happen on import?
 - [ ] Add more caching
 - [ ] Make the app more optimized when selecting stuff
 - [ ] Make the frame object be passed in to the packer
 - [ ] Find a way to optimize images
 - [ ] Bruteforce the width and height
-- [ ] Show how much was saved in the repack
-- [ ] Make a thing that says if it should retrim and such, or only repack
+- [ ] Make a thing that says if it should retrim and such, or only repack (what?)
 - [ ] APNG support
 - [ ] GIF support
 - [ ] Fix the width height not being exact when non fixed size
 - [ ] Make it apply detect identical at the import stage
-- [ ] Make splitter allow importing multiple files at once
-- [ ] Make splitter show info like if the data file is manually edited, or if the width and height are too low
+- [ ] Make splitter allow importing multiple files at once with drag and drop
 - [ ] Mobile support?
+- [ ] Make zip loading async, by loading files in parallel
+- [ ] Make the app more responsive
+- [ ] Image Editor? to remove stray pixels
+- [ ] Rename cover to overlay
+- [ ] CLI program to repack
+- [ ] Convert filters to typescript
+- [ ] Get corejs to only include what is needed
+- [ ] Make it store Duplicates only once
+- [ ] Make it so repacking stores all of the previous repacks to to provide more accurate stats
+- [ ] Add haxe xml parser

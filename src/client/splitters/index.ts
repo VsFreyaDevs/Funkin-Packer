@@ -93,12 +93,22 @@ export class SplitterMaster {
 		this._storedSplitterOrder = null;
 	}
 
+	cleanData = (data: string) => {
+		if(this.currentSplitter === null) {
+			throw new Error("No splitter found");
+		}
+
+		return this.currentSplitter.cleanData(data);
+	}
+
 	splitData = (data:string, options:SplitterOptions, cb: (res: Rect[]) => void) => {
 		if(this.currentSplitter === null) {
 			throw new Error("No splitter found");
 		}
 
 		//console.log(this.currentSplitter.name, "is parsing data", data, options);
+
+		data = this.cleanData(data);
 
 		this.currentSplitter.options = options;
 		this.currentSplitter.doSplit(data, (res) => {

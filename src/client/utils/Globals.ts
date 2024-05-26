@@ -37,6 +37,7 @@ class Globals {
 
 	static clearOrder() {
 		TypedObserver.storedOrderChanged.emit(null);
+		TypedObserver.repackInfo.emit(null);
 	}
 
 	/*static get sparrowOrigMap() {

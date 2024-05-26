@@ -913,7 +913,7 @@ html, body {
 .sheet-splitter-controls {
 	float: right;
 	width: 220px;
-	height: 420px;
+	/* height: 420px; */
 	padding-right: 10px;
 }
 
@@ -932,6 +932,14 @@ html, body {
 	white-space: nowrap;
 	text-align: left;
 	font-size: 12px;
+}
+
+.sheet-splitter-info {
+	float: right;
+	width: 220px;
+	/* height: 380px; */
+	padding-right: 10px;
+	padding-top: 60px;
 }
 
 .sheet-splitter-bottom {
@@ -1035,13 +1043,13 @@ html, body {
 }
 
 .stats-info {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .stats-info-item {
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 	padding-right: 4px;
 	padding-left: 4px;
 
