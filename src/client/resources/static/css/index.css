@@ -1032,6 +1032,15 @@ html, body {
 	vertical-align: middle;
 }
 
+.main-header-ko-fi {
+	display: inline-block;
+	margin-left: 16px;
+}
+
+.main-header-ko-fi img {
+	vertical-align: middle;
+}
+
 .main-header-about {
 	font-size: 18px;
 	color: #fff;

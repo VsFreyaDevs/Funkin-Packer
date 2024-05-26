@@ -35,6 +35,11 @@ class MainHeader extends React.Component {
 							<img src="static/images/github-mark-white.png" height="25" alt="Github" />
 						</a>
 					</div>
+					<div className='main-header-ko-fi'>
+						<a href="https://ko-fi.com/Ne_Eo" target="_blank">
+							<img src="static/images/ko-fi.png" height="25" alt="Ko-Fi" />
+						</a>
+					</div>
 				</div>
 
 				{/* <div className="main-header-about" onClick={this.showAbout}>
