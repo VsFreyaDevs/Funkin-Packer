@@ -18,7 +18,7 @@ import { formatBytes } from '../utils/common';
 /**
  * @type {SplitterMaster}
  */
-var splitterMaster = new SplitterMaster();
+const splitterMaster = new SplitterMaster();
 
 interface Props {
 }
@@ -141,14 +141,14 @@ class SheetSplitter extends React.Component<Props, State> {
 
 		splitterMaster.finishSplit();
 
-		let ctx = this.buffer.getContext('2d');
-		let files = [];
+		const ctx = this.buffer.getContext('2d');
+		const files = [];
 
-		let disableUntrim = this.disableUntrimRef.current.checked;
+		const disableUntrim = this.disableUntrimRef.current.checked;
 
 		if(this.state.updateFileName) {
-			var filename = this.fileName;
-			let parts = filename.split(".");
+			let filename = this.fileName;
+			const parts = filename.split(".");
 			if(parts.length > 1) parts.pop();
 			filename = parts.join(".");
 			PackProperties.i.packOptions.fileName = filename;
@@ -156,23 +156,26 @@ class SheetSplitter extends React.Component<Props, State> {
 			PackProperties.i.refreshPackOptions();
 		}
 
-		for(let item of this.frames) {
-			let trimmed = item.trimmed ? disableUntrim : false;
+		for(const item of this.frames) {
+			const trimmed = item.trimmed ? disableUntrim : false;
 
-			//var prefix = cleanPrefix(item.originalFile || item.file || item.name);
+			//let prefix = cleanPrefix(item.originalFile || item.file || item.name);
 
-			var ssw = item.sourceSize.mw;
-			var ssh = item.sourceSize.mh;
+			const ssw = item.sourceSize.mw;
+			const ssh = item.sourceSize.mh;
 
-			this.buffer.width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
-			this.buffer.height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
+			let width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
+			let height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
 
-			var isEmpty = this.buffer.width === 0 || this.buffer.height === 0;
+			const isEmpty = width === 0 || height === 0;
 
 			if(isEmpty) {
-				this.buffer.width = 1;
-				this.buffer.height = 1;
+				width = 1;
+				height = 1;
 			}
+
+			this.buffer.width = width;
+			this.buffer.height = height;
 
 			ctx.clearRect(0, 0, this.buffer.width, this.buffer.height);
 
@@ -223,10 +226,10 @@ class SheetSplitter extends React.Component<Props, State> {
 		}
 
 		//console.log(ImagesList.i);
-		var images: LoadedImages = {};
+		const images: LoadedImages = {};
 
-		for(let file of files) {
-			var image = new CustomImage(new Image());
+		for(const file of files) {
+			const image = new CustomImage(new Image());
 			image.src = file.base64;
 			image.base64 = file.base64;
 			image.rect = file.rect;
@@ -261,18 +264,18 @@ class SheetSplitter extends React.Component<Props, State> {
 			return;
 		}
 
-		let ctx = this.buffer.getContext('2d');
-		let files = [];
+		const ctx = this.buffer.getContext('2d');
+		const files = [];
 
-		let disableUntrim = this.disableUntrimRef.current.checked;
+		const disableUntrim = this.disableUntrimRef.current.checked;
 
 		for(let item of this.frames) {
-			let trimmed = item.trimmed ? disableUntrim : false;
+			const trimmed = item.trimmed ? disableUntrim : false;
 
-			//var prefix = cleanPrefix(item.originalFile || item.file || item.name);
+			//let prefix = cleanPrefix(item.originalFile || item.file || item.name);
 
-			var ssw = item.sourceSize.mw;
-			var ssh = item.sourceSize.mh;
+			const ssw = item.sourceSize.mw;
+			const ssh = item.sourceSize.mh;
 
 			this.buffer.width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
 			this.buffer.height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
@@ -297,9 +300,8 @@ class SheetSplitter extends React.Component<Props, State> {
 				ctx.restore();
 			}
 			else {
-
-				let dx = trimmed ? 0 : item.spriteSourceSize.x;
-				let dy = trimmed ? 0 : item.spriteSourceSize.y;
+				const dx = trimmed ? 0 : item.spriteSourceSize.x;
+				const dy = trimmed ? 0 : item.spriteSourceSize.y;
 
 				ctx.drawImage(this.texture.image,
 					item.frame.x, item.frame.y,
@@ -333,9 +335,9 @@ class SheetSplitter extends React.Component<Props, State> {
 		if(e.target.files.length) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
-			let loader = new LocalImagesLoader();
+			const loader = new LocalImagesLoader();
 			loader.load(e.target.files, null, data => {
-				let keys = Object.keys(data);
+				const keys = Object.keys(data);
 
 				if(keys.length === 0) {
 					Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
@@ -356,14 +358,14 @@ class SheetSplitter extends React.Component<Props, State> {
 	}
 
 	updateTexture = () => {
-		let canvas = this.viewRef.current;
+		const canvas = this.viewRef.current;
 
 		if(this.texture) {
 			canvas.width = this.texture.width;
 			canvas.height = this.texture.height;
 			canvas.style.display = '';
 
-			let ctx = canvas.getContext('2d');
+			const ctx = canvas.getContext('2d');
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(this.texture.image, 0, 0);
 
@@ -377,15 +379,15 @@ class SheetSplitter extends React.Component<Props, State> {
 
 	selectDataFile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if(e.target.files.length) {
-			let item = e.target.files[0];
+			const item = e.target.files[0];
 
-			let reader = new FileReader();
+			const reader = new FileReader();
 			reader.onload = e => {
 				let content = e.target.result as string;
 				// this code here doesnt look like it would work
 				// data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==
 				// into SGVsbG8sIFdvcmxkIQ==
-				let splitContent = content.split(',');
+				const splitContent = content.split(',');
 				splitContent.shift();
 				if(splitContent.length == 1)
 					content = atob(splitContent.join(','));
@@ -419,13 +421,13 @@ class SheetSplitter extends React.Component<Props, State> {
 			height: +this.heightRef.current.value * 1 || 32,
 			padding: +this.paddingRef.current.value * 1 || 0
 		}, frames => {
-			let cleanData = splitterMaster.cleanData(this.data);
+			const cleanData = splitterMaster.cleanData(this.data);
 
 			if(frames) {
 				this.frames = frames;
 
-				let canvas = this.viewRef.current;
-				let ctx = canvas.getContext('2d');
+				const canvas = this.viewRef.current;
+				const ctx = canvas.getContext('2d');
 
 				const isSparrow = splitterMaster.currentSplitter.splitterName === 'Sparrow';
 
@@ -439,7 +441,7 @@ class SheetSplitter extends React.Component<Props, State> {
 				const WEIRD_SIZE_COLOR = "227,164,39";
 
 				for(let item of this.frames) {
-					let frame = item.frame;
+					const frame = item.frame;
 					let frameHasManualOffsets = false;
 					let frameHasWeirdSize = false;
 
@@ -486,15 +488,15 @@ class SheetSplitter extends React.Component<Props, State> {
 					totalFrames++;
 				}
 
-				let splitterMessage: React.ReactNode[] = [];
+				const splitterMessage: React.ReactNode[] = [];
 				const addMessage = (msg: React.ReactNode) => {
 					if(splitterMessage.length > 0) {
 						splitterMessage.push(<br/>);
 					}
 					splitterMessage.push(msg);
 				};
-				let si = APP.i.packOptions.statsSI;
-				let ramUsage = canvas.width * canvas.height * 4;
+				const si = APP.i.packOptions.statsSI;
+				const ramUsage = canvas.width * canvas.height * 4;
 				addMessage(<><span>Ram Usage: {formatBytes(ramUsage, 3, si)}</span></>);
 				addMessage(<><span>Total Frames: {totalFrames}</span></>);
 				if(manualOffsets > 0) {
@@ -506,9 +508,9 @@ class SheetSplitter extends React.Component<Props, State> {
 				this.setState({message: <>{splitterMessage.map((a, i) => <span key={"splitter-message-" + i}>{a}</span>)}</>});
 
 				// packer detection
-				let detectedPackers: string[] = [];
+				const detectedPackers: string[] = [];
 				if(isSparrow) {
-					let data = cleanData;
+					const data = cleanData;
 
 					let packers = 0;
 
@@ -599,8 +601,8 @@ class SheetSplitter extends React.Component<Props, State> {
 						detectedPackers.push('Leshy Packer');
 					}
 					if(hasPacker(CODENWEB_TEXTURE_PACKER)) {
-						let str = 'CodeAndWeb TexturePacker';
 						const credited = isCredited(CODENWEB_TEXTURE_PACKER);
+						let str = 'CodeAndWeb TexturePacker';
 						if(!credited) {
 							if(header_is_animate)
 								str += ' (Uncredited, Could be Adobe Animate)';
@@ -636,19 +638,19 @@ class SheetSplitter extends React.Component<Props, State> {
 	}
 
 	changeSplitter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		let splitter = splitterMaster.getSplitterFromName(e.target.value);
+		const splitter = splitterMaster.getSplitterFromName(e.target.value);
 
 		this.setState({splitter: splitter});
 		this.updateView();
 	}
 
 	setBack = (e: React.MouseEvent<HTMLDivElement>) => {
-		let classNames = (e.target as HTMLDivElement).className.split(" ");
-		for(let name of classNames) {
+		const classNames = (e.target as HTMLDivElement).className.split(" ");
+		for(const name of classNames) {
 			if(this.textureBackColors.indexOf(name) >= 0) {
 				this.setState({textureBack: name});
 
-				let canvas = this.viewRef.current;
+				const canvas = this.viewRef.current;
 				canvas.className = name;
 
 				return;
@@ -658,23 +660,23 @@ class SheetSplitter extends React.Component<Props, State> {
 
 	updateTextureScale = (val=this.state.scale) => {
 		if(this.texture) {
-			let w = Math.floor(this.texture.width * val);
-			let h = Math.floor(this.texture.height * val);
+			const w = Math.floor(this.texture.width * val);
+			const h = Math.floor(this.texture.height * val);
 
-			let canvas = this.viewRef.current;
+			const canvas = this.viewRef.current;
 			canvas.style.width = w + 'px';
 			canvas.style.height = h + 'px';
 		}
 	}
 
 	changeScale = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let val = Number(e.target.value);
+		const val = Number(e.target.value);
 		this.setState({scale: val});
 		this.updateTextureScale(val);
 	}
 
 	onUpdateFileNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let val = e.target.checked;
+		const val = e.target.checked;
 		this.setState({updateFileName: val});
 		PackProperties.i.packOptions.repackUpdateFileName = val;
 		PackProperties.i.saveOptions();
@@ -686,7 +688,7 @@ class SheetSplitter extends React.Component<Props, State> {
 	}
 
 	render() {
-		let currentSplitterName = splitterMaster.getCurrentSplitter().splitterName;
+		const currentSplitterName = splitterMaster.getCurrentSplitter().splitterName;
 
 		let displayGridProperties = 'none';
 

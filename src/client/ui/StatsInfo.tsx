@@ -65,8 +65,8 @@ class StatsInfo extends React.Component<Props, State> {
 	};
 
 	render() {
-		let sizes = this.state.info.packResults.map((res) => ({ width: res.renderer.width, height: res.renderer.height }));
-		let ramUsage = sizes.reduce((acc, res) => acc + res.width * res.height * 4, 0);
+		const sizes = this.state.info.packResults.map((res) => ({ width: res.renderer.width, height: res.renderer.height }));
+		const ramUsage = sizes.reduce((acc, res) => acc + res.width * res.height * 4, 0);
 		let sizeText = sizes.map((res) => res.width + "x" + res.height).join(" + ");
 		let ramText = formatBytes(ramUsage, 3, this.state.si);
 		let ramTitle = "";
@@ -77,12 +77,12 @@ class StatsInfo extends React.Component<Props, State> {
 		} else {
 			let repackInfo = this.state.repackInfo;
 			if (repackInfo) {
-				var oldUsage = (repackInfo.width * repackInfo.height * 4);
-				var savedRamPercent = (ramUsage-oldUsage) / oldUsage;
+				const oldUsage = (repackInfo.width * repackInfo.height * 4);
+				const savedRamPercent = (ramUsage-oldUsage) / oldUsage;
 				let savePercentTxt = (savedRamPercent * 100).toFixed(2);
 				if(savedRamPercent > 0) savePercentTxt = "+" + savePercentTxt;
 				let saveTxt = " (" + savePercentTxt + "%)";
-				let color = savedRamPercent < 0 ? "#00FF00" : "#FF0000";
+				const color = savedRamPercent < 0 ? "#00FF00" : "#FF0000";
 				savingText = <span style={{color}}>{saveTxt}</span>;
 
 				ramTitle = formatBytes(oldUsage, 3, this.state.si) + " -> " + formatBytes(ramUsage, 3, this.state.si);

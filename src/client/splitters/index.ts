@@ -5,10 +5,9 @@ import JsonArray from './JsonArray';
 import UIKit from './UIKit';
 import Spine from './Spine';
 import Sparrow from './Sparrow';
-import { isNullOrUndefined, setMaxSizes } from '../utils/common';
-import { GLOBAL_EVENT, Observer } from '../Observer';
+import { setMaxSizes } from '../utils/common';
 import Splitter, { SplitterOptions } from './Splitter';
-import { PackOptions, Rect } from 'types';
+import { Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 
 const GridSplitter = new Grid();

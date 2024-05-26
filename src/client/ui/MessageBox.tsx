@@ -24,16 +24,14 @@ class MessageBox extends React.Component<Props> {
 	constructor(props:Props) {
 		super(props);
 
-		var btns = [];
+		const btns = [];
 		if(this.props.buttons) {
 			for(let btn of this.props.buttons) {
 				btns.push({...btn, parentBox: this});
 			}
 		}
 		if(btns.length == 0) {
-			btns = [
-				{name: "ok", caption: I18.f("OK"), parentBox: this}
-			]
+			btns.push({name: "ok", caption: I18.f("OK"), parentBox: this});
 		}
 		this.buttons = btns;
 	}

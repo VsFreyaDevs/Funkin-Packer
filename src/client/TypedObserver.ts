@@ -14,14 +14,14 @@ class TypedObserver<T, FUNC = Callback<T>> {
 	}
 
 	off(callback: FUNC, context?: any) {
-		let index = this._callbacks.findIndex(item => item.callback === callback && item.context === context);
+		const index = this._callbacks.findIndex(item => item.callback === callback && item.context === context);
 		if (index >= 0) {
 			this._callbacks.splice(index, 1);
 		}
 	}
 
 	emit(...args: T[]) {
-		for (let callback of this._callbacks) {
+		for (const callback of this._callbacks) {
 			Function.prototype.apply.call(callback.callback, callback.context, args);
 		}
 	}

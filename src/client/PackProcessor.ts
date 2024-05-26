@@ -61,15 +61,15 @@ class PackProcessor {
 	}
 
 	static applyIdentical(rects:Rect[], identical:Rect[]) {
-		let clones:Rect[] = [];
-		let removeIdentical:Rect[] = [];
+		const clones:Rect[] = [];
+		const removeIdentical:Rect[] = [];
 
-		for (let item of identical) {
-			let ix = rects.indexOf(item.identical);
+		for (const item of identical) {
+			const ix = rects.indexOf(item.identical);
 			if (ix >= 0) {
-				let rect = rects[ix];
+				const rect = rects[ix];
 
-				let clone = { ...rect};
+				const clone = { ...rect};
 
 				clone.name = item.name;
 				clone.image = item.image;
@@ -86,11 +86,11 @@ class PackProcessor {
 			}
 		}
 
-		for (let item of removeIdentical) {
+		for (const item of removeIdentical) {
 			identical.splice(identical.indexOf(item), 1);
 		}
 
-		for (let item of clones) {
+		for (const item of clones) {
 			item.cloned = true;
 			rects.push(item);
 		}
@@ -105,8 +105,8 @@ class PackProcessor {
 		console.log(images);
 		let rects:Rect[] = [];
 
-		let spritePadding = options.spritePadding || 0;
-		let borderPadding = options.borderPadding || 0;
+		const spritePadding = options.spritePadding || 0;
+		const borderPadding = options.borderPadding || 0;
 
 		let maxWidth = 0, maxHeight = 0;
 		let minWidth = 0, minHeight = 0;
@@ -114,12 +114,12 @@ class PackProcessor {
 		let alphaThreshold = options.alphaThreshold || 0;
 		if (alphaThreshold > 255) alphaThreshold = 255;
 
-		let names = Object.keys(images).sort();
+		const names = Object.keys(images).sort();
 
-		for (let key of names) {
-			let img = images[key];
+		for (const key of names) {
+			const img = images[key];
 
-			let name = key.split(".")[0];
+			const name = key.split(".")[0];
 
 			maxWidth += img.width;
 			maxHeight += img.height;
@@ -156,8 +156,8 @@ class PackProcessor {
 		if (!height) height = maxHeight;
 
 		if (options.powerOfTwo) {
-			let sw = Math.round(Math.log2(width));
-			let sh = Math.round(Math.log2(height));
+			const sw = Math.round(Math.log2(width));
+			const sh = Math.round(Math.log2(height));
 
 			let pw = 2 ** sw;
 			let ph = 2 ** sh;
@@ -185,17 +185,17 @@ class PackProcessor {
 		let identical:Rect[] = [];
 
 		if (options.detectIdentical) {
-			let res = PackProcessor.detectIdentical(rects, options.allowTrim);
+			const res = PackProcessor.detectIdentical(rects, options.allowTrim);
 
 			rects = res.rects;
 			identical = res.identical;
 		}
 
-		let getAllPackers = () => {
-			let methods = [];
-			for (let packerClass of allPackers) {
+		const getAllPackers = () => {
+			const methods = [];
+			for (const packerClass of allPackers) {
 				if (packerClass !== OptimalPacker) {
-					for (let method in packerClass.methods) {
+					for (const method in packerClass.methods) {
 						if(!Object.hasOwn(packerClass.methods, method)) continue;
 
 						methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false });
@@ -208,9 +208,9 @@ class PackProcessor {
 			return methods;
 		};
 
-		let packerClass:PackerClass = getPackerByType(options.packer) || MaxRectsBinPack;
-		let packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
-		let packerCombos = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
+		const packerClass:PackerClass = getPackerByType(options.packer) || MaxRectsBinPack;
+		const packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
+		const packerCombos = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
 
 		let optimalRes;
 		let optimalSheets = Infinity;
@@ -222,11 +222,11 @@ class PackProcessor {
 		}
 
 		for (let combo of packerCombos) {
-			let res = [];
+			const res = [];
 			let sheetArea = 0;
 
 			// duplicate rects if more than 1 combo since the array is mutated in pack()
-			let _rects = packerCombos.length > 1 ? rects.map(rect => (
+			const _rects = packerCombos.length > 1 ? rects.map(rect => (
 				{
 					...rect,
 					frame: { ...rect.frame},
@@ -238,7 +238,7 @@ class PackProcessor {
 			// duplicate identical if more than 1 combo and fix references to point to the
 			//  cloned rects since the array is mutated in applyIdentical()
 			// Optimize?
-			let _identical = packerCombos.length > 1 ? identical.map(rect => {
+			const _identical = packerCombos.length > 1 ? identical.map(rect => {
 				for (let rect2 of _rects) {
 					if (rect.identical.image.base64 === rect2.image.base64) {
 						return { ...rect, identical: rect2};
@@ -249,7 +249,7 @@ class PackProcessor {
 
 			while (_rects.length) {
 				// eslint-disable-next-line new-cap
-				let packer = new combo.packerClass(width, height, combo.allowRotation, spritePadding);
+				const packer = new combo.packerClass(width, height, combo.allowRotation, spritePadding);
 				let result = packer.pack(_rects, combo.packerMethod);
 
 				if (options.detectIdentical) {
@@ -262,12 +262,12 @@ class PackProcessor {
 					this.removeRect(_rects, item.name);
 				}
 
-				let { width: sheetWidth, height: sheetHeight } = TextureRenderer.getSize(result, options);
+				const { width: sheetWidth, height: sheetHeight } = TextureRenderer.getSize(result, options);
 				sheetArea += sheetWidth * sheetHeight;
 			}
 
-			let sheets = res.length;
-			let efficiency = sourceArea / sheetArea;
+			const sheets = res.length;
+			const efficiency = sourceArea / sheetArea;
 			// TODO: calculate ram usage instead
 
 			if (sheets < optimalSheets || (sheets === optimalSheets && efficiency > optimalEfficiency)) {
@@ -277,8 +277,8 @@ class PackProcessor {
 			}
 		}
 
-		for (let sheet of optimalRes) {
-			for(let item of sheet) {
+		for (const sheet of optimalRes) {
+			for(const item of sheet) {
 				item.frame.x += borderPadding;
 				item.frame.y += borderPadding;
 			}

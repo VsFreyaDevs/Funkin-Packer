@@ -2,9 +2,6 @@ import CustomImage from "data/CustomImage";
 import { PackerClass } from "./packers/Packer";
 import TextureRenderer from "./utils/TextureRenderer";
 
-//declare var PLATFORM: string;
-//declare var PROFILER: boolean;
-
 declare type PackOptions = {
 	repackUpdateFileName?: boolean;
 	width?: number;

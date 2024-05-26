@@ -6,15 +6,15 @@ import * as plist from 'plist';
 class UIKit extends Splitter {
 	doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
-			let atlas = plist.parse(data);
+			const atlas = plist.parse(data);
 			if(!atlas) return cb(false);
 
-			var frames = (atlas as plist.PlistObject).frames as plist.PlistObject;
+			const frames = (atlas as plist.PlistObject).frames as plist.PlistObject;
 			if(!frames) return cb(false);
 
 			if(atlas && frames) {
-				let names = Object.keys(frames);
-				let frame = frames[names[0]] as plist.PlistObject;
+				const names = Object.keys(frames);
+				const frame = frames[names[0]] as plist.PlistObject;
 
 				if(!frame) return cb(false);
 
@@ -37,17 +37,17 @@ class UIKit extends Splitter {
 
 	doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		try {
-			let res:Rect[] = [];
+			const res:Rect[] = [];
 
-			let atlas = plist.parse(data);
-			var frames = (atlas as plist.PlistObject).frames as plist.PlistObject;
+			const atlas = plist.parse(data);
+			const frames = (atlas as plist.PlistObject).frames as plist.PlistObject;
 
-			let names = Object.keys(frames);
+			const names = Object.keys(frames);
 
-			for(let name of names) {
-				let item = frames[name] as plist.PlistObject;
+			for(const name of names) {
+				const item = frames[name] as plist.PlistObject;
 
-				let trimmed = item.w < item.oW || item.h < item.oH;
+				const trimmed = item.w < item.oW || item.h < item.oH;
 
 				res.push({
 					name: Splitter.fixFileName(name),

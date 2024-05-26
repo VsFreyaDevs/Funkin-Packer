@@ -51,7 +51,7 @@ class APP {
 	}
 
 	pack() {
-		let keys = Object.keys(this.images);
+		const keys = Object.keys(this.images);
 
 		if (keys.length > 0) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
@@ -69,8 +69,8 @@ class APP {
 	onPackComplete = (res:Rect[][]) => {
 		this.packResult = [];
 
-		for (let data of res) {
-			let renderer = new TextureRenderer(data, this.packOptions);
+		for (const data of res) {
+			const renderer = new TextureRenderer(data, this.packOptions);
 
 			this.packResult.push({
 				data,
@@ -104,25 +104,25 @@ class APP {
 	}
 
 	async doExport() {
-		let exporter = this.packOptions.exporter;
-		let fileName = this.packOptions.fileName;
-		let filterClass = getFilterByType(this.packOptions.filter);
+		const exporter = this.packOptions.exporter;
+		const fileName = this.packOptions.fileName;
+		const filterClass = getFilterByType(this.packOptions.filter);
 		// eslint-disable-next-line new-cap
-		let filter = new filterClass();
+		const filter = new filterClass();
 
-		let files = [];
+		const files = [];
 
 		let ix = 0;
-		for (let item of this.packResult) {
+		for (const item of this.packResult) {
 
-			let fName = fileName + (this.packResult.length > 1 ? "-" + ix : "");
+			const fName = fileName + (this.packResult.length > 1 ? "-" + ix : "");
 
-			//let buffer = item.renderer.scale(this.packOptions.scale);
+			//const buffer = item.renderer.scale(this.packOptions.scale);
 
-			let buffer = item.renderer.getBuffer();
+			const buffer = item.renderer.getBuffer();
 
 			let imageData = filter.apply(buffer).toDataURL(this.packOptions.textureFormat === "png" ? "image/png" : "image/jpeg");
-			let parts = imageData.split(",");
+			const parts = imageData.split(",");
 			parts.shift();
 			imageData = parts.join(",");
 
@@ -142,9 +142,9 @@ class APP {
 			});
 
 			//TODO: move to options
-			let pixelFormat = this.packOptions.textureFormat === "png" ? "RGBA8888" : "RGB888";
+			const pixelFormat = this.packOptions.textureFormat === "png" ? "RGBA8888" : "RGB888";
 
-			let options = {
+			const options = {
 				imageName: `${fName}`,
 				imageFile: `${fName}.${this.packOptions.textureFormat}`,
 				imageData,

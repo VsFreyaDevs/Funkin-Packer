@@ -90,8 +90,8 @@ class SpritesPlayer extends React.Component<Props> {
 			let baseTexture = part.buffer;
 
 			for (let config of part.data) {
-				var w = config.sourceSize.mw;
-				var h = config.sourceSize.mh;
+				const w = config.sourceSize.mw;
+				const h = config.sourceSize.mh;
 
 				//console.log(w, h, config, config.sourceSize);
 
@@ -108,7 +108,7 @@ class SpritesPlayer extends React.Component<Props> {
 		if(this.width < 256) this.width = 256;
 		if(this.height < 200) this.height = 200;
 
-		let canvas = this.viewRef.current;
+		const canvas = this.viewRef.current;
 		canvas.width = this.width;
 		canvas.height = this.height;
 
@@ -183,10 +183,10 @@ class SpritesPlayer extends React.Component<Props> {
 
 		//console.log(texture.config);
 
-		//var w = Math.max(texture.config.sourceSize.mw, texture.config.sourceSize.w);
-		//var h = Math.max(texture.config.sourceSize.mh, texture.config.sourceSize.h);
-		var w = texture.config.sourceSize.mw;
-		var h = texture.config.sourceSize.mh;
+		//let w = Math.max(texture.config.sourceSize.mw, texture.config.sourceSize.w);
+		//let h = Math.max(texture.config.sourceSize.mh, texture.config.sourceSize.h);
+		const w = texture.config.sourceSize.mw;
+		const h = texture.config.sourceSize.mh;
 
 		let buffer = this.bufferRef.current;
 		buffer.width = w;

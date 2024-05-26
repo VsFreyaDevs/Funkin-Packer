@@ -185,7 +185,7 @@ class ImagesList extends React.Component<Props, State> {
 			for(let key of keys) {
 				let item = images[key];
 
-				if(item.fsPath.folder && data.path.substr(0, item.fsPath.folder.length) === item.fsPath.folder) {
+				if(item.fsPath.folder && data.path.substring(0, item.fsPath.folder.length) === item.fsPath.folder) {
 					folder = item.fsPath.folder;
 					addPath = folder.split("/").pop();
 				}
@@ -193,7 +193,7 @@ class ImagesList extends React.Component<Props, State> {
 
 			let name = "";
 			if(folder) {
-				name = addPath + data.path.substr(folder.length);
+				name = addPath + data.path.substring(folder.length);
 			}
 			else {
 				name = data.path.split("/").pop();
@@ -212,14 +212,14 @@ class ImagesList extends React.Component<Props, State> {
 			this.addZipInputRef.current.value = "";
 		}
 
-		let names = Object.keys(data);
+		const names = Object.keys(data);
 
 		if(names.length) {
 			let images = this.state.images;
 
-			for (let name of names) {
+			for (const name of names) {
 				images[name] = data[name];
-				var img = images[name];
+				const img = images[name];
 				if(isNullOrUndefined(img.rect)) img.rect = getDummyRect(name, img.width, img.height);
 				/*images[name] = {
 					image: data[name],
@@ -231,7 +231,7 @@ class ImagesList extends React.Component<Props, State> {
 				}*/
 			}
 
-			var rects = names.map(name => images[name].rect);
+			const rects = names.map(name => images[name].rect);
 			setMaxSizes(rects);
 
 			images = this.sortImages(images);
@@ -242,10 +242,10 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	sortImages = (images:LoadedImages) => {
-		let names = Object.keys(images);
+		const names = Object.keys(images);
 		names.sort(smartSortImages);
 
-		let sorted:LoadedImages = {};
+		const sorted:LoadedImages = {};
 
 		for(let name of names) {
 			sorted[name] = images[name];
@@ -255,9 +255,9 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	clear = () => {
-		let keys = Object.keys(this.state.images);
-		if(keys.length) {
-			let buttons:ButtonData[] = [
+		const keys = Object.keys(this.state.images);
+		if(keys.length > 0) {
+			const buttons:ButtonData[] = [
 				{name: "yes", caption: I18.f("YES"), callback: this.doClear},
 				{name: "no", caption: I18.f("NO")}
 			];
@@ -274,8 +274,8 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	selectAllImages = () => {
-		let images = this.state.images;
-		for(let key in images) {
+		const images = this.state.images;
+		for(const key in images) {
 			images[key].selected = true;
 		}
 
@@ -284,15 +284,15 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	removeImagesSelect = () => {
-		let images = this.state.images;
-		for(let key in images) {
+		const images = this.state.images;
+		for(const key in images) {
 			images[key].selected = false;
 		}
 	}
 
 	getCurrentImage = () => {
-		let images = this.state.images;
-		for(let key in images) {
+		const images = this.state.images;
+		for(const key in images) {
 			if(images[key].current) return images[key];
 		}
 
@@ -302,8 +302,8 @@ class ImagesList extends React.Component<Props, State> {
 	getImageIdx = (image:CustomImage) => {
 		let idx = 0;
 
-		let images = this.state.images;
-		for(let key in images) {
+		const images = this.state.images;
+		for(const key in images) {
 			if(images[key] === image) return idx;
 			idx++;
 		}
@@ -312,18 +312,18 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	bulkSelectImages = (to:CustomImage) => {
-		let current = this.getCurrentImage();
+		const current = this.getCurrentImage();
 		if(!current) {
 			to.selected = true;
 			return;
 		}
 
-		let fromIx = this.getImageIdx(current);
-		let toIx = this.getImageIdx(to);
+		const fromIx = this.getImageIdx(current);
+		const toIx = this.getImageIdx(to);
 
-		let images = this.state.images;
+		const images = this.state.images;
 		let ix = 0;
-		for(let key in images) {
+		for(const key in images) {
 			if(fromIx < toIx && ix >= fromIx && ix <= toIx) images[key].selected = true;
 			if(fromIx > toIx && ix <= fromIx && ix >= toIx) images[key].selected = true;
 			ix++;
@@ -332,11 +332,11 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	selectImagesFolder = (path: string, selected: boolean) => {
-		let images = this.state.images;
+		const images = this.state.images;
 
 		let first = false;
-		for(let key in images) {
-			if(key.substr(0, path.length + 1) === path + "/") {
+		for(const key in images) {
+			if(key.substring(0, path.length + 1) === path + "/") {
 				if(!first) {
 					first = true;
 					this.clearCurrentImage();
@@ -349,36 +349,38 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	clearCurrentImage = () => {
-		let images = this.state.images;
-		for(let key in images) {
+		const images = this.state.images;
+		for(const key in images) {
 			images[key].current = false;
 		}
 	}
 
 	getFirstImageInFolder = (path: string) => {
-		let images = this.state.images;
+		const images = this.state.images;
 
-		for(let key in images) {
-			if (key.substr(0, path.length + 1) === path + "/") return images[key];
+		for(const key in images) {
+			if (key.substring(0, path.length + 1) === path + "/")
+				return images[key];
 		}
 
 		return null;
 	}
 
 	getLastImageInFolder = (path: string) => {
-		let images = this.state.images;
+		const images = this.state.images;
 
 		let ret = null;
-		for(let key in images) {
-			if (key.substr(0, path.length + 1) === path + "/") ret = images[key];
+		for(const key in images) {
+			if (key.substring(0, path.length + 1) === path + "/")
+				ret = images[key];
 		}
 
 		return ret;
 	}
 
 	handleImageSelected = (e: SelectedEvent) => {
-		let path = e.path;
-		let images = this.state.images;
+		const path = e.path;
+		const images = this.state.images;
 
 		if(e.isFolder) {
 			if(e.ctrlKey) {
@@ -401,7 +403,7 @@ class ImagesList extends React.Component<Props, State> {
 			}
 		}
 		else {
-			let image = images[path];
+			const image = images[path];
 			if(image) {
 				if(e.ctrlKey) {
 					image.selected = !image.selected;
@@ -431,11 +433,11 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	emitSelectedChanges = () => {
-		let selected = [];
+		const selected = [];
 
-		let images = this.state.images;
+		const images = this.state.images;
 
-		for(let key in images) {
+		for(const key in images) {
 			if(images[key].selected) selected.push(key);
 		}
 
@@ -461,11 +463,11 @@ class ImagesList extends React.Component<Props, State> {
 		let folder = null;
 
 		while(parts.length) {
-			let name = parts.shift();
+			const name = parts.shift();
 
 			folder = null;
 
-			for (let item of root.items) {
+			for (const item of root.items) {
 				if (item.isFolder && item.name === name) {
 					folder = item;
 					break;
@@ -473,7 +475,7 @@ class ImagesList extends React.Component<Props, State> {
 			}
 
 			if (!folder) {
-				let p = [];
+				const p = [];
 				if(root.path) p.unshift(root.path);
 				p.push(name);
 
@@ -488,16 +490,16 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	getImagesTree = () => {
-		let res = this.createImagesFolder();
+		const res = this.createImagesFolder();
 
-		let keys = Object.keys(this.state.images);
+		const keys = Object.keys(this.state.images);
 
-		for(let key of keys) {
-			let parts = key.split("/");
-			let name = parts.pop();
-			let folder = this.getImageSubFolder(res, parts);
+		for(const key of keys) {
+			const parts = key.split("/");
+			const name = parts.pop();
+			const folder = this.getImageSubFolder(res, parts);
 
-			let img = this.state.images[key];
+			const img = this.state.images[key];
 
 			folder.items.push({
 				img: img,
