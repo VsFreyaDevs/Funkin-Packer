@@ -8,7 +8,7 @@ const METHODS = {
 	BestAreaFit: "BestAreaFit",
 	BottomLeftRule: "BottomLeftRule",
 	ContactPointRule: "ContactPointRule"
-};
+} as const;
 
 class MutatableNumber {
 	value: number;

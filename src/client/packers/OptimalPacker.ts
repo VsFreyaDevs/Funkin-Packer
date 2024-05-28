@@ -3,7 +3,7 @@ import Packer, { MethodList } from "./Packer";
 
 const METHODS = {
 	Automatic: "Automatic"
-};
+} as const;
 
 class OptimalPacker extends Packer {
 	constructor(width: number, height: number, allowRotate: boolean = false, padding: number = 0) {

@@ -11,7 +11,7 @@ const list:PackerClass[] = [
 	GrowingPacker,
 	OrderedPacker,
 	OptimalPacker
-];
+] as const;
 
 function getPackerByType(name:string) {
 	for(let item of list) {

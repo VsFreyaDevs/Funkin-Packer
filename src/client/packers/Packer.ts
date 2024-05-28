@@ -20,7 +20,7 @@ export type PackerCombo = {
 
 const METHODS = {
 	Default: "Default"
-};
+} as const;
 
 class Packer {
 	constructor(width: number, height: number, allowRotate: boolean = false, padding: number = 0) {

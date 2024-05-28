@@ -9,7 +9,7 @@ const METHODS = {
 	SortedWidth: "SortedWidth",
 	SortedArea: "SortedArea",
 	Unsorted: "Unsorted"
-};
+} as const;
 
 type Block = {
 	w: number,

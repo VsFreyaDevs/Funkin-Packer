@@ -11,7 +11,7 @@ const METHODS = {
 	SquareArea: "SquareArea",
 	SmartSquare: "SmartSquare",
 	SmartSquareArea: "SmartSquareArea"
-};
+} as const;
 
 class MaxRectsPacker extends Packer {
 	binWidth: number;

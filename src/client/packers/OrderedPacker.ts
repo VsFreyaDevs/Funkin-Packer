@@ -5,7 +5,7 @@ const METHODS = {
 	SortedAreaDsc: "SortedAreaDsc",
 	SortedAreaAsc: "SortedAreaAsc",
 	Unsorted: "Unsorted",
-};
+} as const;
 
 type Block = {
 	x?: number,

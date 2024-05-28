@@ -24,6 +24,7 @@ mustache.Formatters = {
 		let x2 = size2 / 2;
 		return x2 - x1;
 	},
+	negate: (v1) => -v1,
 	mirror: (start, size1, size2) => size2 - start - size1,
 	escapeName: (name) => name.replace(/%/g, "%25").replace(/#/g, "%23").replace(/:/g, "%3A").replace(/;/g, "%3B").replace(/\\/g, "-").replace(/\//g, "-")
 };
@@ -39,7 +40,7 @@ function getExporterByType(type) {
 
 function prepareData(data, options) {
 
-	let opt = { ...options};
+	let opt = { ...options };
 
 	opt.imageName ||= "texture";
 	opt.imageFile ||= (opt.imageName + "." + options.textureFormat);
@@ -54,17 +55,17 @@ function prepareData(data, options) {
 		let name = item.originalFile || item.file;
 		let origName = name;
 
-		if(options.trimSpriteNames) {
+		if(opt.trimSpriteNames) {
 			name.trim();
 		}
 
-		if(options.removeFileExtension) {
+		if(opt.removeFileExtension) {
 			let parts = name.split(".");
 			if(parts.length > 1) parts.pop();
 			name = parts.join(".");
 		}
 
-		if(!options.prependFolderName) {
+		if(!opt.prependFolderName) {
 			name = name.split("/").pop();
 		}
 
@@ -93,7 +94,7 @@ function prepareData(data, options) {
 
 		let trimmed = item.trimmed;
 
-		if(item.trimmed && options.trimMode === 'crop') {
+		if(item.trimmed && opt.trimMode === 'crop') {
 			trimmed = false;
 			spriteSourceSize.x = 0;
 			spriteSourceSize.y = 0;
@@ -101,7 +102,7 @@ function prepareData(data, options) {
 			sourceSize.h = spriteSourceSize.h;
 		}
 
-		if(opt.scale !== 1) { // Maybe round if sparrow?
+		/*if(opt.scale !== 1) { // Maybe round if sparrow?
 			frame.x *= opt.scale;
 			frame.y *= opt.scale;
 			frame.w *= opt.scale;
@@ -116,7 +117,7 @@ function prepareData(data, options) {
 
 			sourceSize.w *= opt.scale;
 			sourceSize.h *= opt.scale;
-		}
+		}*/
 
 		ret.push({
 			name,
@@ -148,7 +149,7 @@ function startExporter(exporter, data, options) {
 		};
 
 		// Sort the exported rows
-		if(options.sortExportedRows) {
+		if(config.sortExportedRows) {
 			rects = rects.sort((a, b) => smartSortImages(a.name, b.name));
 		}
 
@@ -157,7 +158,7 @@ function startExporter(exporter, data, options) {
 		// Make order the same as before
 		if(sparrowOrder !== null) {
 			sparrowOrder = [...sparrowOrder];
-			/* if(options.removeFileExtension) {
+			/* if(config.removeFileExtension) {
 				for(let i = 0; i < sparrowOrder.length; i++) {
 					let name = sparrowOrder[i];
 					let parts = name.split(".");

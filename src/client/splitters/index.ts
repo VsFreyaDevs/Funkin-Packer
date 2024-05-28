@@ -67,7 +67,7 @@ export class SplitterMaster {
 			if(item.splitterName === GridSplitter.splitterName) continue;
 
 			let isValid = false;
-			item.doCheck(data, (checked) => {
+			item.doCheck(item.cleanData(data), (checked) => {
 				if(checked) {
 					isValid = true;
 				}

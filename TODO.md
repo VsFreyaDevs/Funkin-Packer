@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Allow repacking files with manual offsets
+- [ ] Allow repacking files with manual offsets (Preview only done, Exporting **not done**)
 - [ ] Allow people to edit the offsets in app
 - [ ] Allow people to rename the frames in app
 - [ ] Make scaling happen before packing, not at export, make sure to scale offsets too
@@ -25,7 +25,9 @@
 - [ ] Get corejs to only include what is needed
 - [ ] Make it store Duplicates only once
 - [ ] Make it so repacking stores all of the previous repacks to to provide more accurate stats
-- [ ] Add haxe xml parser
 - [ ] Rewrite css to sass or something else
 - [ ] export individual frames from a spritesheet
 - [ ] Make ctrl keybinds use command key on mac
+- [ ] Make it so frame offsets arent used when packing and such, for more optimization, (Make sure trim toggle still works)
+- [ ] Make it so the app can be used offline
+- [X] Add haxe xml parser

@@ -5,9 +5,9 @@ Created with {{appInfo.displayName}} v{{appInfo.version}} {{{appInfo.url}}}
 <TextureAtlas imagePath="{{{config.imageFile}}}" width="{{config.imageWidth}}" height="{{config.imageHeight}}" spritePadding="{{config.spritePadding}}" borderPadding="{{config.borderPadding}}"{{#config.changedScale}} scale="{{config.scale}}"{{/config.changedScale}}>
 	{{#rects}}
 	{{#rotated}}
-	<SubTexture name="{{{name}}}" x="{{frame.x}}" y="{{frame.y}}" width="{{frame.h}}" height="{{frame.w}}" rotated="true" frameX="-{{spriteSourceSize.x}}" frameY="-{{spriteSourceSize.y}}" frameWidth="{{sourceSize.w}}" frameHeight="{{sourceSize.h}}"/>
+	<SubTexture name="{{{name}}}" x="{{frame.x}}" y="{{frame.y}}" width="{{frame.h}}" height="{{frame.w}}" rotated="true" frameX="{{spriteSourceSize.x | negate}}" frameY="{{spriteSourceSize.y | negate}}" frameWidth="{{sourceSize.w}}" frameHeight="{{sourceSize.h}}"/>
 	{{/rotated}}{{^rotated}}
-	<SubTexture name="{{{name}}}" x="{{frame.x}}" y="{{frame.y}}" width="{{frame.w}}" height="{{frame.h}}" frameX="-{{spriteSourceSize.x}}" frameY="-{{spriteSourceSize.y}}" frameWidth="{{sourceSize.w}}" frameHeight="{{sourceSize.h}}"/>
+	<SubTexture name="{{{name}}}" x="{{frame.x}}" y="{{frame.y}}" width="{{frame.w}}" height="{{frame.h}}" frameX="{{spriteSourceSize.x | negate}}" frameY="{{spriteSourceSize.y | negate}}" frameWidth="{{sourceSize.w}}" frameHeight="{{sourceSize.h}}"/>
 	{{/rotated}}
 	{{/rects}}
 </TextureAtlas>
