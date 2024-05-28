@@ -118,7 +118,7 @@ class SpritesPlayer extends React.Component<Props> {
 		let w = config.sourceSize.mw;
 		let h = config.sourceSize.mh;
 
-		if(config.frame !== null) {
+		if(config.frameSize !== null) {
 			let width = config.frameSize.w;
 			let height = config.frameSize.h;
 			let x = config.frameSize.x;
@@ -221,20 +221,23 @@ class SpritesPlayer extends React.Component<Props> {
 		let frameY = texture.config.spriteSourceSize.y;
 		let frameW = texture.config.spriteSourceSize.w;
 		let frameH = texture.config.spriteSourceSize.h;
-		if(texture.config.frameSize !== null) {
-			// todo make this append the frameSize to the sprite source size
+		let frameOffsetX = 0;
+		let frameOffsetY = 0;
+
+		if(texture.config.frameSize !== null && texture.config.manualOffset) {
 			frameX += texture.config.frameSize.x;
 			frameY += texture.config.frameSize.y;
-			frameW = texture.config.frameSize.w;
-			frameH = texture.config.frameSize.h;
 			//console.log(texture.config.spriteSourceSize, texture.config.frameSize);
 		}
+
 		if(frameX < 0) {
 			frameW -= frameX;
+			frameOffsetX -= frameX;
 			frameX = 0;
 		}
 		if(frameY < 0) {
 			frameH -= frameY;
+			frameOffsetY -= frameY;
 			frameY = 0;
 		}
 
@@ -260,7 +263,9 @@ class SpritesPlayer extends React.Component<Props> {
 				texture.config.frame.w, texture.config.frame.h);
 		}
 
-		const x = this.width/2, y = this.height/2;
+		let x = this.width/2, y = this.height/2;
+		x += frameOffsetX;
+		y += frameOffsetY;
 
 		ctx.drawImage(buffer,
 			0, 0,

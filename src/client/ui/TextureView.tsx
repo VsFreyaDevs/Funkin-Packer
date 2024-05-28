@@ -168,7 +168,7 @@ class TextureView extends React.Component<TextureViewProps> {
 	render() {
 		return (
 			<div ref={this.backRef} className="texture-view">
-				<canvas ref={this.viewRef} onClick={this.onViewClick}> </canvas>
+				<canvas ref={this.viewRef} onClick={this.onViewClick}></canvas>
 			</div>
 		);
 	}

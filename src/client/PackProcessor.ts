@@ -140,6 +140,7 @@ class PackProcessor {
 					mh: img.rect.sourceSize.mh
 				},
 				frameSize: img.rect.frameSize,
+				manualOffset: img.rect.manualOffset,
 				name,
 				file: key,
 				image: img
@@ -269,6 +270,13 @@ class PackProcessor {
 				sheetArea += sheetWidth * sheetHeight;
 
 				lastLoop = _rects.length;
+			}
+
+			if(_rects.length) {
+				if(packerCombos.length > 1) {
+					continue;
+				}
+				console.warn("PackProcessor: Not all images were packed. Some images may be missing.");
 			}
 
 			const sheets = res.length;
