@@ -7,7 +7,7 @@ import TextureRenderer from './utils/TextureRenderer';
 import I18 from './utils/I18';
 import { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
 import { TreeListItem, TreeListItems } from 'ui/ItemTree';
-import { PackerClass } from './packers/Packer';
+import Packer, { PackerClass, PackerCombo } from './packers/Packer';
 import { ButtonData } from 'ui/MessageBox';
 
 class PackProcessor {
@@ -98,7 +98,7 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][]) => void = null, onError:(data:MessageBoxData) => void = null, onProgress:(data:any) => void = null) {
+	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void = null, onError:(data:MessageBoxData) => void = null, onProgress:(data:any) => void = null) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
@@ -192,7 +192,7 @@ class PackProcessor {
 		}
 
 		const getAllPackers = () => {
-			const methods = [];
+			const methods:PackerCombo[] = [];
 			for (const packerClass of allPackers) {
 				if (packerClass !== OptimalPacker) {
 					for (const method in packerClass.methods) {
@@ -210,11 +210,12 @@ class PackProcessor {
 
 		const packerClass:PackerClass = getPackerByType(options.packer) || MaxRectsBinPack;
 		const packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
-		const packerCombos = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
+		const packerCombos:PackerCombo[] = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
 
 		let optimalRes;
 		let optimalSheets = Infinity;
 		let optimalEfficiency = 0;
+		let usedPacker:PackerCombo = null;
 
 		let sourceArea = 0;
 		for (let rect of rects) {
@@ -247,7 +248,9 @@ class PackProcessor {
 				return {...rect};
 			}) : identical;
 
-			while (_rects.length) {
+			let lastLoop = -1;
+
+			while (_rects.length && lastLoop !== _rects.length) {
 				// eslint-disable-next-line new-cap
 				const packer = new combo.packerClass(width, height, combo.allowRotation, spritePadding);
 				let result = packer.pack(_rects, combo.packerMethod);
@@ -264,6 +267,8 @@ class PackProcessor {
 
 				const { width: sheetWidth, height: sheetHeight } = TextureRenderer.getSize(result, options);
 				sheetArea += sheetWidth * sheetHeight;
+
+				lastLoop = _rects.length;
 			}
 
 			const sheets = res.length;
@@ -274,6 +279,7 @@ class PackProcessor {
 				optimalRes = res;
 				optimalSheets = sheets;
 				optimalEfficiency = efficiency;
+				usedPacker = combo;
 			}
 		}
 
@@ -288,7 +294,7 @@ class PackProcessor {
 			console.timeEnd("pack");
 
 		if (onComplete) {
-			onComplete(optimalRes);
+			onComplete(optimalRes, usedPacker);
 		}
 	}
 

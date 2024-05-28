@@ -2,7 +2,7 @@ import Packer, { MethodList } from "./Packer";
 import Rectangle from "../math/Rectangle";
 import { Rect } from "types";
 
-const METHOD = {
+const METHODS = {
 	BestShortSideFit: "BestShortSideFit",
 	BestLongSideFit: "BestLongSideFit",
 	BestAreaFit: "BestAreaFit",
@@ -49,25 +49,25 @@ class MaxRectsBin extends Packer {
 		return res;
 	}
 
-	insert(width:number, height:number, method:string=METHOD.BestShortSideFit) {
+	insert(width:number, height:number, method:string=METHODS.BestShortSideFit) {
 		let newNode = new Rectangle();
 		let score1 = new MutatableNumber();
 		let score2 = new MutatableNumber();
 
 		switch(method) {
-			case METHOD.BestShortSideFit:
+			case METHODS.BestShortSideFit:
 				newNode = this._findPositionForNewNodeBestShortSideFit(width, height, score1, score2);
 				break;
-			case METHOD.BottomLeftRule:
+			case METHODS.BottomLeftRule:
 				newNode = this._findPositionForNewNodeBottomLeft(width, height, score1, score2);
 				break;
-			case METHOD.ContactPointRule:
+			case METHODS.ContactPointRule:
 				newNode = this._findPositionForNewNodeContactPoint(width, height, score1);
 				break;
-			case METHOD.BestLongSideFit:
+			case METHODS.BestLongSideFit:
 				newNode = this._findPositionForNewNodeBestLongSideFit(width, height, score2, score1);
 				break;
-			case METHOD.BestAreaFit:
+			case METHODS.BestAreaFit:
 				newNode = this._findPositionForNewNodeBestAreaFit(width, height, score1, score2);
 				break;
 			default:
@@ -145,20 +145,20 @@ class MaxRectsBin extends Packer {
 		score2.value = Infinity;
 
 		switch(method) {
-			case METHOD.BestShortSideFit:
+			case METHODS.BestShortSideFit:
 				newNode = this._findPositionForNewNodeBestShortSideFit(width, height, score1, score2);
 				break;
-			case METHOD.BottomLeftRule:
+			case METHODS.BottomLeftRule:
 				newNode = this._findPositionForNewNodeBottomLeft(width, height, score1, score2);
 				break;
-			case METHOD.ContactPointRule:
+			case METHODS.ContactPointRule:
 				newNode = this._findPositionForNewNodeContactPoint(width, height, score1);
 				score1.value = -score1.value;
 				break;
-			case METHOD.BestLongSideFit:
+			case METHODS.BestLongSideFit:
 				newNode = this._findPositionForNewNodeBestLongSideFit(width, height, score2, score1);
 				break;
-			case METHOD.BestAreaFit:
+			case METHODS.BestAreaFit:
 				newNode = this._findPositionForNewNodeBestAreaFit(width, height, score1, score2);
 				break;
 			default:
@@ -489,21 +489,25 @@ class MaxRectsBin extends Packer {
 		return "MaxRectsBin";
 	}
 
+	static get defaultMethod():string {
+		return METHODS.BestShortSideFit;
+	}
+
 	static get methods():MethodList {
-		return METHOD;
+		return METHODS;
 	}
 
 	static getMethodProps(id:string='') {
 		switch(id) {
-			case METHOD.BestShortSideFit:
+			case METHODS.BestShortSideFit:
 				return {name: "Best short side fit", description: "Positions the Rectangle against the short side of a free Rectangle into which it fits the best."};
-			case METHOD.BestLongSideFit:
+			case METHODS.BestLongSideFit:
 				return {name: "Best long side fit", description: "Positions the Rectangle against the long side of a free Rectangle into which it fits the best."};
-			case METHOD.BestAreaFit:
+			case METHODS.BestAreaFit:
 				return {name: "Best area fit", description: "Positions the Rectangle into the smallest free Rectangle into which it fits."};
-			case METHOD.BottomLeftRule:
+			case METHODS.BottomLeftRule:
 				return {name: "Bottom left rule", description: "Does the Tetris placement."};
-			case METHOD.ContactPointRule:
+			case METHODS.ContactPointRule:
 				return {name: "Contact point rule", description: "Chooses the placement where the Rectangle touches other Rectangles as much as possible."};
 			default:
 				throw Error("Unknown method " + id);

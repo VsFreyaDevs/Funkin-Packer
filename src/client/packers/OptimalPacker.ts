@@ -1,7 +1,7 @@
 import { Rect } from "types";
 import Packer, { MethodList } from "./Packer";
 
-const METHOD = {
+const METHODS = {
 	Automatic: "Automatic"
 };
 
@@ -18,13 +18,17 @@ class OptimalPacker extends Packer {
 		return "OptimalPacker";
 	}
 
+	static get defaultMethod():string {
+		return METHODS.Automatic;
+	}
+
 	static get methods():MethodList {
-		return METHOD;
+		return METHODS;
 	}
 
 	static getMethodProps(id:string='') {
 		switch(id) {
-			case METHOD.Automatic:
+			case METHODS.Automatic:
 				return {name: "Automatic", description: ""};
 			default:
 				throw Error("Unknown method " + id);

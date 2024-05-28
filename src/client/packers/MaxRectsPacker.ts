@@ -4,7 +4,7 @@ let PACKING_LOGIC = require("maxrects-packer").PACKING_LOGIC;
 import { Rect } from "types";
 import Packer, { MethodList } from "./Packer";
 
-const METHOD = {
+const METHODS = {
 	Smart: "Smart",
 	SmartArea: "SmartArea",
 	Square: "Square",
@@ -30,11 +30,11 @@ class MaxRectsPacker extends Packer {
 
 	pack(data: Rect[], method: string) {
 		let options = {
-			smart: (method === METHOD.Smart || method === METHOD.SmartArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
+			smart: (method === METHODS.Smart || method === METHODS.SmartArea || method === METHODS.SmartSquare || method === METHODS.SmartSquareArea),
 			pot: false,
-			square: (method === METHOD.Square || method === METHOD.SquareArea || method === METHOD.SmartSquare || method === METHOD.SmartSquareArea),
+			square: (method === METHODS.Square || method === METHODS.SquareArea || method === METHODS.SmartSquare || method === METHODS.SmartSquareArea),
 			allowRotation: this.allowRotate,
-			logic: (method === METHOD.Smart || method === METHOD.Square || method === METHOD.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
+			logic: (method === METHODS.Smart || method === METHODS.Square || method === METHODS.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
 		};
 
 		let packer = new MaxRectsPackerEngine(this.binWidth, this.binHeight, this.padding, options);
@@ -68,23 +68,27 @@ class MaxRectsPacker extends Packer {
 		return "MaxRectsPacker";
 	}
 
+	static get defaultMethod():string {
+		return METHODS.Smart;
+	}
+
 	static get methods():MethodList {
-		return METHOD;
+		return METHODS;
 	}
 
 	static getMethodProps(id:string = '') {
 		switch (id) {
-			case METHOD.Smart:
+			case METHODS.Smart:
 				return { name: "Smart edge logic", description: "" };
-			case METHOD.SmartArea:
+			case METHODS.SmartArea:
 				return { name: "Smart area logic", description: "" };
-			case METHOD.Square:
+			case METHODS.Square:
 				return { name: "Square edge logic", description: "" };
-			case METHOD.SquareArea:
+			case METHODS.SquareArea:
 				return { name: "Square area logic", description: "" };
-			case METHOD.SmartSquare:
+			case METHODS.SmartSquare:
 				return { name: "Smart square edge logic", description: "" };
-			case METHOD.SmartSquareArea:
+			case METHODS.SmartSquareArea:
 				return { name: "Smart square area logic", description: "" };
 			default:
 				throw Error("Unknown method " + id);

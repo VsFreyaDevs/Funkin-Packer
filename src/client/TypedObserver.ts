@@ -1,6 +1,6 @@
 import { LoadedImages, PackOptions, PackResultsData, SelectedEvent } from "types";
 import { ButtonData } from "./ui/MessageBox";
-import { RepackInfoEvent } from "./ui/StatsInfo";
+import StatsInfo, { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
 
 type Callback<T> = (...args: T[]) => void;
 
@@ -31,10 +31,8 @@ export default {
 	imagesListChanged: new TypedObserver<LoadedImages>(),
 	imagesListSelectedChanged: new TypedObserver<string[]>(),
 	siUnitsChanged: new TypedObserver<number>(),
-	statsInfoUpdated: new TypedObserver<{
-		packResults: PackResultsData[]
-	}>(),
-	packComplete: new TypedObserver<PackResultsData[]>(),
+	statsInfoUpdated: new TypedObserver<StatsInfoEvent>(),
+	packComplete: new TypedObserver<StatsInfoEvent>(),
 	packOptionsChanged: new TypedObserver<PackOptions>(),
 	packExporterChanged: new TypedObserver<PackOptions>(),
 	showMessage: new TypedObserver<string | ButtonData[], (content: string, buttons?: ButtonData[]) => void>(),

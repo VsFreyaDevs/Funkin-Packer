@@ -166,9 +166,10 @@ class PackProperties extends React.Component<Props, State> {
 		data.alphaThreshold = data.alphaThreshold || 0;
 		data.detectIdentical = data.detectIdentical === undefined ? true : data.detectIdentical;
 		data.sortExportedRows = data.sortExportedRows === undefined ? true : data.sortExportedRows;
-		data.packer = getPackerByType(data.packer) ? data.packer : packers[2].packerName;
 		data.repackUpdateFileName = data.repackUpdateFileName === undefined ? true : data.repackUpdateFileName;
 		data.statsSI = data.statsSI === undefined ? 1024 : data.statsSI;
+		data.packer = getPackerByType(data.packer) ? data.packer : packers[2].packerName;
+		data.packerMethod = data.packerMethod || packers[2].defaultMethod;
 
 		let methodValid = false;
 		let packer = getPackerByType(data.packer);
@@ -180,8 +181,13 @@ class PackProperties extends React.Component<Props, State> {
 					break;
 				}
 			}
+			console.log(methodValid, packerMethods, data.packerMethod, packer.defaultMethod);
 
-			if(!methodValid) data.packerMethod = packerMethods[0];
+			if(!methodValid) data.packerMethod = packer.defaultMethod;
+
+			if(this.packerMethodRef != null) {
+				this.packerMethodRef.current.setValue(data.packerMethod);
+			}
 		}
 
 		return data;
@@ -218,10 +224,10 @@ class PackProperties extends React.Component<Props, State> {
 		data.trimMode = (this.trimModeRef.current).value;
 		data.alphaThreshold = +(this.alphaThresholdRef.current).value;
 		data.detectIdentical = (this.detectIdenticalRef.current).checked;
-		data.packer = (this.packerRef.current).value;
-		data.packerMethod = (this.packerMethodRef.current).value;
 		data.sortExportedRows = (this.sortExportedRowsRef.current).checked;
 		data.statsSI = Number((this.statsSIRef.current).value);
+		data.packer = (this.packerRef.current).value;
+		data.packerMethod = (this.packerMethodRef.current).value;
 
 		this.packOptions = this.applyOptionsDefaults(data);
 
@@ -251,10 +257,10 @@ class PackProperties extends React.Component<Props, State> {
 		(this.trimModeRef.current).value = this.packOptions.trimMode;
 		(this.alphaThresholdRef.current).value = (this.packOptions.alphaThreshold || 0).toString();
 		(this.detectIdenticalRef.current).checked = this.packOptions.detectIdentical;
-		(this.packerRef.current).value = this.packOptions.packer;
-		(this.packerMethodRef.current).value = this.packOptions.packerMethod;
 		(this.sortExportedRowsRef.current).checked = this.packOptions.sortExportedRows;
 		(this.statsSIRef.current).value = this.packOptions.statsSI.toString();
+		(this.packerRef.current).value = this.packOptions.packer;
+		(this.packerMethodRef.current).value = this.packOptions.packerMethod;
 	}
 
 	getPackOptions = () => {
@@ -580,27 +586,29 @@ interface PackerMethodsProps {
 }
 
 class PackerMethods extends React.Component<PackerMethodsProps, {
-	value: string
+	value: string;
 }> {
 	selectRef: React.RefObject<HTMLSelectElement>;
+	value: string;
 
 	constructor(props: PackerMethodsProps) {
 		super(props);
 
 		this.selectRef = React.createRef();
 
-		this.state = {
-			value: this.props.packer ?? this.props.defaultMethod
-		};
+		this.value = this.props.defaultMethod;
+		this.state = {value: this.value};
 	}
 
-	// theres probably a better way to do this
-	get value() {
-		return this.state.value;
+	setValue(val: string) {
+		this.value = val;
+		this.setState({value: val});
 	}
 
-	set value(value: string) {
-		this.setState({value});
+	onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		this.value = e.target.value;
+		this.setState({value: this.value});
+		this.props.handler(e);
 	}
 
 	render() {
@@ -614,11 +622,12 @@ class PackerMethods extends React.Component<PackerMethodsProps, {
 
 		let methods = Object.keys(packerCls.methods);
 		for(let item of methods) {
-			items.push(<option value={item} key={"packer-method-" + item }>{item}</option>);
+			items.push(<option value={item} key={"packer-method-" + item}>{item}</option>);
 		}
 
+		// defaultValue={this.props.defaultMethod}
 		return (
-			<select onChange={this.props.handler} className="border-color-gray" defaultValue={this.props.defaultMethod} >{items}</select>
+			<select ref={this.selectRef} onChange={this.onChange} className="border-color-gray" value={this.state.value}>{items}</select>
 		)
 	}
 }

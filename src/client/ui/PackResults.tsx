@@ -5,6 +5,7 @@ import SpritesPlayer from './SpritesPlayer';
 import I18 from '../utils/I18';
 import { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
+import { StatsInfoEvent } from './StatsInfo';
 
 interface Props {}
 
@@ -55,12 +56,13 @@ class PackResults extends React.Component<Props, State> {
 		this.setState({selectedImages: data});
 	}
 
-	updatePackResult = (data: PackResultsData[]) => {
+	updatePackResult = (data: StatsInfoEvent) => {
 		//console.log(data);
 		TypedObserver.statsInfoUpdated.emit({
-			packResults: data
+			packResults: data.packResults,
+			usedPacker: data.usedPacker
 		})
-		this.setState({packResult: data});
+		this.setState({packResult: data.packResults});
 	}
 
 	setBack = (e: React.MouseEvent<HTMLDivElement>) => {

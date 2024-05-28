@@ -7,11 +7,18 @@ export type MethodList = {
 export type PackerClass = {
 	packerName: string,
 	methods: MethodList,
+	defaultMethod: string,
 	getMethodProps(): {name: string, description: string},
 	new(width: number, height: number, allowRotate?: boolean, padding?: number):Packer
 };
 
-const METHOD:MethodList = {
+export type PackerCombo = {
+	packerClass: PackerClass,
+	packerMethod: string,
+	allowRotation: boolean
+};
+
+const METHODS = {
 	Default: "Default"
 };
 
@@ -28,8 +35,12 @@ class Packer {
 		return "Default";
 	}
 
+	static get defaultMethod():string {
+		return METHODS.Default;
+	}
+
 	static get methods():MethodList {
-		return METHOD;
+		return METHODS;
 	}
 
 	static getMethodProps(id:string='') {

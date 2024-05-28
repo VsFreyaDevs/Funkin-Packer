@@ -145,6 +145,7 @@ UPDATE_FILENAME;Update Filename:
 SPLITTER_ERROR_NO_TEXTURE;No textures found. Please, try again.
 STATS_SIZE;Size
 STATS_RAM;RAM
+STATS_USED_PACKER;Packer
 STATS_SI_TITLE;SI units (Used for ram usage stat)\nCodename Engine SI = 1024\nPsych 0.7+ SI = 1024\nPsych 0.6 and below SI = 1000
 STATS_SI;SI units:
 BASED_ON;Based on Free Texture Packer

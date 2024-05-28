@@ -8,6 +8,7 @@ import { startExporter } from './exporters';
 import Downloader from 'platform/Downloader';
 import { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
+import Packer, { PackerCombo } from './packers/Packer';
 
 let INSTANCE:APP = null;
 
@@ -66,7 +67,7 @@ class APP {
 		PackProcessor.pack(this.images, this.packOptions, this.onPackComplete, this.onPackError);
 	}
 
-	onPackComplete = (res:Rect[][]) => {
+	onPackComplete = (res:Rect[][], usedPacker:PackerCombo) => {
 		this.packResult = [];
 
 		for (const data of res) {
@@ -79,7 +80,10 @@ class APP {
 			});
 		}
 
-		TypedObserver.packComplete.emit(this.packResult);
+		TypedObserver.packComplete.emit({
+			packResults: this.packResult,
+			usedPacker: usedPacker
+		});
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 

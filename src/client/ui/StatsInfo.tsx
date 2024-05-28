@@ -6,11 +6,13 @@ import { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 
 import { formatBytes } from '../utils/common';
+import { PackerCombo } from 'packers/Packer';
 
 (globalThis as any).formatBytes = formatBytes;
 
-type StatsInfoEvent = {
+export type StatsInfoEvent = {
 	packResults: PackResultsData[];
+	usedPacker: PackerCombo;
 }
 
 export type RepackInfoEvent = {
@@ -33,7 +35,8 @@ class StatsInfo extends React.Component<Props, State> {
 
 		this.state = {
 			info: {
-				packResults: []
+				packResults: [],
+				usedPacker: null
 			},
 			repackInfo: null,
 			si: 1024
@@ -70,10 +73,12 @@ class StatsInfo extends React.Component<Props, State> {
 		let sizeText = sizes.map((res) => res.width + "x" + res.height).join(" + ");
 		let ramText = formatBytes(ramUsage, 3, this.state.si);
 		let ramTitle = "";
+		let usedPacker = this.state.info.usedPacker?.packerClass?.packerName ?? "";
 		let savingText = <></>;
 		if (sizes.length === 0) {
 			sizeText = "? x ?";
 			ramText = "? B";
+			usedPacker = "";
 		} else {
 			let repackInfo = this.state.repackInfo;
 			if (repackInfo) {
@@ -99,6 +104,10 @@ class StatsInfo extends React.Component<Props, State> {
 					<div className="stats-info-label">{I18.f("STATS_RAM")}</div>
 					<div className="stats-info-value" title={ramTitle}>{ramText}{savingText}</div>
 				</div>
+				{usedPacker ? <div className="stats-info-item">
+					<div className="stats-info-label">{I18.f("STATS_USED_PACKER")}</div>
+					<div className="stats-info-value">{usedPacker}</div>
+				</div> : <></>}
 			</div>
 		);
 	}

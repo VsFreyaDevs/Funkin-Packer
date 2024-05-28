@@ -573,7 +573,7 @@ class ImagesList extends React.Component<Props, State> {
 	render() {
 		let data = this.getImagesTree();
 
-		console.log(data, this.state.images);
+		//console.log(data, this.state.images);
 
 		let dropHelp = Object.keys(this.state.images).length > 0 ? null : (<div ref={this.dropHelpRef} className="image-drop-help">{I18.f("IMAGE_DROP_HELP")}</div>);
 

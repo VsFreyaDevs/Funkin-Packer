@@ -1,11 +1,15 @@
 import MaxRectsPacker from "./MaxRectsPacker";
 import MaxRectsBin from "./MaxRectsBin";
 import OptimalPacker from "./OptimalPacker";
+import GrowingPacker from "./GrowingPacker";
+import OrderedPacker from "./OrderedPacker";
 import { PackerClass } from "./Packer";
 
 const list:PackerClass[] = [
 	MaxRectsBin,
 	MaxRectsPacker,
+	GrowingPacker,
+	OrderedPacker,
 	OptimalPacker
 ];
 
