@@ -7,7 +7,7 @@ const METHODS = {
 	BestLongSideFit: "BestLongSideFit",
 	BestAreaFit: "BestAreaFit",
 	BottomLeftRule: "BottomLeftRule",
-	ContactPointRule: "ContactPointRule"
+	//ContactPointRule: "ContactPointRule" // broken
 } as const;
 
 class MutatableNumber {
@@ -61,9 +61,9 @@ class MaxRectsBin extends Packer {
 			case METHODS.BottomLeftRule:
 				newNode = this._findPositionForNewNodeBottomLeft(width, height, score1, score2);
 				break;
-			case METHODS.ContactPointRule:
-				newNode = this._findPositionForNewNodeContactPoint(width, height, score1);
-				break;
+			//case METHODS.ContactPointRule:
+			//	newNode = this._findPositionForNewNodeContactPoint(width, height, score1);
+			//	break;
 			case METHODS.BestLongSideFit:
 				newNode = this._findPositionForNewNodeBestLongSideFit(width, height, score2, score1);
 				break;
@@ -91,7 +91,8 @@ class MaxRectsBin extends Packer {
 			let bestRectangleIndex = -1;
 			let bestNode = new Rectangle();
 
-			for(let i= 0; i < rectangles.length; i++) {
+			let len = rectangles.length;
+			for(let i= 0; i < len; i++) {
 				let score1 = new MutatableNumber();
 				let score2 = new MutatableNumber();
 				let newNode = this._scoreRectangle(rectangles[i].frame.w + this.padding, rectangles[i].frame.h + this.padding, method, score1, score2);
@@ -151,10 +152,10 @@ class MaxRectsBin extends Packer {
 			case METHODS.BottomLeftRule:
 				newNode = this._findPositionForNewNodeBottomLeft(width, height, score1, score2);
 				break;
-			case METHODS.ContactPointRule:
-				newNode = this._findPositionForNewNodeContactPoint(width, height, score1);
-				score1.value = -score1.value;
-				break;
+			//case METHODS.ContactPointRule:
+			//	newNode = this._findPositionForNewNodeContactPoint(width, height, score1);
+			//	score1.value = -score1.value;
+			//	break;
 			case METHODS.BestLongSideFit:
 				newNode = this._findPositionForNewNodeBestLongSideFit(width, height, score2, score1);
 				break;
@@ -371,29 +372,39 @@ class MaxRectsBin extends Packer {
 		return bestNode;
 	}
 
-	static _commonIntervalLength(i1start:number, i1end:number, i2start:number, i2end:number){
-		if (i1end < i2start || i2end < i1start){
+	static _commonIntervalLength(i1start: number, i1end: number, i2start: number, i2end: number): number {
+		if (i1end <= i2start || i2end <= i1start) {
 			return 0;
 		}
 		return Math.min(i1end, i2end) - Math.max(i1start, i2start);
 	}
 
-	_contactPointScoreNode(x:number, y:number, width:number, height:number){
-		let usedRectangles = this.usedRectangles;
+	_contactPointScoreNode(x: number, y: number, width: number, height: number): number {
+		const usedRectangles = this.usedRectangles;
 		let score = 0;
 
-		if (x === 0 || x + width === this.binWidth)
+		const xEnd = x + width;
+		const yEnd = y + height;
+
+		if (x === 0 || xEnd === this.binWidth) {
 			score += height;
-		if (y === 0 || y + height === this.binHeight)
-			score += width;
-		let rect;
-		for(let i= 0; i < usedRectangles.length; i++) {
-			rect = usedRectangles[i];
-			if (rect.x === x + width || rect.x + rect.width === x)
-				score += MaxRectsBin._commonIntervalLength(rect.y, rect.y + rect.height, y, y + height);
-			if (rect.y === y + height || rect.y + rect.height === y)
-				score += MaxRectsBin._commonIntervalLength(rect.x, rect.x + rect.width, x, x + width);
 		}
+		if (y === 0 || yEnd === this.binHeight) {
+			score += width;
+		}
+
+		for (const { x: rectX, y: rectY, width: rectWidth, height: rectHeight } of usedRectangles) {
+			const rectXEnd = rectX + rectWidth;
+			const rectYEnd = rectY + rectHeight;
+
+			if (rectX === xEnd || rectXEnd === x) {
+				score += MaxRectsBin._commonIntervalLength(rectY, rectYEnd, y, yEnd);
+			}
+			if (rectY === yEnd || rectYEnd === y) {
+				score += MaxRectsBin._commonIntervalLength(rectX, rectXEnd, x, xEnd);
+			}
+		}
+
 		return score;
 	}
 
@@ -471,7 +482,7 @@ class MaxRectsBin extends Packer {
 		return true;
 	}
 
-	_pruneFreeList() {
+	/*_pruneFreeList() {
 		let freeRectangles = this.freeRectangles;
 		for(let i = 0;i < freeRectangles.length; i++)
 			for(let j= i+1; j < freeRectangles.length; j++) {
@@ -483,7 +494,56 @@ class MaxRectsBin extends Packer {
 					freeRectangles.splice(j,1);
 				}
 			}
-	}
+	}*/
+	/*_pruneFreeList() {
+		let freeRectangles = this.freeRectangles;
+		let i = 0;
+
+		while (i < freeRectangles.length) {
+			let hasMerged = false;
+			for (let j = i + 1; j < freeRectangles.length; j++) {
+				if (Rectangle.hitTest(freeRectangles[i], freeRectangles[j])) {
+					freeRectangles.splice(i, 1);
+					hasMerged = true;
+					break;
+				} else if (Rectangle.hitTest(freeRectangles[j], freeRectangles[i])) {
+					freeRectangles.splice(j, 1);
+					hasMerged = true;
+					break;
+				}
+			}
+			if (!hasMerged) {
+				i++;
+			}
+		}
+	}*/
+	_pruneFreeList() {
+        // Go through each pair of freeRects and remove any rects that is redundant
+        let i = 0;
+        let j = 0;
+		let freeRectangles = this.freeRectangles;
+        let len = freeRectangles.length;
+        while (i < len) {
+            j = i + 1;
+            let tmpRect1 = freeRectangles[i];
+            while (j < len) {
+                let tmpRect2 = freeRectangles[j];
+				if (Rectangle.hitTest(tmpRect1, tmpRect2)) {
+					freeRectangles.splice(i, 1);
+					i--;
+					len--;
+					break;
+				}
+				if (Rectangle.hitTest(tmpRect2, tmpRect1)) {
+                    freeRectangles.splice(j, 1);
+                    j--;
+                    len--;
+                }
+                j++;
+            }
+            i++;
+        }
+    }
 
 	static get packerName() {
 		return "MaxRectsBin";
@@ -507,8 +567,8 @@ class MaxRectsBin extends Packer {
 				return {name: "Best area fit", description: "Positions the Rectangle into the smallest free Rectangle into which it fits."};
 			case METHODS.BottomLeftRule:
 				return {name: "Bottom left rule", description: "Does the Tetris placement."};
-			case METHODS.ContactPointRule:
-				return {name: "Contact point rule", description: "Chooses the placement where the Rectangle touches other Rectangles as much as possible."};
+			//case METHODS.ContactPointRule:
+			//	return {name: "Contact point rule", description: "Chooses the placement where the Rectangle touches other Rectangles as much as possible."};
 			default:
 				throw Error("Unknown method " + id);
 		}

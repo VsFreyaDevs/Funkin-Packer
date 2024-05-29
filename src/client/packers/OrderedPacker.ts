@@ -46,6 +46,7 @@ class OrderedPacker extends Packer {
 				blocks = new_blocks;
 			}
 		}
+		//let blocks = this._pack(_data, _method, this.allowRotate);
 
 		let rects:Rect[] = [];
 
