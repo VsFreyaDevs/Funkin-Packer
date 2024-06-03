@@ -149,6 +149,10 @@ class OrderedPacker extends Packer {
 		return METHODS;
 	}
 
+	static needsNonRotation(): boolean {
+		return false;
+	}
+
 	static getMethodProps(id:string='') {
 		switch(id) {
 			case METHODS.SortedAreaAsc:

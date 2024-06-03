@@ -9,6 +9,7 @@ export type PackerClass = {
 	methods: MethodList,
 	defaultMethod: string,
 	getMethodProps(): {name: string, description: string},
+	needsNonRotation(): boolean,
 	new(width: number, height: number, allowRotate?: boolean, padding?: number):Packer
 };
 
@@ -41,6 +42,10 @@ class Packer {
 
 	static get methods():MethodList {
 		return METHODS;
+	}
+
+	static needsNonRotation(): boolean {
+		return true;
 	}
 
 	static getMethodProps(id:string='') {

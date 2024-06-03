@@ -48,6 +48,20 @@ function calculateArea(blocks:Block[]) {
 	return (rightBound) * (bottomBound);
 }
 
+function getMinimumSize(blocks: Rect[]) {
+	let width = Number.POSITIVE_INFINITY;
+	let height = Number.POSITIVE_INFINITY;
+	for(const block of blocks) {
+		if(block.frame.w < width) {
+			width = block.frame.w;
+		}
+		if(block.frame.h < height) {
+			height = block.frame.h;
+		}
+	}
+	return {w: width, h: height};
+}
+
 function rotateBlock(block:Block) {
 	block.rotated = !block.rotated;
 	const temp = block.w;
@@ -105,26 +119,63 @@ class FixedOrderedPacker extends Packer {
 				method = METHODS.Unsorted;
 				break;
 		}
+
+		let sortedData = [..._data];
+		if(method == METHODS.SortedAreaDsc)
+			sortedData.sort((a, b) => (b.frame.w * b.frame.h) - (a.frame.w * a.frame.h));
+		if(method == METHODS.SortedAreaAsc)
+			sortedData.sort((a, b) => (a.frame.w * a.frame.h) - (b.frame.w * b.frame.h));
+
 		const originalWidth = this.width;
 		const originalHeight = this.height;
 		let blocks:Block[] = null;
 		let currentBest:number = -1;
 		function setBest(bb:Block[]) {
-			if(bb == null) {
-				return;
+			if(bb != null) {
+				blocks = bb;
+				currentBest = calculateArea(bb);
+				//console.log("setBest", calculateWidth(bb), calculateHeight(bb), currentBest);
 			}
-			blocks = bb;
-			currentBest = calculateArea(bb);
 		}
 
+		const minSize = getMinimumSize(_data);
+
+		const incW = 128;
+		const incH = 128;
+
+		for(let xx = minSize.w; xx < originalWidth; xx += incW) {
+			for(let yy = minSize.h; yy < originalHeight; yy += incH) {
+				this.width = xx;
+				this.height = yy;
+				let newBlocks = this._pack(sortedData, false);
+				//console.log("width", this.width, "height", this.height, newBlocks != null ? newBlocks.length : 0, newBlocks != null ? calculateArea(newBlocks) : 0);
+				//console.log("width", this.width, "height", this.height, newBlocks != null ? newBlocks.length : 0, newBlocks != null ? calculateArea(newBlocks) : 0);
+				if(blocks == null || newBlocks != null && calculateArea(newBlocks) < currentBest) {
+					setBest(newBlocks);
+				}
+				if(this.allowRotate) {
+					let newBlocks = this._pack(sortedData, true);
+					if(blocks == null || newBlocks != null && calculateArea(newBlocks) < currentBest) {
+						setBest(newBlocks);
+					}
+				}
+			}
+		}
+
+		this.width = originalWidth;
+		this.height = originalHeight;
+
+		/*
 		let alternate = false;
 		let cw = 2;
 		let ch = 2;
 		while(!(cw < originalWidth && ch < originalHeight)) {
 			if(alternate) {
+				cw++;
 				cw *= 1.5;
 				cw = Math.floor(cw);
 			} else {
+				ch++;
 				ch *= 1.5;
 				ch = Math.floor(ch);
 			}
@@ -143,8 +194,8 @@ class FixedOrderedPacker extends Packer {
 					setBest(newBlocks);
 				}
 			}
-		}
-		this.width = originalWidth;
+		}*/
+		/*this.width = originalWidth;
 		this.height = originalHeight;
 		if(blocks == null) {
 			setBest(this._pack(_data, method, false));
@@ -157,7 +208,7 @@ class FixedOrderedPacker extends Packer {
 		}
 		if(blocks == null) {
 			return [];
-		}
+		}*/
 		//let blocks = this._pack(_data, _method, this.allowRotate);
 
 		const rects:Rect[] = [];
@@ -174,7 +225,7 @@ class FixedOrderedPacker extends Packer {
 		return rects;
 	}
 
-	_pack(_data:Rect[], _method:String, allowRotation:boolean):Block[] {
+	_pack(_data:Rect[], allowRotation:boolean):Block[] {
 		const blocks:Block[] = [];
 		for(const data of _data) {
 			const block:Block = {
@@ -184,11 +235,6 @@ class FixedOrderedPacker extends Packer {
 			};
 			blocks.push(block);
 		}
-
-		if(_method == METHODS.SortedAreaDsc)
-			blocks.sort((a, b) => (b.rect.frame.w * b.rect.frame.h) - (a.rect.frame.w * a.rect.frame.h));
-		if(_method == METHODS.SortedAreaAsc)
-			blocks.sort((a, b) => (a.rect.frame.w * a.rect.frame.h) - (b.rect.frame.w * b.rect.frame.h));
 
 		let packedBlocks:Block[] = null;
 		if(this.isAlt) {
@@ -339,6 +385,10 @@ class FixedOrderedPacker extends Packer {
 
 	static get methods():MethodList {
 		return METHODS;
+	}
+
+	static needsNonRotation(): boolean {
+		return false;
 	}
 
 	static getMethodProps(id:string='') {

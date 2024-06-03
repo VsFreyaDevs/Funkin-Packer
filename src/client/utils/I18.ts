@@ -109,7 +109,7 @@ class I18 {
 			for (const part of parts) {
 				const keyVal = part.split(this.config.iniSeparator);
 				if (keyVal[0].trim()) {
-					strings[keyVal[0].trim()] = keyVal[1].trim();
+					strings[keyVal[0].trim()] = keyVal[1].trim().replace(/\\n/g, "\n");
 				}
 			}
 		}

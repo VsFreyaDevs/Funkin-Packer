@@ -26,6 +26,10 @@ class OptimalPacker extends Packer {
 		return METHODS;
 	}
 
+	static needsNonRotation(): boolean {
+		return true;
+	}
+
 	static getMethodProps(id:string='') {
 		switch(id) {
 			case METHODS.Automatic:
