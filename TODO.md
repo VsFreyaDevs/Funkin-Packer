@@ -30,4 +30,8 @@
 - [ ] Make ctrl keybinds use command key on mac
 - [ ] Make it so frame offsets arent used when packing and such, for more optimization, (Make sure trim toggle still works)
 - [ ] Make it so the app can be used offline
+- [ ] Smart ordered packer, which adds frames below if theres enough space
+- [ ] Fix double pack when repacking
+- [ ] Make it so the program calculates the padding used, and shows it in repacker
+- [ ] Make it so growing packer and ordered packer uses the max width and height
 - [X] Add haxe xml parser

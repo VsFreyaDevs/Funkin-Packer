@@ -17,9 +17,9 @@ type Block = {
 }
 
 function calculateArea(blocks:Block[]) {
-	var rightBound = 0;
-	var bottomBound = 0;
-	for(let block of blocks) {
+	let rightBound = 0;
+	let bottomBound = 0;
+	for(const block of blocks) {
 		rightBound = Math.max(rightBound, block.x + block.w);
 		bottomBound = Math.max(bottomBound, block.y + block.h);
 	}
@@ -29,11 +29,15 @@ function calculateArea(blocks:Block[]) {
 class OrderedPacker extends Packer {
 	allowRotate: boolean;
 	padding: number;
+	width: number;
+	height: number;
 
 	constructor(width: number, height: number, allowRotate: boolean = false, padding: number = 0) {
 		// nothing to do
 		super(width, height, allowRotate, padding);
 
+		this.width = width;
+		this.height = height;
 		this.allowRotate = allowRotate;
 		this.padding = padding;
 	}
@@ -48,9 +52,9 @@ class OrderedPacker extends Packer {
 		}
 		//let blocks = this._pack(_data, _method, this.allowRotate);
 
-		let rects:Rect[] = [];
+		const rects:Rect[] = [];
 
-		for(let block of blocks) {
+		for(const block of blocks) {
 			block.rect.frame.x = block.x;
 			block.rect.frame.y = block.y;
 			//block.fit.w -= this.padding;
@@ -63,9 +67,9 @@ class OrderedPacker extends Packer {
 	}
 
 	_pack(_data:Rect[], _method:String, rotated:boolean):Block[] {
-		let blocks:Block[] = [];
-		for (var i = 0; i < _data.length; i++) {
-			let block:Block = {
+		const blocks:Block[] = [];
+		for (let i = 0; i < _data.length; i++) {
+			const block:Block = {
 				w: _data[i].frame.w,
 				h: _data[i].frame.h,
 				rect: _data[i]
@@ -78,34 +82,37 @@ class OrderedPacker extends Packer {
 		if(_method == METHODS.SortedAreaAsc)
 			blocks.sort((a, b) => (a.rect.frame.w * a.rect.frame.h) - (b.rect.frame.w * b.rect.frame.h));
 
-		let tot_area = blocks.reduce((a, b) => a + b.w * b.h, 0);
-		let estimated_sidelen = Math.pow(tot_area, 0.5);
-		let avg_width = this._get_total_width(blocks) / blocks.length;
+		const tot_area = blocks.reduce((a, b) => a + b.w * b.h, 0);
+		const estimated_sidelen = Math.pow(tot_area, 0.5);
+		const avg_width = this._get_total_width(blocks) / blocks.length;
 
-		let blocks_per_row = Math.floor(estimated_sidelen / avg_width);
-		let width_per_row = blocks_per_row * avg_width;
+		const blocks_per_row = Math.floor(estimated_sidelen / avg_width);
+		const width_per_row = blocks_per_row * avg_width;
 
 		let curr_x = 0;
 		let curr_y = 0;
 		let current_max_height = 0;
 
-		for (let i = 0; i < blocks.length; i++) {
-			let bl = blocks[i];
+		for(const bl of blocks) {
 			bl.x = curr_x;
 			bl.y = curr_y;
 
-			let shouldRotate = rotated && bl.w > bl.h && bl.w <= current_max_height;
+			const shouldRotate = rotated && bl.w > bl.h && bl.w <= current_max_height;
 
 			if(shouldRotate) {
 				bl.rotated = true;
-				var temp = bl.w;
+				const temp = bl.w;
 				bl.w = bl.h;
 				bl.h = temp;
 			}
 
+			let old_x = curr_x + bl.w;
+
 			curr_x += bl.w + this.padding;
-			current_max_height = Math.max(current_max_height, bl.h);
-			if(curr_x > width_per_row) {
+			if(bl.h > current_max_height) {
+				current_max_height = bl.h;
+			}
+			if(old_x > width_per_row || old_x > this.width) {
 				curr_x = 0;
 				curr_y += current_max_height + this.padding;
 				current_max_height = 0;
@@ -116,7 +123,7 @@ class OrderedPacker extends Packer {
 
 	_get_total_width(blocks: Block[]): number {
 		let sum = 0;
-		for(let block of blocks) {
+		for(const block of blocks) {
 			sum += block.w + this.padding;
 		}
 		return sum;
@@ -124,7 +131,7 @@ class OrderedPacker extends Packer {
 
 	_get_total_height(blocks: Block[]): number {
 		let sum = 0;
-		for(let block of blocks) {
+		for(const block of blocks) {
 			sum += block.h;
 		}
 		return sum;

@@ -1,5 +1,6 @@
-let MaxRectsPackerEngine = require("maxrects-packer").MaxRectsPacker;
-let PACKING_LOGIC = require("maxrects-packer").PACKING_LOGIC;
+import { IRectangle, MaxRectsPacker as MaxRectsPackerEngine } from "maxrects-packer";
+import { PACKING_LOGIC } from "maxrects-packer";
+
 
 import { Rect } from "types";
 import Packer, { MethodList } from "./Packer";
@@ -37,12 +38,12 @@ class MaxRectsPacker extends Packer {
 			logic: (method === METHODS.Smart || method === METHODS.Square || method === METHODS.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
 		};
 
-		let packer = new MaxRectsPackerEngine(this.binWidth, this.binHeight, this.padding, options);
+		let packer = new MaxRectsPackerEngine<IRectangle>(this.binWidth, this.binHeight, this.padding, options);
 
-		let input = [];
+		let input:IRectangle[] = [];
 
 		for (let item of data) {
-			input.push({ width: item.frame.w, height: item.frame.h, data: item });
+			input.push({ x: 0, y: 0, width: item.frame.w, height: item.frame.h, data: item });
 		}
 
 		packer.addArray(input);

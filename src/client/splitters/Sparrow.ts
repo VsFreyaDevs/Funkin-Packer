@@ -57,12 +57,12 @@ class Sparrow extends Splitter {
 		catch(e) {
 			try {
 				console.log("Trying to parse as Haxe Xml");
-				var atlas = HaxeXmlParser.parse(data, false);
+				const atlas = HaxeXmlParser.parse(data, false);
 				console.log("Parsed as Haxe Xml");
 				console.log(atlas);
 				if(atlas.hasElement("TextureAtlas")) {
-					var list = atlas.firstElement();
-					var arr = list.elementsNamed("SubTexture");
+					const list = atlas.firstElement();
+					const arr = list.elementsNamed("SubTexture");
 					cb(arr.length > 0);
 				} else {
 					cb(false);
@@ -112,8 +112,8 @@ class Sparrow extends Splitter {
 		}
 		catch(e) {
 			try {
-				var atlas = HaxeXmlParser.parse(data, false).firstElement();
-				var rects = atlas.elementsNamed("SubTexture");
+				const atlas = HaxeXmlParser.parse(data, false).firstElement();
+				const rects = atlas.elementsNamed("SubTexture");
 				for(const rect of rects) {
 					res.push(this.convertToRect({
 						name: rect.get("name"),

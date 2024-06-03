@@ -252,6 +252,7 @@ class PackProcessor {
 			let lastLoop = -1;
 
 			while (_rects.length && lastLoop !== _rects.length) {
+				lastLoop = _rects.length;
 				// eslint-disable-next-line new-cap
 				const packer = new combo.packerClass(width, height, combo.allowRotation, spritePadding);
 				let result = packer.pack(_rects, combo.packerMethod);
@@ -268,8 +269,6 @@ class PackProcessor {
 
 				const { width: sheetWidth, height: sheetHeight } = TextureRenderer.getSize(result, options);
 				sheetArea += sheetWidth * sheetHeight;
-
-				lastLoop = _rects.length;
 			}
 
 			if(_rects.length) {

@@ -52,9 +52,9 @@ class GrowingPacker extends Packer {
 	}
 
 	pack(_data:Rect[], _method:string):Rect[] {
-		let blocks:Block[] = [];
-		for (var i = 0; i < _data.length; i++) {
-			let block:Block = {
+		const blocks:Block[] = [];
+		for (let i = 0; i < _data.length; i++) {
+			const block:Block = {
 				w: _data[i].frame.w,
 				h: _data[i].frame.h,
 				rect: _data[i]
@@ -75,10 +75,10 @@ class GrowingPacker extends Packer {
 		//blocks.sort((a, b) => (a.rect.frame.w * a.rect.frame.h) - (b.rect.frame.w * b.rect.frame.h));
 		//console.log("GrowingPacker: blocks", blocks);
 
-		var len = blocks.length;
+		const len = blocks.length;
 		let padding = this.padding;
-		var w = len > 0 ? blocks[0].w + padding : 0;
-		var h = len > 0 ? blocks[0].h + padding : 0;
+		const w = len > 0 ? blocks[0].w + padding : 0;
+		const h = len > 0 ? blocks[0].h + padding : 0;
 		this.root = { x: 0, y: 0, w: w, h: h };
 		for(let block of blocks) {
 			let node = this.findNode(this.root, block.w + padding, block.h + padding);
@@ -88,7 +88,7 @@ class GrowingPacker extends Packer {
 				block.fit = this.growNode(block.w + padding, block.h + padding);
 		}
 
-		var rects:Rect[] = [];
+		const rects:Rect[] = [];
 
 		for(let block of blocks) {
 			if(block.fit === null) continue;
@@ -120,11 +120,11 @@ class GrowingPacker extends Packer {
 	}
 
 	growNode = (w:number, h:number) => {
-		var canGrowDown  = (w <= this.root.w);
-		var canGrowRight = (h <= this.root.h);
+		const canGrowDown  = (w <= this.root.w);
+		const canGrowRight = (h <= this.root.h);
 
-		var shouldGrowRight = canGrowRight && (this.root.h >= (this.root.w + w)); // attempt to keep square-ish by growing right when height is much greater than width
-		var shouldGrowDown  = canGrowDown  && (this.root.w >= (this.root.h + h)); // attempt to keep square-ish by growing down  when width  is much greater than height
+		const shouldGrowRight = canGrowRight && (this.root.h >= (this.root.w + w)); // attempt to keep square-ish by growing right when height is much greater than width
+		const shouldGrowDown  = canGrowDown  && (this.root.w >= (this.root.h + h)); // attempt to keep square-ish by growing down  when width  is much greater than height
 
 		if (shouldGrowRight)
 			return this.growRight(w, h);
