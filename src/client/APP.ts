@@ -7,7 +7,7 @@ import { RenderSettings, startExporter } from './exporters';
 import Downloader from 'platform/Downloader';
 import { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
-import Packer, { PackerCombo } from './packers/Packer';
+import { PackerCombo } from './packers/Packer';
 
 let INSTANCE:APP = null;
 
@@ -15,8 +15,6 @@ class APP {
 	images: LoadedImages;
 	packOptions: PackOptions;
 	packResult: PackResultsData[];
-	naturalWidth: number;
-	naturalHeight: number;
 
 	constructor() {
 		INSTANCE = this;
@@ -35,22 +33,22 @@ class APP {
 		return INSTANCE;
 	}
 
-	onImagesListChanged = (data: LoadedImages) => {
+	private onImagesListChanged = (data: LoadedImages) => {
 		this.images = data;
 		//console.log(this.images);
 		this.pack();
 	}
 
-	onPackOptionsChanged = (data: PackOptions) => {
+	private onPackOptionsChanged = (data: PackOptions) => {
 		this.packOptions = data;
 		this.pack();
 	}
 
-	onPackExporterOptionsChanged = (data: PackOptions) => {
+	private onPackExporterOptionsChanged = (data: PackOptions) => {
 		this.packOptions = data;
 	}
 
-	pack() {
+	private pack() {
 		const keys = Object.keys(this.images);
 
 		if (keys.length > 0) {
@@ -62,11 +60,11 @@ class APP {
 		}
 	}
 
-	doPack() {
+	private doPack() {
 		PackProcessor.pack(this.images, this.packOptions, this.onPackComplete, this.onPackError);
 	}
 
-	onPackComplete = (res:Rect[][], usedPacker:PackerCombo) => {
+	private onPackComplete = (res:Rect[][], usedPacker:PackerCombo) => {
 		this.packResult = [];
 
 		for (const data of res) {
@@ -86,12 +84,12 @@ class APP {
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 	}
 
-	onPackError = (err: MessageBoxData) => {
+	private onPackError = (err: MessageBoxData) => {
 		Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
 		TypedObserver.showMessage.emit(err.description);
 	}
 
-	startExport() {
+	private startExport() {
 		if (!this.packResult || !this.packResult.length) {
 			TypedObserver.showMessage.emit(I18.f("NO_IMAGES_ERROR"));
 			return;
@@ -101,7 +99,7 @@ class APP {
 		setTimeout(() => this.doExport(), 0);
 	}
 
-	async doExport() {
+	private async doExport() {
 		const exporter = this.packOptions.exporter;
 		const fileName = this.packOptions.fileName;
 		const filterClass = getFilterByType(this.packOptions.filter);

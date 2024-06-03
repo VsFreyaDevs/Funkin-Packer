@@ -3,7 +3,7 @@ import * as React from 'react';
 import I18 from '../utils/I18';
 
 class OldBrowserBlocker extends React.Component {
-	overlayRef: React.RefObject<HTMLDivElement>;
+	readonly overlayRef: React.RefObject<HTMLDivElement>;
 
 	constructor(props:any) {
 		super(props);
@@ -19,7 +19,7 @@ class OldBrowserBlocker extends React.Component {
 		if(!globalThis.FileReader) return false;
 
 		//check canvas
-		let canvas = document.createElement("canvas");
+		const canvas = document.createElement("canvas");
 		if(!canvas.getContext) return false;
 
 		//check ajax

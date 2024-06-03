@@ -5,12 +5,14 @@ const METHODS = {
 	Automatic: "Automatic"
 } as const;
 
+type MethodType = typeof METHODS[keyof typeof METHODS];
+
 class OptimalPacker extends Packer {
 	constructor(width: number, height: number, allowRotate: boolean = false, padding: number = 0) {
 		super(width, height, allowRotate, padding);
 	}
 
-	pack(_data:Rect[], _method:string):Rect[] {
+	pack(_data:Rect[], _method:MethodType):Rect[] {
 		throw new Error('OptimalPacker is a dummy and cannot be used directly');
 	}
 
@@ -18,7 +20,7 @@ class OptimalPacker extends Packer {
 		return "OptimalPacker";
 	}
 
-	static get defaultMethod():string {
+	static get defaultMethod():MethodType {
 		return METHODS.Automatic;
 	}
 
@@ -30,7 +32,7 @@ class OptimalPacker extends Packer {
 		return true;
 	}
 
-	static getMethodProps(id:string='') {
+	static getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.Automatic:
 				return {name: "Automatic", description: ""};

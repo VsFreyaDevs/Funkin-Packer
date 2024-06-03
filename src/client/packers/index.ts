@@ -16,7 +16,7 @@ const list:PackerClass[] = [
 ] as const;
 
 function getPackerByType(name:string) {
-	for(let item of list) {
+	for(const item of list) {
 		if(item.name === name) {
 			return item;
 		}

@@ -33,27 +33,30 @@ interface State {
 	detectedPacker: string;
 }
 
+const valTextureBackColors = ["grid-back", "white-back", "pink-back", "black-back"] as const;
+export type TextureBack = typeof valTextureBackColors;
+
 class SheetSplitter extends React.Component<Props, State> {
-	disableUntrimRef: React.RefObject<HTMLInputElement>;
-	updateFileNameRef: React.RefObject<HTMLInputElement>;
-	dataFormatRef: React.RefObject<HTMLSelectElement>;
-	selectTextureInputRef: React.RefObject<HTMLInputElement>;
-	dataFileNameRef: React.RefObject<HTMLInputElement>;
-	fileNameRef: React.RefObject<HTMLInputElement>;
-	viewRef: React.RefObject<HTMLCanvasElement>;
-	paddingRef: React.RefObject<HTMLInputElement>;
-	widthRef: React.RefObject<HTMLInputElement>;
-	heightRef: React.RefObject<HTMLInputElement>;
-	textureBackColors: string[];
+	readonly disableUntrimRef: React.RefObject<HTMLInputElement>;
+	readonly updateFileNameRef: React.RefObject<HTMLInputElement>;
+	readonly dataFormatRef: React.RefObject<HTMLSelectElement>;
+	readonly selectTextureInputRef: React.RefObject<HTMLInputElement>;
+	readonly dataFileNameRef: React.RefObject<HTMLInputElement>;
+	readonly fileNameRef: React.RefObject<HTMLInputElement>;
+	readonly viewRef: React.RefObject<HTMLCanvasElement>;
+	readonly paddingRef: React.RefObject<HTMLInputElement>;
+	readonly widthRef: React.RefObject<HTMLInputElement>;
+	readonly heightRef: React.RefObject<HTMLInputElement>;
+	readonly textureBackColors: TextureBack;
 	step: number;
-	rangeRef: React.RefObject<HTMLInputElement>;
-	wheelRef: React.RefObject<HTMLInputElement>;
+	readonly rangeRef: React.RefObject<HTMLInputElement>;
+	readonly wheelRef: React.RefObject<HTMLInputElement>;
 	texture: CustomImage;
 	data: string;
 	frames: Rect[];
 	fileName: string;
 	dataName: string;
-	buffer: HTMLCanvasElement;
+	readonly buffer: HTMLCanvasElement;
 
 	constructor(props: Props) {
 		super(props);
@@ -69,7 +72,7 @@ class SheetSplitter extends React.Component<Props, State> {
 		this.widthRef = React.createRef();
 		this.heightRef = React.createRef();
 
-		this.textureBackColors = ["grid-back", "white-back", "pink-back", "black-back"];
+		this.textureBackColors = valTextureBackColors;
 		this.step = 0.01;
 
 		this.state = {
@@ -655,7 +658,7 @@ class SheetSplitter extends React.Component<Props, State> {
 	setBack = (e: React.MouseEvent<HTMLDivElement>) => {
 		const classNames = (e.target as HTMLDivElement).className.split(" ");
 		for(const name of classNames) {
-			if(this.textureBackColors.indexOf(name) >= 0) {
+			if(this.textureBackColors.indexOf(name as TextureBack[number]) >= 0) {
 				this.setState({textureBack: name});
 
 				const canvas = this.viewRef.current;

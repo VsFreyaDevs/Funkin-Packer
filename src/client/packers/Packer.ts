@@ -1,23 +1,23 @@
 import { Rect } from "types";
 
 export type MethodList = {
-	[key:string]: string
+	readonly [key:string]: string
 };
 
 export type PackerClass = {
-	packerName: string,
-	methods: MethodList,
-	defaultMethod: string,
-	getMethodProps(): {name: string, description: string},
+	readonly packerName: string,
+	readonly methods: MethodList,
+	readonly defaultMethod: string,
+	getMethodProps(name:string): {name: string, description: string},
 	needsNonRotation(): boolean,
 	new(width: number, height: number, allowRotate?: boolean, padding?: number):Packer
 };
 
-export type PackerCombo = {
+export type PackerCombo = Readonly<{
 	packerClass: PackerClass,
 	packerMethod: string,
 	allowRotation: boolean
-};
+}>;
 
 const METHODS = {
 	Default: "Default"
@@ -48,7 +48,7 @@ class Packer {
 		return true;
 	}
 
-	static getMethodProps(id:string='') {
+	static getMethodProps(id:string) {
 		return {name: "Default", description: "Default placement"};
 	}
 }

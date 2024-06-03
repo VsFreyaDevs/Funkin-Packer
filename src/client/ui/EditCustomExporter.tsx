@@ -10,10 +10,10 @@ import TypedObserver from 'TypedObserver';
 const STORAGE_CUSTOM_EXPORTER_KEY = "custom-exporter";
 
 class EditCustomExporter extends React.Component {
-	contentRef: React.RefObject<HTMLTextAreaElement>;
-	allowTrimRef: React.RefObject<HTMLInputElement>;
-	allowRotationRef: React.RefObject<HTMLInputElement>;
-	fileExtRef: React.RefObject<HTMLInputElement>;
+	readonly contentRef: React.RefObject<HTMLTextAreaElement>;
+	readonly allowTrimRef: React.RefObject<HTMLInputElement>;
+	readonly allowRotationRef: React.RefObject<HTMLInputElement>;
+	readonly fileExtRef: React.RefObject<HTMLInputElement>;
 
 	constructor(props: any) {
 		super(props);

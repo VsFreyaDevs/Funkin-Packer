@@ -1,11 +1,11 @@
 import { Rect } from "types";
 import { dataURItoBlob } from "../utils/common";
 
-export type FileSystemPath = {
+export type FileSystemPath = Readonly<{
 	name: string;
 	path: string;
 	folder: string;
-}
+}>;
 
 class CustomImage {
 	//name: string;
@@ -14,13 +14,13 @@ class CustomImage {
 	base64: string;
 	cachedTrim?: number;
 	cachedTrimmedImage?: Uint8ClampedArray;
-	cachedSpaces?: {
+	cachedSpaces?: Readonly<{
 		left: number;
 		right: number;
 		top: number;
 		bottom: number;
-	};
-	image: HTMLImageElement;
+	}>;
+	readonly image: HTMLImageElement;
 	selected: boolean;
 	current: boolean;
 	rect: Rect;
@@ -33,7 +33,7 @@ class CustomImage {
 	constructor(image: HTMLImageElement, name?: string, path?: string, folder?: string) {
 		this.image = image;
 		if(name && path && folder) {
-			this.fsPath = { name, path, folder };
+			this.fsPath = { name, path, folder } as const;
 		}
 		this._blobString = null;
 		this._blob = null;

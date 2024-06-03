@@ -4,25 +4,26 @@ import { Observer, GLOBAL_EVENT } from "../Observer";
 import { smartSortImages} from '../utils/common';
 import { PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
+import { TextureBack } from './SheetSplitter';
 
 interface Props {
-	start?: boolean;
-	textureBack?: string;
-	data?: PackResultsData[];
+	readonly start: boolean;
+	readonly textureBack: TextureBack[number];
+	readonly data: PackResultsData[];
 }
 
 type Texture = {
-	config: Rect,
-	baseTexture: HTMLCanvasElement
+	readonly config: Rect,
+	readonly baseTexture: HTMLCanvasElement
 }
 
 class SpritesPlayer extends React.Component<Props> {
-	fpsRef: React.RefObject<HTMLInputElement>;
-	speedRef: React.RefObject<HTMLInputElement>;
-	bufferRef: React.RefObject<HTMLCanvasElement>;
-	viewRef: React.RefObject<HTMLCanvasElement>;
-	playerContainerRef: React.RefObject<HTMLDivElement>;
-	containerRef: React.RefObject<HTMLDivElement>;
+	readonly fpsRef: React.RefObject<HTMLInputElement>;
+	readonly speedRef: React.RefObject<HTMLInputElement>;
+	readonly bufferRef: React.RefObject<HTMLCanvasElement>;
+	readonly viewRef: React.RefObject<HTMLCanvasElement>;
+	readonly playerContainerRef: React.RefObject<HTMLDivElement>;
+	readonly containerRef: React.RefObject<HTMLDivElement>;
 	textures: Texture[];
 	currentTextures: Texture[];
 	currentFrame: number;
@@ -90,7 +91,7 @@ class SpritesPlayer extends React.Component<Props> {
 			const baseTexture = part.buffer;
 
 			for (const config of part.data) {
-				let {w, h} = SpritesPlayer.getFrameSize(config);
+				const {w, h} = SpritesPlayer.getFrameSize(config);
 
 				//console.log(w, h, config, config.sourceSize);
 
@@ -161,7 +162,7 @@ class SpritesPlayer extends React.Component<Props> {
 	updateCurrentTextures = () => {
 		let textures:Texture[] = [];
 
-		for(let tex of this.textures) {
+		for(const tex of this.textures) {
 			if(!tex.config.cloned && this.selectedImages.indexOf(tex.config.file) >= 0) {
 				textures.push(tex);
 			}
@@ -208,7 +209,7 @@ class SpritesPlayer extends React.Component<Props> {
 
 		//let w = Math.max(texture.config.sourceSize.mw, texture.config.sourceSize.w);
 		//let h = Math.max(texture.config.sourceSize.mh, texture.config.sourceSize.h);
-		let {w, h} = SpritesPlayer.getFrameSize(texture.config);
+		const {w, h} = SpritesPlayer.getFrameSize(texture.config);
 
 		const buffer = this.bufferRef.current;
 		buffer.width = w;

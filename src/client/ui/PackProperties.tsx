@@ -32,29 +32,29 @@ interface State {
 
 class PackProperties extends React.Component<Props, State> {
 	packOptions: PackOptions;
-	fileNameRef: React.RefObject<HTMLInputElement>;
-	textureFormatRef: React.RefObject<HTMLSelectElement>;
-	removeFileExtensionRef: React.RefObject<HTMLInputElement>;
-	prependFolderNameRef: React.RefObject<HTMLInputElement>;
-	scaleRef: React.RefObject<HTMLInputElement>;
-	filterRef: React.RefObject<HTMLSelectElement>;
-	exporterRef: React.RefObject<HTMLSelectElement>;
-	editCustomFormatRef: React.RefObject<HTMLInputElement>;
-	widthRef: React.RefObject<HTMLInputElement>;
-	heightRef: React.RefObject<HTMLInputElement>;
-	spritePaddingRef: React.RefObject<HTMLInputElement>;
-	borderPaddingRef: React.RefObject<HTMLInputElement>;
-	allowRotationRef: React.RefObject<HTMLInputElement>;
-	allowTrimRef: React.RefObject<HTMLInputElement>;
-	detectIdenticalRef: React.RefObject<HTMLInputElement>;
-	packerRef: React.RefObject<HTMLSelectElement>;
-	packerMethodRef: React.RefObject<PackerMethods>;
-	sortExportedRowsRef: React.RefObject<HTMLInputElement>;
-	fixedSizeRef: React.RefObject<HTMLInputElement>;
-	powerOfTwoRef: React.RefObject<HTMLInputElement>;
-	trimModeRef: React.RefObject<HTMLSelectElement>;
-	alphaThresholdRef: React.RefObject<HTMLInputElement>;
-	statsSIRef: React.RefObject<HTMLInputElement>;
+	readonly fileNameRef: React.RefObject<HTMLInputElement>;
+	readonly textureFormatRef: React.RefObject<HTMLSelectElement>;
+	readonly removeFileExtensionRef: React.RefObject<HTMLInputElement>;
+	readonly prependFolderNameRef: React.RefObject<HTMLInputElement>;
+	readonly scaleRef: React.RefObject<HTMLInputElement>;
+	readonly filterRef: React.RefObject<HTMLSelectElement>;
+	readonly exporterRef: React.RefObject<HTMLSelectElement>;
+	readonly editCustomFormatRef: React.RefObject<HTMLInputElement>;
+	readonly widthRef: React.RefObject<HTMLInputElement>;
+	readonly heightRef: React.RefObject<HTMLInputElement>;
+	readonly spritePaddingRef: React.RefObject<HTMLInputElement>;
+	readonly borderPaddingRef: React.RefObject<HTMLInputElement>;
+	readonly allowRotationRef: React.RefObject<HTMLInputElement>;
+	readonly allowTrimRef: React.RefObject<HTMLInputElement>;
+	readonly detectIdenticalRef: React.RefObject<HTMLInputElement>;
+	readonly packerRef: React.RefObject<HTMLSelectElement>;
+	readonly packerMethodRef: React.RefObject<PackerMethods>;
+	readonly sortExportedRowsRef: React.RefObject<HTMLInputElement>;
+	readonly fixedSizeRef: React.RefObject<HTMLInputElement>;
+	readonly powerOfTwoRef: React.RefObject<HTMLInputElement>;
+	readonly trimModeRef: React.RefObject<HTMLSelectElement>;
+	readonly alphaThresholdRef: React.RefObject<HTMLInputElement>;
+	readonly statsSIRef: React.RefObject<HTMLInputElement>;
 
 	constructor(props: Props) {
 		super(props);

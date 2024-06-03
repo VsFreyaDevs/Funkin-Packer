@@ -13,6 +13,8 @@ const METHODS = {
 	//SmartUnsorted: "SmartUnsorted",
 } as const;
 
+type MethodType = typeof METHODS[keyof typeof METHODS];
+
 type Block = {
 	x?: number,
 	y?: number,
@@ -70,8 +72,8 @@ function rotateBlock(block:Block) {
 }
 
 class FixedOrderedPacker extends Packer {
-	allowRotate: boolean;
-	padding: number;
+	readonly allowRotate: boolean;
+	readonly padding: number;
 	width: number;
 	height: number;
 	isSmart: boolean;
@@ -89,7 +91,7 @@ class FixedOrderedPacker extends Packer {
 		this.isAlt = false;
 	}
 
-	pack(_data:Rect[], _method:string):Rect[] {
+	pack(_data:Rect[], _method:MethodType):Rect[] {
 		let method = _method;
 		this.isSmart = false;
 		this.isAlt = false;
@@ -225,7 +227,7 @@ class FixedOrderedPacker extends Packer {
 		return rects;
 	}
 
-	_pack(_data:Rect[], allowRotation:boolean):Block[] {
+	private _pack(_data:Rect[], allowRotation:boolean):Block[] {
 		const blocks:Block[] = [];
 		for(const data of _data) {
 			const block:Block = {
@@ -245,7 +247,7 @@ class FixedOrderedPacker extends Packer {
 		return packedBlocks;
 	}
 
-	packNormal(blocks: Block[], allowRotation: boolean): Block[] {
+	private packNormal(blocks: Block[], allowRotation: boolean): Block[] {
 		let xPos = 0;
 		let yPos = 0;
 		let maxRowHeight = 0;
@@ -311,7 +313,7 @@ class FixedOrderedPacker extends Packer {
 		return packedBlocks;
 	}
 
-	packAlt(blocks: Block[], allowRotation: boolean) {
+	private packAlt(blocks: Block[], allowRotation: boolean) {
 		let xPos = 0;
 		let yPos = 0;
 		let maxRowHeight = 0;
@@ -359,17 +361,17 @@ class FixedOrderedPacker extends Packer {
 		return packedBlocks;
 	}
 
-	_get_total_width(blocks: Block[]): number {
+	private _get_total_width(blocks: Block[]): number {
 		let sum = 0;
-		for(let block of blocks) {
+		for(const block of blocks) {
 			sum += block.w + this.padding;
 		}
 		return sum;
 	}
 
-	_get_total_height(blocks: Block[]): number {
+	private _get_total_height(blocks: Block[]): number {
 		let sum = 0;
-		for(let block of blocks) {
+		for(const block of blocks) {
 			sum += block.h;
 		}
 		return sum;
@@ -379,7 +381,7 @@ class FixedOrderedPacker extends Packer {
 		return "FixedOrderedPacker";
 	}
 
-	static get defaultMethod():string {
+	static get defaultMethod():MethodType {
 		return METHODS.SortedAreaDsc;
 	}
 
@@ -391,7 +393,7 @@ class FixedOrderedPacker extends Packer {
 		return false;
 	}
 
-	static getMethodProps(id:string='') {
+	static getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.SortedAreaAsc:
 				return {name: "SortedAreaAsc", description: "Sorted placement"};

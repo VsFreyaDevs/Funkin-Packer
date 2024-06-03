@@ -60,7 +60,7 @@ class Sparrow extends Splitter {
 				console.log("Trying to parse as Haxe Xml");
 				const atlas = HaxeXmlParser.parse(data, false);
 				console.log("Parsed as Haxe Xml");
-				console.log(atlas);
+				//console.log(atlas);
 				if(atlas.hasElement("TextureAtlas")) {
 					const list = atlas.firstElement();
 					const arr = list.elementsNamed("SubTexture");
@@ -140,18 +140,18 @@ class Sparrow extends Splitter {
 		cb(res);
 	}
 
-	convertToRect(attribs:RawSparrowFrame): Rect {
-		let name = Splitter.fixFileName(attribs.name);
+	private convertToRect(attribs:RawSparrowFrame): Rect {
+		const name = Splitter.fixFileName(attribs.name);
 
-		let rotated = attribs.rotated === 'true';
+		const rotated = attribs.rotated === 'true';
 		if(rotated) {
 			// Unsure if i should swap the offsets too?
-			let temp = attribs.width;
+			const temp = attribs.width;
 			attribs.width = attribs.height;
 			attribs.height = temp;
 		}
 
-		let item: SparrowFrame = {
+		const item: SparrowFrame = {
 			name: name,
 			x: parseInt(attribs.x, 10),
 			y: parseInt(attribs.y, 10),
@@ -174,7 +174,7 @@ class Sparrow extends Splitter {
 
 		//console.log(name, item);
 
-		let trimmed = item.width < item.frameWidth || item.height < item.frameHeight;
+		const trimmed = item.width < item.frameWidth || item.height < item.frameHeight;
 
 		// TODO: make this only happen visually, since users have reported issues with this
 		//item.frameWidth = Math.max(item.frameWidth, item.width + item.frameX);

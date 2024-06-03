@@ -89,7 +89,7 @@ class ZipLoader {
 		});
 	}
 
-	waitImages = () => {
+	private waitImages = () => {
 		let ready = true;
 
 		for(const key of Object.keys(this.loaded)) {

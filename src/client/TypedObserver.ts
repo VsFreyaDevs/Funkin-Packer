@@ -1,6 +1,6 @@
-import { LoadedImages, PackOptions, PackResultsData, SelectedEvent } from "types";
+import { LoadedImages, PackOptions, SelectedEvent } from "types";
 import { ButtonData } from "./ui/MessageBox";
-import StatsInfo, { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
+import { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
 
 type Callback<T> = (...args: T[]) => void;
 
@@ -28,16 +28,16 @@ class TypedObserver<T, FUNC = Callback<T>> {
 }
 
 export default {
-	imagesListChanged: new TypedObserver<LoadedImages>(),
-	imagesListSelectedChanged: new TypedObserver<string[]>(),
-	siUnitsChanged: new TypedObserver<number>(),
-	statsInfoUpdated: new TypedObserver<StatsInfoEvent>(),
-	packComplete: new TypedObserver<StatsInfoEvent>(),
-	packOptionsChanged: new TypedObserver<PackOptions>(),
-	packExporterChanged: new TypedObserver<PackOptions>(),
-	showMessage: new TypedObserver<string | ButtonData[], (content: string, buttons?: ButtonData[]) => void>(),
-	imageSelected: new TypedObserver<SelectedEvent>(),
-	changeLanguage: new TypedObserver<string>(),
-	storedOrderChanged: new TypedObserver<string[]>(),
-	repackInfo: new TypedObserver<RepackInfoEvent>(),
+	imagesListChanged: new TypedObserver<Readonly<LoadedImages>>(),
+	imagesListSelectedChanged: new TypedObserver<Readonly<string>[]>(),
+	siUnitsChanged: new TypedObserver<Readonly<number>>(),
+	statsInfoUpdated: new TypedObserver<Readonly<StatsInfoEvent>>(),
+	packComplete: new TypedObserver<Readonly<StatsInfoEvent>>(),
+	packOptionsChanged: new TypedObserver<Readonly<PackOptions>>(),
+	packExporterChanged: new TypedObserver<Readonly<PackOptions>>(),
+	showMessage: new TypedObserver<Readonly<string | ButtonData[]>, (content: string, buttons?: ButtonData[]) => void>(),
+	imageSelected: new TypedObserver<Readonly<SelectedEvent>>(),
+	changeLanguage: new TypedObserver<Readonly<string>>(),
+	storedOrderChanged: new TypedObserver<Readonly<string>[]>(),
+	repackInfo: new TypedObserver<Readonly<RepackInfoEvent>>(),
 };

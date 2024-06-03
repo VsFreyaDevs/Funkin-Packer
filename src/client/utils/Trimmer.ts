@@ -1,7 +1,7 @@
 import { Rect } from "types";
 
-let cns = document.createElement("canvas");
-let ctx = cns.getContext("2d", {willReadFrequently: true});
+const cns = document.createElement("canvas");
+const ctx = cns.getContext("2d", {willReadFrequently: true});
 
 /*#__PURE__*/
 /*function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) {
@@ -9,7 +9,7 @@ let ctx = cns.getContext("2d", {willReadFrequently: true});
 }*/
 
 class Trimmer {
-	static getSpacing(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
+	private static getSpacing(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		const stride = width * 4;
 		let left = width, top = height;
 		let right = width, bottom = height;
@@ -62,12 +62,12 @@ class Trimmer {
 
 		if(PROFILER)
 			console.time("trim");
-		for(let item of rects) {
-			let img = item.image;
+		for(const item of rects) {
+			const img = item.image;
 
 			let spaces = {left: 0, right: 0, top: 0, bottom: 0};
 
-			let cached = img.cachedTrim !== undefined && img.cachedTrim === threshold;
+			const cached = img.cachedTrim !== undefined && img.cachedTrim === threshold;
 
 			if(cached) {
 				spaces = img.cachedSpaces;
@@ -79,7 +79,7 @@ class Trimmer {
 
 				ctx.drawImage(img.image, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
 
-				let {data} = ctx.getImageData(0, 0, img.width, img.height);
+				const {data} = ctx.getImageData(0, 0, img.width, img.height);
 
 				spaces = this.getSpacing(data, img.width, img.height, threshold);
 

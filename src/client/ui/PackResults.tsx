@@ -9,9 +9,12 @@ import { StatsInfoEvent } from './StatsInfo';
 
 interface Props {}
 
+const valTextureBackColors = ["grid-back", "white-back", "pink-back", "black-back"] as const;
+type TextureBack = typeof valTextureBackColors;
+
 interface State {
 	packResult: PackResultsData[];
-	textureBack: string;
+	textureBack: TextureBack[number];
 	displayOutline: boolean;
 	selectedImages: string[];
 	playerVisible: boolean;
@@ -19,10 +22,10 @@ interface State {
 }
 
 class PackResults extends React.Component<Props, State> {
-	spritesPlayerRef: React.RefObject<SpritesPlayer>;
-	rangeRef: React.RefObject<HTMLInputElement>;
-	wheelRef: React.RefObject<HTMLInputElement>;
-	textureBackColors: string[];
+	readonly spritesPlayerRef: React.RefObject<SpritesPlayer>;
+	readonly rangeRef: React.RefObject<HTMLInputElement>;
+	readonly wheelRef: React.RefObject<HTMLInputElement>;
+	readonly textureBackColors: TextureBack;
 	step: number;
 
 	constructor(props: Props) {
@@ -32,7 +35,7 @@ class PackResults extends React.Component<Props, State> {
 		this.rangeRef = React.createRef();
 		this.wheelRef = React.createRef();
 
-		this.textureBackColors = ["grid-back", "white-back", "pink-back", "black-back"];
+		this.textureBackColors = valTextureBackColors;
 		this.step = 0.01;
 
 		this.state = {
@@ -66,8 +69,8 @@ class PackResults extends React.Component<Props, State> {
 	}
 
 	setBack = (e: React.MouseEvent<HTMLDivElement>) => {
-		let classNames = (e.target as HTMLDivElement).className.split(" ");
-		for(let name of classNames) {
+		const classNames = (e.target as HTMLDivElement).className.split(" ") as TextureBack[number][];
+		for(const name of classNames) {
 			if(this.textureBackColors.indexOf(name) >= 0) {
 				this.setState({textureBack: name});
 				return;
@@ -121,9 +124,10 @@ class PackResults extends React.Component<Props, State> {
 	}
 
 	render() {
-		let views = [], ix=0;
+		const views = [];
+		let ix=0;
 		if(this.state.packResult) {
-			for (let item of this.state.packResult) {
+			for (const item of this.state.packResult) {
 				views.push((
 					<TextureView key={"tex-view-" + ix} data={item} scale={this.state.scale} textureBack={this.state.textureBack} selectedImages={this.state.selectedImages} displayOutline={this.state.displayOutline} />
 				));

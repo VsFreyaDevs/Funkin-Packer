@@ -4,27 +4,27 @@ import I18 from '../utils/I18';
 import { isNullOrUndefined } from '../utils/common';
 
 interface Props {
-	content: string;
-	buttons?: ButtonData[];
-	closeCallback?: () => void;
+	readonly content: string;
+	readonly buttons?: ButtonData[];
+	readonly closeCallback?: () => void;
 }
 
 export interface ButtonData {
-	name: string;
-	caption: string;
-	callback?: () => void;
+	readonly name: string;
+	readonly caption: string;
+	readonly callback?: () => void;
 }
 
 type ButtonProps = ButtonData & {
-	parentBox?: MessageBox;
+	readonly parentBox?: MessageBox;
 }
 
 class MessageBox extends React.Component<Props> {
-	buttons: ButtonProps[];
+	readonly buttons: ButtonProps[];
 	constructor(props:Props) {
 		super(props);
 
-		const btns = [];
+		const btns:ButtonProps[] = [];
 		if(this.props.buttons) {
 			for(let btn of this.props.buttons) {
 				btns.push({...btn, parentBox: this});

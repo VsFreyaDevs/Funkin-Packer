@@ -28,11 +28,11 @@ interface State {
 };
 
 class ImagesList extends React.Component<Props, State> {
-	imagesTreeRef: React.RefObject<HTMLDivElement>;
-	imagesTreePartRef: React.RefObject<ItemTreePart>;
-	dropHelpRef: React.RefObject<HTMLDivElement>;
-	addImagesInputRef: React.RefObject<HTMLInputElement>;
-	addZipInputRef: React.RefObject<HTMLInputElement>;
+	readonly imagesTreeRef: React.RefObject<HTMLDivElement>;
+	readonly imagesTreePartRef: React.RefObject<ItemTreePart>;
+	readonly dropHelpRef: React.RefObject<HTMLDivElement>;
+	readonly addImagesInputRef: React.RefObject<HTMLInputElement>;
+	readonly addZipInputRef: React.RefObject<HTMLInputElement>;
 
 	state:State = {
 		images: {},

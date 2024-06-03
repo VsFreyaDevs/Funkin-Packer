@@ -35,7 +35,7 @@ const enum XmlType {
 	Document
 }
 
-function xmlTypeToString(type: XmlType): string {
+/*function xmlTypeToString(type: XmlType): string {
 	switch (type) {
 		case XmlType.Element:
 			return 'Element';
@@ -52,10 +52,10 @@ function xmlTypeToString(type: XmlType): string {
 		case XmlType.Document:
 			return 'Document';
 	}
-}
+}*/
 
 class ArrayWrapper<T> {
-	public array: T[];
+	public readonly array: T[];
 	constructor(array:T[]) {
 		this.array = array;
 	}
@@ -97,8 +97,8 @@ class Xml {
 	public nodeName: string;
 	public nodeValue: string;
 	public parent: Xml;
-	private children: ArrayWrapper<Xml>;
-	private attributeMap: Map<string, string>;
+	private readonly children: ArrayWrapper<Xml>;
+	private readonly attributeMap: Map<string, string>;
 
 	constructor(type: XmlType) {
 		this.nodeType = type;
@@ -338,8 +338,8 @@ class StringBuf {
 
 	get length():number {
 		let length = 0;
-		for (let i = 0; i < this._string.length; i++) {
-			length += this._string[i].length;
+		for(const s of this._string) {
+			length += s.length;
 		}
 		return length;
 	}
@@ -397,13 +397,13 @@ export class HaxeXmlParser {
 		return doc;
 	}
 
-	private static printEntire(xml: Xml, pretty: boolean = false): string {
+	/*private static printEntire(xml: Xml, pretty: boolean = false): string {
 		if(xml == null)
 			return "??NULL??";
 		while(xml.parent !== null)
 			xml = xml.parent;
 		return Printer.print(xml, pretty);
-	}
+	}*/
 
 	private static doParse(str:string, strict:boolean, p:number, parent:Xml):number {
 		let nsubs:number = 0;

@@ -5,7 +5,6 @@ import JsonArray from './JsonArray';
 import UIKit from './UIKit';
 import Spine from './Spine';
 import Sparrow from './Sparrow';
-import { getDummyRect, setMaxSizes } from '../utils/common';
 import Splitter, { SplitterOptions } from './Splitter';
 import { Rect } from 'types';
 import TypedObserver from 'TypedObserver';
@@ -20,7 +19,7 @@ const list: Splitter[] = [
 	//XML,
 	new UIKit(),
 	new Spine()
-];
+] as const;
 
 function getDefaultSplitter():Splitter {
 	return new Sparrow();
@@ -115,7 +114,6 @@ export class SplitterMaster {
 				return cb([]);
 
 			const order = [];
-
 			for(const item of res) {
 				order.push(item.name);
 			}

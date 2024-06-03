@@ -6,20 +6,18 @@ import TextureRenderer from './utils/TextureRenderer';
 
 import I18 from './utils/I18';
 import { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
-import { TreeListItem, TreeListItems } from 'ui/ItemTree';
-import Packer, { PackerClass, PackerCombo } from './packers/Packer';
-import { ButtonData } from 'ui/MessageBox';
+import { PackerClass, PackerCombo } from './packers/Packer';
 
 class PackProcessor {
 	static detectIdentical(rects: Rect[], didTrim: boolean) {
-		let identical:Rect[] = [];
+		const identical:Rect[] = [];
 
 		const len = rects.length;
 
 		for (let i = 0; i < len; i++) {
-			let rect1 = rects[i];
+			const rect1 = rects[i];
 			for (let n = i + 1; n < len; n++) {
-				let rect2 = rects[n];
+				const rect2 = rects[n];
 				if (identical.indexOf(rect2) === -1 && PackProcessor.compareImages(rect1, rect2, didTrim)) {
 					rect2.identical = rect1;
 					identical.push(rect2);
@@ -27,14 +25,14 @@ class PackProcessor {
 			}
 		}
 
-		for (let rect of identical) {
+		for (const rect of identical) {
 			rects.splice(rects.indexOf(rect), 1);
 		}
 
 		return {
 			rects,
 			identical
-		}
+		} as const;
 	}
 
 	static compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
@@ -308,7 +306,7 @@ class PackProcessor {
 		}
 	}
 
-	static removeRect(rects:Rect[], name:string) {
+	private static removeRect(rects:Rect[], name:string) {
 		for (let i = 0; i < rects.length; i++) {
 			if (rects[i].name === name) {
 				rects.splice(i, 1);

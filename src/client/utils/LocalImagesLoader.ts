@@ -30,7 +30,7 @@ class LocalImagesLoader {
 		this.loadNext();
 	}
 
-	loadNext = () => {
+	private loadNext = () => {
 		if (!this.data.length) {
 			this.waitImages();
 			return;
@@ -72,7 +72,7 @@ class LocalImagesLoader {
 		}
 	}
 
-	waitImages = () => {
+	private waitImages = () => {
 		let ready = true;
 
 		for (let key of Object.keys(this.loaded)) {

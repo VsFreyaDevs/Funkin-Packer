@@ -3,7 +3,7 @@ import * as React from 'react';
 import I18 from '../utils/I18';
 
 class ProcessingOverlay extends React.Component {
-	overlayRef: React.RefObject<HTMLDivElement>;
+	readonly overlayRef: React.RefObject<HTMLDivElement>;
 	showTimer: any;
 
 	constructor(props:any) {

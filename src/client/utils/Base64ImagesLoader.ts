@@ -33,7 +33,7 @@ class Base64ImagesLoader {
 		this.waitImages();
 	}
 
-	waitImages = () => {
+	private waitImages = () => {
 		let ready = true;
 		let loaded = 0;
 		let keys = Object.keys(this.loaded);

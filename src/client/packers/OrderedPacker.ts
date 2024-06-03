@@ -7,6 +7,8 @@ const METHODS = {
 	Unsorted: "Unsorted",
 } as const;
 
+type MethodType = typeof METHODS[keyof typeof METHODS];
+
 type Block = {
 	x?: number,
 	y?: number,
@@ -42,7 +44,7 @@ class OrderedPacker extends Packer {
 		this.padding = padding;
 	}
 
-	pack(_data:Rect[], _method:string):Rect[] {
+	pack(_data:Rect[], _method:MethodType):Rect[] {
 		let blocks = this._pack(_data, _method, false);
 		if(this.allowRotate) {
 			let new_blocks = this._pack(_data, _method, true);
@@ -66,7 +68,7 @@ class OrderedPacker extends Packer {
 		return rects;
 	}
 
-	_pack(_data:Rect[], _method:String, rotated:boolean):Block[] {
+	private _pack(_data:Rect[], _method:MethodType, rotated:boolean):Block[] {
 		const blocks:Block[] = [];
 		for (let i = 0; i < _data.length; i++) {
 			const block:Block = {
@@ -121,7 +123,7 @@ class OrderedPacker extends Packer {
 		return blocks;
 	}
 
-	_get_total_width(blocks: Block[]): number {
+	private _get_total_width(blocks: Block[]): number {
 		let sum = 0;
 		for(const block of blocks) {
 			sum += block.w + this.padding;
@@ -129,7 +131,7 @@ class OrderedPacker extends Packer {
 		return sum;
 	}
 
-	_get_total_height(blocks: Block[]): number {
+	private _get_total_height(blocks: Block[]): number {
 		let sum = 0;
 		for(const block of blocks) {
 			sum += block.h;
@@ -141,7 +143,7 @@ class OrderedPacker extends Packer {
 		return "OrderedPacker";
 	}
 
-	static get defaultMethod():string {
+	static get defaultMethod():MethodType {
 		return METHODS.SortedAreaDsc;
 	}
 
@@ -153,7 +155,7 @@ class OrderedPacker extends Packer {
 		return false;
 	}
 
-	static getMethodProps(id:string='') {
+	static getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.SortedAreaAsc:
 				return {name: "SortedAreaAsc", description: "Sorted placement"};

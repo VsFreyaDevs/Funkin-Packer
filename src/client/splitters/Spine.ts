@@ -17,7 +17,7 @@ class Spine extends Splitter {
 		cb(lines[2] && lines[2].trim().indexOf('size:') === 0);
 	}
 
-	static finalizeItem(item:SplitterRect):Rect {
+	private static finalizeItem(item:SplitterRect):Rect {
 		/*if(item.offset) {
 			item.spriteSourceSize = {
 				x: item.offset.x,
@@ -32,13 +32,13 @@ class Spine extends Splitter {
 
 		item.trimmed = item.frame.w !== item.sourceSize.w || item.frame.h !== item.sourceSize.h;
 
-		return item as Rect;
+		return item;
 	}
 
 	doSplit(data: string, cb: (res: Rect[] | false) => void) {
-		let res:Rect[] = [];
+		const res:Rect[] = [];
 
-		let lines = data.split('\n');
+		const lines = data.split('\n');
 
 		let currentItem:SplitterRect = null;
 
@@ -82,11 +82,11 @@ class Spine extends Splitter {
 			}
 			else {
 				line = line.trim();
-				let parts = line.split(':');
-				let name = parts[0].trim();
-				let val = parts[1].trim();
+				const parts = line.split(':');
+				const name = parts[0].trim();
+				const val = parts[1].trim();
 
-				let valParts = val.split(',');
+				const valParts = val.split(',');
 				valParts[0] = valParts[0].trim();
 
 				if(valParts[1]) valParts[1] = valParts[1].trim();

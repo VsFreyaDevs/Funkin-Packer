@@ -4,7 +4,7 @@ import Splitter from './Splitter';
 class JsonHash extends Splitter {
 	doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
-			let json = JSON.parse(data);
+			const json = JSON.parse(data);
 			cb(json && json.frames && !Array.isArray(json.frames));
 		}
 		catch(e) {
@@ -13,15 +13,15 @@ class JsonHash extends Splitter {
 	}
 
 	doSplit(data: string, cb: (res: Rect[] | false) => void) {
-		let res = [];
+		const res = [];
 
 		try {
-			let json = JSON.parse(data);
+			const json = JSON.parse(data);
 
-			let names = Object.keys(json.frames);
+			const names = Object.keys(json.frames);
 
-			for(let name of names) {
-				let item = json.frames[name];
+			for(const name of names) {
+				const item = json.frames[name];
 
 				item.name = Splitter.fixFileName(name);
 				res.push(item);

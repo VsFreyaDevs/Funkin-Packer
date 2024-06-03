@@ -171,7 +171,7 @@ class TextureRenderer {
 
 	}*/
 
-	renderItem(ctx: CanvasRenderingContext2D, item: Rect, _options: PackOptions) {
+	private renderItem(ctx: CanvasRenderingContext2D, item: Rect, _options: PackOptions) {
 		if(item.skipRender) return;
 
 		let img = item.image;

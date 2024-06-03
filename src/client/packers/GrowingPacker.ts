@@ -11,6 +11,8 @@ const METHODS = {
 	Unsorted: "Unsorted"
 } as const;
 
+type MethodType = typeof METHODS[keyof typeof METHODS];
+
 type Block = {
 	w: number,
 	h: number,
@@ -47,11 +49,11 @@ class GrowingPacker extends Packer {
 		this.height = height;
 	}
 
-	static get defaultMethod():string {
+	static get defaultMethod():MethodType {
 		return METHODS.Sorted;
 	}
 
-	pack(_data:Rect[], _method:string):Rect[] {
+	pack(_data:Rect[], _method:MethodType):Rect[] {
 		const blocks:Block[] = [];
 		for (let i = 0; i < _data.length; i++) {
 			const block:Block = {
@@ -104,7 +106,7 @@ class GrowingPacker extends Packer {
 		return rects;
 	}
 
-	findNode = (root:Node, w:number, h:number):Node => {
+	private findNode = (root:Node, w:number, h:number):Node => {
 		if (root.used)
 			return this.findNode(root.right, w, h) || this.findNode(root.down, w, h);
 		if ((w <= root.w) && (h <= root.h))
@@ -112,14 +114,14 @@ class GrowingPacker extends Packer {
 		return null;
 	}
 
-	splitNode = (node:Node, w:number, h:number) => {
+	private splitNode = (node:Node, w:number, h:number) => {
 		node.used = true;
 		node.down  = { x: node.x,     y: node.y + h, w: node.w,     h: node.h - h };
 		node.right = { x: node.x + w, y: node.y,     w: node.w - w, h: h          };
 		return node;
 	}
 
-	growNode = (w:number, h:number) => {
+	private growNode = (w:number, h:number) => {
 		const canGrowDown  = (w <= this.root.w);
 		const canGrowRight = (h <= this.root.h);
 
@@ -139,7 +141,7 @@ class GrowingPacker extends Packer {
 		//return null; // need to ensure sensible root starting size to avoid this happening
 	}
 
-	growRight = (w:number, h:number) => {
+	private growRight = (w:number, h:number) => {
 		this.root = {
 			used: true,
 			x: 0,
@@ -155,7 +157,7 @@ class GrowingPacker extends Packer {
 		return null;
 	}
 
-	growDown = (w:number, h:number) => {
+	private growDown = (w:number, h:number) => {
 		this.root = {
 			used: true,
 			x: 0,
@@ -183,7 +185,7 @@ class GrowingPacker extends Packer {
 		return true;
 	}
 
-	static getMethodProps(id:string='') {
+	static getMethodProps(id:MethodType) {
 		return {name: "Default", description: "Default placement"};
 	}
 }

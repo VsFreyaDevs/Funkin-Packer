@@ -15,11 +15,11 @@ export interface TreeListItem {
 }
 
 export type TreeListItems = {
-	[key: string]: TreeListItem
+	readonly [key: string]: TreeListItem
 };
 
 type TreeItemProps = {
-	data: TreeListItem;
+	readonly data: TreeListItem;
 }
 
 
@@ -123,9 +123,9 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeListItem>, Tree
 	}
 
 	render() {
-		let collapsed = this.state.collapsed;
-		let label = this.props.name;
-		let children = this.props.children;
+		const collapsed = this.state.collapsed;
+		const label = this.props.name;
+		const children = this.props.children;
 
 		let arrowClass = 'tree-view-arrow';
 		let containerClass = 'tree-view-children';
@@ -134,8 +134,8 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeListItem>, Tree
 			containerClass += ' tree-view-children-collapsed';
 		}
 
-		let arrow = (<div className={arrowClass} onClick={this.handleCollapse}/>);
-		let folderIcon = (<div className="tree-view-folder"></div>);
+		const arrow = (<div className={arrowClass} onClick={this.handleCollapse}/>);
+		const folderIcon = (<div className="tree-view-folder"></div>);
 
 		return (
 			<div className="tree-view" onClick={this.handleClick}>

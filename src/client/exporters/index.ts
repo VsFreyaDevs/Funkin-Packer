@@ -19,6 +19,12 @@ export type Exporter = {
 	content?: string;
 };
 
+declare type TemplateSettings = {
+	rects: ExporterRect[],
+	config: RenderSettings,
+	appInfo: typeof appInfo
+};
+
 type ExporterRect = {
 	name: string;
 	origName: string;
@@ -165,7 +171,7 @@ function prepareData(data: Rect[], options: RenderSettings): {
 			trimmed,
 			first: false,
 			last: false
-		});
+		} as const);
 
 	}
 

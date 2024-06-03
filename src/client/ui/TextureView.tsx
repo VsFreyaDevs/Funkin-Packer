@@ -4,16 +4,16 @@ import { PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 
 interface TextureViewProps {
-	data: PackResultsData;
-	scale: number;
-	selectedImages: string[];
-	displayOutline: boolean;
-	textureBack: string;
+	readonly data: PackResultsData;
+	readonly scale: number;
+	readonly selectedImages: string[];
+	readonly displayOutline: boolean;
+	readonly textureBack: string;
 }
 
 class TextureView extends React.Component<TextureViewProps> {
-	backRef: React.RefObject<HTMLDivElement>;
-	viewRef: React.RefObject<HTMLCanvasElement>;
+	readonly backRef: React.RefObject<HTMLDivElement>;
+	readonly viewRef: React.RefObject<HTMLCanvasElement>;
 
 	constructor(props: TextureViewProps) {
 		super(props);
@@ -31,7 +31,7 @@ class TextureView extends React.Component<TextureViewProps> {
 	}
 
 	updateView = () => {
-		let view = this.viewRef.current;
+		const view = this.viewRef.current;
 		if(view) {
 			view.width = this.props.data.buffer.width;
 			view.height = this.props.data.buffer.height;
@@ -39,7 +39,7 @@ class TextureView extends React.Component<TextureViewProps> {
 			view.style.width = Math.floor(view.width * this.props.scale) + "px";
 			view.style.height = Math.floor(view.height * this.props.scale) + "px";
 
-			let ctx = view.getContext("2d");
+			const ctx = view.getContext("2d");
 
 			ctx.clearRect(0, 0, view.width, view.height);
 
@@ -50,7 +50,7 @@ class TextureView extends React.Component<TextureViewProps> {
 			ctx.drawImage(this.props.data.buffer, 0, 0, view.width, view.height, 0, 0, view.width, view.height);
 
 			if(this.props.displayOutline) {
-				for (let item of this.props.data.data) {
+				for (const item of this.props.data.data) {
 					if(!item.cloned) {
 						this.drawOutline(ctx, item);
 					}

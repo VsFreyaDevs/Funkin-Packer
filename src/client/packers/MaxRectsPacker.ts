@@ -14,6 +14,8 @@ const METHODS = {
 	SmartSquareArea: "SmartSquareArea"
 } as const;
 
+type MethodType = typeof METHODS[keyof typeof METHODS];
+
 class MaxRectsPacker extends Packer {
 	binWidth: number;
 	binHeight: number;
@@ -29,31 +31,31 @@ class MaxRectsPacker extends Packer {
 		this.padding = padding;
 	}
 
-	pack(data: Rect[], method: string) {
-		let options = {
+	pack(data: Rect[], method: MethodType) {
+		const options = {
 			smart: (method === METHODS.Smart || method === METHODS.SmartArea || method === METHODS.SmartSquare || method === METHODS.SmartSquareArea),
 			pot: false,
 			square: (method === METHODS.Square || method === METHODS.SquareArea || method === METHODS.SmartSquare || method === METHODS.SmartSquareArea),
 			allowRotation: this.allowRotate,
 			logic: (method === METHODS.Smart || method === METHODS.Square || method === METHODS.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
-		};
+		} as const;
 
-		let packer = new MaxRectsPackerEngine<IRectangle>(this.binWidth, this.binHeight, this.padding, options);
+		const packer = new MaxRectsPackerEngine<IRectangle>(this.binWidth, this.binHeight, this.padding, options);
 
-		let input:IRectangle[] = [];
+		const input:IRectangle[] = [];
 
-		for (let item of data) {
+		for (const item of data) {
 			input.push({ x: 0, y: 0, width: item.frame.w, height: item.frame.h, data: item });
 		}
 
 		packer.addArray(input);
 
-		let bin = packer.bins[0];
-		let rects = bin.rects;
+		const bin = packer.bins[0];
+		const rects = bin.rects;
 
-		let res = [];
+		const res = [];
 
-		for (let item of rects) {
+		for (const item of rects) {
 			item.data.frame.x = item.x;
 			item.data.frame.y = item.y;
 			if (item.rot) {
@@ -69,7 +71,7 @@ class MaxRectsPacker extends Packer {
 		return "MaxRectsPacker";
 	}
 
-	static get defaultMethod():string {
+	static get defaultMethod():MethodType {
 		return METHODS.Smart;
 	}
 
@@ -81,7 +83,7 @@ class MaxRectsPacker extends Packer {
 		return true;
 	}
 
-	static getMethodProps(id:string = '') {
+	static getMethodProps(id:MethodType) {
 		switch (id) {
 			case METHODS.Smart:
 				return { name: "Smart edge logic", description: "" };

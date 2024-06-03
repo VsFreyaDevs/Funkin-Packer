@@ -18,7 +18,7 @@ class Globals {
 		TypedObserver.storedOrderChanged.on(this.onStoredOrderChanged, this);
 	}
 
-	onStoredOrderChanged = (data:string[]) => {
+	private onStoredOrderChanged = (data:string[]) => {
 		this.storedOrder = data;
 	}
 

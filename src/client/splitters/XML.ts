@@ -36,9 +36,9 @@ class XML extends Splitter {
 					return;
 				}
 
-				let res: SplitterRect[] = [];
+				const res: SplitterRect[] = [];
 
-				let list = atlas.TextureAtlas.sprite;
+				const list = atlas.TextureAtlas.sprite;
 
 				for(let item of list) {
 					item = item.$;
@@ -52,7 +52,7 @@ class XML extends Splitter {
 					item.oW *= 1;
 					item.oH *= 1;
 
-					let trimmed = item.w < item.oW || item.h < item.oH;
+					const trimmed = item.w < item.oW || item.h < item.oH;
 
 					res.push({
 						name: Splitter.fixFileName(item.n),
