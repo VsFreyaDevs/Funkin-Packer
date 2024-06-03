@@ -14,7 +14,7 @@ declare type PackOptions = {
 	alphaThreshold?: number;
 	scale?: number;
 	textureFormat?: string;
-	trimMode?: string;
+	trimMode?: "trim" | "crop";
 	sortExportedRows?: boolean;
 	fileName?: string;
 	powerOfTwo?: boolean;

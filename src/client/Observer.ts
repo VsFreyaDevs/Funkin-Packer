@@ -1,10 +1,10 @@
-import EventEmitter from 'eventemitter3';
+import { EventEmitter } from 'eventemitter3';
 
 // TODO: make these types
 
-let Observer = new EventEmitter();
+const Observer = new EventEmitter();
 
-let GLOBAL_EVENT = {
+const GLOBAL_EVENT = {
 	//IMAGES_LIST_CHANGED          : "IMAGES_LIST_CHANGED",
 	//IMAGES_LIST_SELECTED_CHANGED : "IMAGES_LIST_SELECTED_CHANGED",
 	//IMAGE_ITEM_SELECTED          : "IMAGE_ITEM_SELECTED",
@@ -30,7 +30,7 @@ let GLOBAL_EVENT = {
 	SHOW_SHEET_SPLITTER          : "SHOW_SHEET_SPLITTER",
 	HIDE_SHEET_SPLITTER          : "HIDE_SHEET_SPLITTER",
 	//STORED_ORDER_CHANGED         : "STORED_ORDER_CHANGED",
-};
+} as const;
 
 export {
 	Observer,

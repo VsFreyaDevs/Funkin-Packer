@@ -1,12 +1,12 @@
 import { Rect } from 'types';
 import Splitter from './Splitter';
 
-import * as plist from 'plist';
+import { parse as plistParse } from 'plist';
 
 class UIKit extends Splitter {
 	doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
-			const atlas = plist.parse(data);
+			const atlas = plistParse(data);
 			if(!atlas) return cb(false);
 
 			const frames = (atlas as plist.PlistObject).frames as plist.PlistObject;
@@ -39,7 +39,7 @@ class UIKit extends Splitter {
 		try {
 			const res:Rect[] = [];
 
-			const atlas = plist.parse(data);
+			const atlas = plistParse(data);
 			const frames = (atlas as plist.PlistObject).frames as plist.PlistObject;
 
 			const names = Object.keys(frames);

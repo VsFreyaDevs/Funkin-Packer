@@ -32,10 +32,6 @@ PREPEND_FOLDER;Mantener carpetas
 PREPEND_FOLDER_TITLE;Mantiene el nombre de carpetas
 BASE64_EXPORT_TITLE;Exporta a formato base64 (si es posible)
 BASE64_EXPORT;Exporta a base64
-TINIFY_TITLE;Tinify usando https://tinypng.com
-TINIFY;Tinify
-TINIFY_KEY_TITLE;TinyPNG key https://tinypng.com/developers
-TINIFY_KEY;TinyPNG key
 SCALE;Escala:
 SCALE_TITLE;Escala de la textura base
 FILTER;Filtro:
@@ -78,9 +74,6 @@ INVALID_SIZE_ERROR;Tamaño incorrecto. Min: %sx%s
 NO_IMAGES_ERROR;Por favor, primero añada imágenes
 CLEAR_WARNING;¿Quiéres borrar todas las imágenes?
 INVALID_ZIP_ERROR;Fichero zip incorrecto
-NO_TINIFY_KEY_ERROR;Por favor, escriba su TinyPNG key https://tinypng.com/developers
-TINIFY_ERROR;Tinify error: %s
-TINIFY_ERROR_COMMON;Tinify error...
 OLD_BROWSER_MESSAGE1;Lo sentimos, su navegador es muy viejo para esta aplicación...
 OLD_BROWSER_MESSAGE2;Por favor, utilice un navegador más actualizado.
 ABOUT_HOMEPAGE;Página principal:

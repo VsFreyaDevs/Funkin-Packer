@@ -32,10 +32,6 @@ PREPEND_FOLDER;Ordnername voranstellen:
 PREPEND_FOLDER_TITLE;Ordnername vor Dateiname stellen
 BASE64_EXPORT;Export in base64
 BASE64_EXPORT_TITLE;Export im base64-Format (Wenn möglich)
-TINIFY;Tinify
-TINIFY_TITLE;Tinify mithilfe von https://tinypng.com
-TINIFY_KEY;TinyPNG Schlüssel
-TINIFY_KEY_TITLE;TinyPNG Schlüssel https://tinypng.com/developers
 SCALE_TITLE;Basistextur Skalierung
 FILTER;Filter:
 FILTER_TITLE;Filter für die Ausgabedatei
@@ -80,9 +76,6 @@ INVALID_SIZE_ERROR;Ungültige Größe. Min: %sx%s
 NO_IMAGES_ERROR;Bitte erst ein Bild hinzufügen
 CLEAR_WARNING;Wollen Sie alle Bilder löschen?
 INVALID_ZIP_ERROR;Ungültige ZIP-Datei
-NO_TINIFY_KEY_ERROR;Setze bitte deinen TinyPNG Schlüssel https://tinypng.com/developers
-TINIFY_ERROR;Tinify Error: %s
-TINIFY_ERROR_COMMON;Tinify Error...
 OLD_BROWSER_MESSAGE1;Ihr Browser ist für diese App leider zu alt...
 OLD_BROWSER_MESSAGE2;Bitte benutzen Sie einen der folgenden Browser:
 EXPORTER_ERROR;Export Error: %s

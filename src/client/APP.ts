@@ -3,8 +3,7 @@ import PackProcessor from './PackProcessor';
 import TextureRenderer from './utils/TextureRenderer';
 import { getFilterByType } from './filters';
 import I18 from './utils/I18';
-import { startExporter } from './exporters';
-//import Tinifyer from 'platform/Tinifyer';
+import { RenderSettings, startExporter } from './exporters';
 import Downloader from 'platform/Downloader';
 import { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
@@ -98,11 +97,6 @@ class APP {
 			return;
 		}
 
-		//if (this.packOptions.tinify && !this.packOptions.tinifyKey) {
-		//    TypedObserver.showMessage.emit(I18.f("NO_TINIFY_KEY_ERROR"));
-		//    return;
-		//}
-
 		Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 		setTimeout(() => this.doExport(), 0);
 	}
@@ -130,14 +124,6 @@ class APP {
 			parts.shift();
 			imageData = parts.join(",");
 
-			/*try {
-				imageData = await Tinifyer.start(imageData, this.packOptions);
-			}
-			catch (e) {
-				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
-				TypedObserver.showMessage.emit(e);
-				return;
-			}*/
 
 			files.push({
 				name: `${fName}.${this.packOptions.textureFormat}`,
@@ -148,7 +134,7 @@ class APP {
 			//TODO: move to options
 			const pixelFormat = this.packOptions.textureFormat === "png" ? "RGBA8888" : "RGB888";
 
-			const options = {
+			const options:RenderSettings = {
 				imageName: `${fName}`,
 				imageFile: `${fName}.${this.packOptions.textureFormat}`,
 				imageData,

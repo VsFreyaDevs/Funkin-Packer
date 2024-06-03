@@ -74,8 +74,6 @@ class PackProperties extends React.Component<Props, State> {
 		this.removeFileExtensionRef = React.createRef();
 		this.prependFolderNameRef = React.createRef();
 		//this.base64ExportRef = React.createRef();
-		//this.tinifyRef = React.createRef();
-		//this.tinifyKeyRef = React.createRef();
 		this.scaleRef = React.createRef();
 		this.filterRef = React.createRef();
 		this.exporterRef = React.createRef();
@@ -151,8 +149,6 @@ class PackProperties extends React.Component<Props, State> {
 		data.filter = getFilterByType(data.filter) ? data.filter : filters[0].type;
 		data.exporter = getExporterByType(data.exporter) ? data.exporter : exporters[0].type;
 		data.base64Export = false;//data.base64Export === undefined ? false : data.base64Export;
-		//data.tinify = data.tinify === undefined ? false : data.tinify;
-		//data.tinifyKey = data.tinifyKey === undefined ? "" : data.tinifyKey;
 		//data.savePath = data.savePath || "";
 		data.width = data.width === undefined ? 8192 : data.width;
 		data.height = data.height === undefined ? 8192 : data.height;
@@ -206,8 +202,6 @@ class PackProperties extends React.Component<Props, State> {
 		data.removeFileExtension = (this.removeFileExtensionRef.current).checked;
 		data.prependFolderName = (this.prependFolderNameRef.current).checked;
 		//data.base64Export = (this.base64ExportRef.current).checked;
-		//data.tinify = (this.tinifyRef.current).checked;
-		//data.tinifyKey = (this.tinifyKeyRef.current).value;
 		data.scale = Number((this.scaleRef.current).value);
 		data.filter = (this.filterRef.current).value;
 		data.exporter = (this.exporterRef.current).value;
@@ -221,7 +215,7 @@ class PackProperties extends React.Component<Props, State> {
 		data.borderPadding = Number((this.borderPaddingRef.current).value) || 0;
 		data.allowRotation = (this.allowRotationRef.current).checked;
 		data.allowTrim = (this.allowTrimRef.current).checked;
-		data.trimMode = (this.trimModeRef.current).value;
+		data.trimMode = (this.trimModeRef.current).value as "trim" | "crop";
 		data.alphaThreshold = +(this.alphaThresholdRef.current).value;
 		data.detectIdentical = (this.detectIdenticalRef.current).checked;
 		data.sortExportedRows = (this.sortExportedRowsRef.current).checked;
@@ -239,8 +233,6 @@ class PackProperties extends React.Component<Props, State> {
 		(this.removeFileExtensionRef.current).checked = this.packOptions.removeFileExtension;
 		(this.prependFolderNameRef.current).checked = this.packOptions.prependFolderName;
 		//(this.base64ExportRef.current).checked = this.packOptions.base64Export;
-		//(this.tinifyRef.current).checked = this.packOptions.tinify;
-		//(this.tinifyKeyRef.current).value = this.packOptions.tinifyKey;
 		(this.scaleRef.current).value = Number(this.packOptions.scale).toString();
 		(this.filterRef.current).value = this.packOptions.filter;
 		(this.exporterRef.current).value = this.packOptions.exporter;
@@ -408,16 +400,6 @@ class PackProperties extends React.Component<Props, State> {
 							{/* <tr title={I18.f("BASE64_EXPORT_TITLE")}>
 								<td>{I18.f("BASE64_EXPORT")}</td>
 								<td><input ref={this.base64ExportRef} className="border-color-gray" type="checkbox" defaultChecked={this.packOptions.base64Export} onChange={this.onExporterPropChanged} /></td>
-								<td></td>
-							</tr> */}
-							{/* <tr title={I18.f("TINIFY_TITLE")}>
-								<td>{I18.f("TINIFY")}</td>
-								<td><input ref={this.tinifyRef} className="border-color-gray" type="checkbox" defaultChecked={this.packOptions.tinify} onChange={this.onExporterPropChanged} /></td>
-								<td></td>
-							</tr> */}
-							{/* <tr title={I18.f("TINIFY_KEY_TITLE")}>
-								<td>{I18.f("TINIFY_KEY")}</td>
-								<td><input ref={this.tinifyKeyRef} type="text" className="border-color-gray" defaultValue={this.packOptions.tinifyKey} onBlur={this.onExporterPropChanged} /></td>
 								<td></td>
 							</tr> */}
 							<tr title={I18.f("FORMAT_TITLE")}>

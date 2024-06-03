@@ -1,5 +1,4 @@
 const path = require('path');
-//const tinify = require('tinify');
 const argv = require('optimist').argv;
 const windowStateKeeper = require('electron-window-state');
 const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron');
@@ -41,7 +40,7 @@ function createWindow() {
 
 	mainWindowState.manage(mainWindow);
 
-	mainWindow.on('page-title-updated', function(e) {
+	mainWindow.on('page-title-updated', (e) => {
 		e.preventDefault();
 	});
 
@@ -54,21 +53,21 @@ function createWindow() {
 
 	Menu.setApplicationMenu(null);
 
-	mainWindow.on('close', function(e) {
+	mainWindow.on('close', (e) => {
 		if(CURRENT_PROJECT_MODIFIED) {
 			sendMessage({actionName: 'quit'});
 			e.preventDefault();
 		}
 	});
 
-	mainWindow.on('closed', function() {
+	mainWindow.on('closed', () => {
 		mainWindow = null;
 	});
 
 	mainWindow.webContents.on('will-navigate', handleRedirect);
 	mainWindow.webContents.on('new-window', handleRedirect);
 
-	mainWindow.webContents.on('did-finish-load', function() {
+	mainWindow.webContents.on('did-finish-load', () => {
 		CURRENT_PROJECT = "";
 		CURRENT_PROJECT_MODIFIED = false;
 		updateWindowTitle();
@@ -148,18 +147,15 @@ function startAutoUpdater() {
 	autoUpdater.autoDownload = false;
 	autoUpdater.autoInstallOnAppQuit = false;
 
-	autoUpdater.on('checking-for-update', () => {
-	});
+	autoUpdater.on('checking-for-update', () => {});
 
 	autoUpdater.on('update-available', (info) => {
 		mainWindow.send('update-available', info);
 	});
 
-	autoUpdater.on('update-not-available', (info) => {
-	});
+	autoUpdater.on('update-not-available', (info) => {});
 
-	autoUpdater.on('error', (err) => {
-	});
+	autoUpdater.on('error', (err) => {});
 
 	autoUpdater.on('download-progress', (progressObj) => {
 		mainWindow.send('download-progress', progressObj.percent);
@@ -320,37 +316,17 @@ function updateWindowTitle() {
 
 app.on('ready', createWindow);
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
 		app.quit();
 	}
 });
 
-app.on('activate', function () {
+app.on('activate', () => {
 	if (mainWindow === null) {
 		createWindow();
 	}
 });
-
-/*ipcMain.on('tinify', (e, data) => {
-	tinify.key = data.key;
-	tinify.fromBuffer(Buffer.from(data.imageData, 'base64')).toBuffer((err, res) => {
-		if (err) {
-			e.sender.send('tinify-complete', {
-				success: false,
-				uid: data.uid,
-				error: err.message
-			});
-			return;
-		}
-
-		e.sender.send('tinify-complete', {
-			success: true,
-			uid: data.uid,
-			data: res.toString('base64')
-		});
-	});
-});*/
 
 ipcMain.on('update-app-info', (e, data) => {
 	APP_INFO = data;

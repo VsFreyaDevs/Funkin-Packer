@@ -2,13 +2,18 @@ import Filter from './Filter';
 import Mask from './Mask';
 import Grayscale from './Grayscale';
 
-const list = [
+export type FilterClass = {
+	type: string,
+	new():Filter
+};
+
+const list: FilterClass[] = [
 	Filter,
 	Mask,
 	Grayscale
 ];
 
-function getFilterByType(type) {
+function getFilterByType(type:string) {
 	for(let item of list) {
 		if(item.type === type) {
 			return item;

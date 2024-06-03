@@ -32,10 +32,6 @@ PREPEND_FOLDER;前置文件夹名称:
 PREPEND_FOLDER_TITLE;将文件夹名称添加到文件名
 BASE64_EXPORT_TITLE;导出base64格式(如果支持)
 BASE64_EXPORT;导出base64
-TINIFY_TITLE;Tinify 用法 https://tinypng.com（压缩png）
-TINIFY;Tinify
-TINIFY_KEY_TITLE;TinyPNG key https://tinypng.com/developers
-TINIFY_KEY;TinyPNG key
 SCALE;放大:
 SCALE_TITLE;基础纹理缩放
 FILTER;滤镜:
@@ -78,9 +74,6 @@ INVALID_SIZE_ERROR;无效尺寸. 最小值: %sx%s
 NO_IMAGES_ERROR;请添加图片
 CLEAR_WARNING;清除所有图像？
 INVALID_ZIP_ERROR;无效的zip文件
-NO_TINIFY_KEY_ERROR;请设置TinyPNG key https://tinypng.com/developers
-TINIFY_ERROR;Tinify错误: %s
-TINIFY_ERROR_COMMON;Tinify错误...
 OLD_BROWSER_MESSAGE1;对不起，您的浏览器对这个应用程序来说太旧了...
 OLD_BROWSER_MESSAGE2;请使用现代浏览器（新版的谷歌、火狐、Safari、Edge等）:
 ABOUT_HOMEPAGE;首页:

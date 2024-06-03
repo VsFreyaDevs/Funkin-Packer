@@ -125,8 +125,8 @@ class PackProcessor {
 			maxHeight += img.height;
 
 			// This is probably wrong
-			if (img.width > minWidth) minWidth = img.width + spritePadding * 2;// + borderPadding * 2;
-			if (img.height > minHeight) minHeight = img.height + spritePadding * 2;// + borderPadding * 2;
+			minWidth = Math.max(minWidth, img.width + spritePadding * 2);// + borderPadding * 2;
+			minHeight = Math.max(minHeight, img.height + spritePadding * 2);// + borderPadding * 2;
 
 			rects.push({
 				frame: { x: 0, y: 0, w: img.width, h: img.height },
@@ -199,7 +199,10 @@ class PackProcessor {
 					for (const method in packerClass.methods) {
 						if(!Object.hasOwn(packerClass.methods, method)) continue;
 
-						methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false });
+						if(options.allowRotation && packerClass.needsNonRotation() || !options.allowRotation) {
+							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false });
+						}
+
 						if (options.allowRotation) {
 							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: true });
 						}

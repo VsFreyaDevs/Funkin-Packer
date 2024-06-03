@@ -2,7 +2,7 @@ import { Rect, SplitterRect } from 'types';
 import { isNullOrUndefined } from '../utils/common';
 import Splitter from './Splitter';
 
-import * as xmlParser from 'xml2js';
+import { Parser as XmlParser } from 'xml2js';
 import { HaxeXmlParser } from './tools/HaxeXmlParser';
 
 type SparrowFrame = {
@@ -46,7 +46,8 @@ class Sparrow extends Splitter {
 		}
 
 		try {
-			xmlParser.parseString(data, (err, atlas) => {
+			var parser = new XmlParser();
+			parser.parseString(data, (err, atlas) => {
 				if(err) {
 					throw err;
 				}
@@ -83,7 +84,8 @@ class Sparrow extends Splitter {
 		let res: SplitterRect[] = [];
 
 		try {
-			xmlParser.parseString(data, (err, atlas) => {
+			var parser = new XmlParser();
+			parser.parseString(data, (err, atlas) => {
 				if(err) {
 					throw err;
 				}

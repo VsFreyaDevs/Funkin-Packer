@@ -1,17 +1,18 @@
 import { Rect, SplitterRect } from 'types';
 import Splitter from './Splitter';
 
-class Point {
+/*class Point {
 	x: number;
 	y: number;
-}
+}*/
 
 class Spine extends Splitter {
 	doCheck(data: string, cb: (checked: boolean) => void) {
 		let lines = data.split('\n');
-		if(lines[0] === undefined || String(lines[0]).trim() !== '') cb(false);
+		if(lines.length < 2) return cb(false);
+		if(lines[0].trim() !== '') return cb(false);
 
-		if(String(lines[lines.length-1]).trim() !== '') cb(false);
+		if(lines[lines.length-1].trim() !== '') return cb(false);
 
 		cb(lines[2] && lines[2].trim().indexOf('size:') === 0);
 	}

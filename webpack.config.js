@@ -11,7 +11,7 @@ let plugins = [];
 
 let devtool = 'eval-source-map';
 let output = 'static/js/index.js';
-let debug = true;
+let debug = false;
 
 let profiler = debug
 let prod = !debug;

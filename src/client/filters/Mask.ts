@@ -5,7 +5,7 @@ class Mask extends Filter {
 		super();
 	}
 
-	applyImageData(imageData) {
+	applyImageData(imageData: ImageData) {
 		for(let i=0; i<imageData.data.length; i+=4) {
 			if(imageData.data[i+3] === 0) {
 				imageData.data[i] = 0;

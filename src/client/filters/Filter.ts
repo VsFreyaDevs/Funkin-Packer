@@ -3,7 +3,7 @@ class Filter {
 		// nothing to do
 	}
 
-	apply(buffer) {
+	apply(buffer: HTMLCanvasElement) {
 
 		let retCanvas = document.createElement("canvas");
 		let retCtx = retCanvas.getContext("2d");
@@ -19,7 +19,7 @@ class Filter {
 		return retCanvas;
 	}
 
-	applyImageData(imageData) {
+	applyImageData(imageData: ImageData) {
 		return imageData;
 	}
 

@@ -1,36 +1,76 @@
 /* eslint-disable no-use-before-define */
-import list from './list.json';
-import appInfo from '../../../package.json';
+import * as list from './list.json';
+import * as appInfo from '../../../package.json';
 import { sendGet } from '../utils/ajax';
-import mustache from 'mustache';
-import wax from '@jvitela/mustache-wax';
 import { smartSortImages, removeFromArray, isNullOrUndefined } from '../utils/common';
 import Globals from '../utils/Globals';
+import finishExporter from './render';
 
-wax(mustache);
+import { Rect } from 'types';
 
-mustache.Formatters = {
-	add: (v1, v2) => v1 + v2,
-	subtract: (v1, v2) => v1 - v2,
-	multiply: (v1, v2) => v1 * v2,
-	divide: (v1, v2) => v1 / v2,
-	offsetLeft: (start, size1, size2) => {
-		let x1 = start + size1 / 2;
-		let x2 = size2 / 2;
-		return x1 - x2;
-	},
-	offsetRight: (start, size1, size2) => {
-		let x1 = start + size1 / 2;
-		let x2 = size2 / 2;
-		return x2 - x1;
-	},
-	negate: (v1) => -v1,
-	mirror: (start, size1, size2) => size2 - start - size1,
-	escapeName: (name) => name.replace(/%/g, "%25").replace(/#/g, "%23").replace(/:/g, "%3A").replace(/;/g, "%3B").replace(/\\/g, "-").replace(/\//g, "-")
+export type Exporter = {
+	type: string;
+	description: string;
+	allowTrim: boolean;
+	allowRotation: boolean;
+	template: string;
+	fileExt: string;
+	predefined?: boolean;
+	content?: string;
 };
 
-function getExporterByType(type) {
-	for(let item of list) {
+type ExporterRect = {
+	name: string;
+	origName: string;
+	frame: {
+		x: number;
+		y: number;
+		w: number;
+		h: number;
+	};
+	spriteSourceSize: {
+		x: number;
+		y: number;
+		w: number;
+		h: number;
+	};
+	sourceSize: {
+		w: number;
+		h: number;
+		mw: number;
+		mh: number;
+	};
+	rotated: boolean;
+	trimmed: boolean;
+
+	first: boolean;
+	last: boolean;
+}
+
+export type RenderSettings = {
+	imageName: string,
+	imageFile: string,
+	imageData: any,
+	spritePadding: number,
+	borderPadding: number,
+	format: "RGBA8888" | "RGB888",
+	textureFormat: string,
+	imageWidth: number,
+	imageHeight: number,
+	removeFileExtension: boolean,
+	prependFolderName: boolean,
+	base64Export: boolean,
+	scale: number,
+	changedScale: boolean,
+	trimMode: string,
+
+	sortExportedRows: boolean,
+
+	base64Prefix?: string,
+}
+
+function getExporterByType(type:string):Exporter {
+	for(const item of list) {
 		if(item.type === type) {
 			return item;
 		}
@@ -38,9 +78,12 @@ function getExporterByType(type) {
 	return null;
 }
 
-function prepareData(data, options) {
+function prepareData(data: Rect[], options: RenderSettings): {
+	rects: ExporterRect[],
+	config: RenderSettings
+} {
 
-	let opt = { ...options };
+	const opt = { ...options };
 
 	opt.imageName ||= "texture";
 	opt.imageFile ||= (opt.imageName + "." + options.textureFormat);
@@ -48,19 +91,14 @@ function prepareData(data, options) {
 	opt.scale ||= 1;
 	opt.base64Prefix = options.textureFormat === "png" ? "data:image/png;base64," : "data:image/jpeg;base64,";
 
-	let ret = [];
+	const ret:ExporterRect[] = [];
 
-	for(let item of data) {
-
+	for(const item of data) {
 		let name = item.originalFile || item.file;
-		let origName = name;
-
-		if(opt.trimSpriteNames) {
-			name.trim();
-		}
+		const origName = name;
 
 		if(opt.removeFileExtension) {
-			let parts = name.split(".");
+			const parts = name.split(".");
 			if(parts.length > 1) parts.pop();
 			name = parts.join(".");
 		}
@@ -69,7 +107,7 @@ function prepareData(data, options) {
 			name = name.split("/").pop();
 		}
 
-		let frame = {
+		const frame = {
 			x: item.frame.x,
 			y: item.frame.y,
 			w: item.frame.w,
@@ -77,17 +115,15 @@ function prepareData(data, options) {
 			hw: item.frame.w/2,
 			hh: item.frame.h/2
 		};
-		let spriteSourceSize = {
+		const spriteSourceSize = {
 			x: item.spriteSourceSize.x,
 			y: item.spriteSourceSize.y,
 			w: item.spriteSourceSize.w,
 			h: item.spriteSourceSize.h
 		};
-		let sourceSize = {
+		const sourceSize = {
 			w: item.sourceSize.w,
 			h: item.sourceSize.h,
-			frameWidth: item.sourceSize.frameWidth,
-			frameHeight: item.sourceSize.frameHeight,
 			mw: item.sourceSize.mw,
 			mh: item.sourceSize.mh
 		};
@@ -126,7 +162,9 @@ function prepareData(data, options) {
 			spriteSourceSize,
 			sourceSize,
 			rotated: item.rotated,
-			trimmed
+			trimmed,
+			first: false,
+			last: false
 		});
 
 	}
@@ -139,10 +177,10 @@ function prepareData(data, options) {
 	return {rects: ret, config: opt};
 }
 
-function startExporter(exporter, data, options) {
+function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings): Promise<string> {
 	return new Promise((resolve, reject) => {
 		let {rects, config} = prepareData(data, options);
-		let renderOptions = {
+		const renderOptions = {
 			rects,
 			config,
 			appInfo
@@ -167,8 +205,8 @@ function startExporter(exporter, data, options) {
 				}
 			} */
 
-			let oldRects = [...rects];
-			let nameMap = {};
+			let oldRects:ExporterRect[] = [...rects];
+			let nameMap:Record<string, ExporterRect> = {};
 			for (const v of rects) {
 				nameMap[v.origName] = v;
 			}
@@ -179,10 +217,7 @@ function startExporter(exporter, data, options) {
 				removeFromArray(oldRects, item);
 				return item;
 			});
-
-			array = array.concat(oldRects);
-
-			rects = array;
+			rects = array.concat(oldRects);
 		}
 
 		// Fix sourceSize
@@ -206,7 +241,7 @@ function startExporter(exporter, data, options) {
 
 		//console.log(rects.map((v)=>v.name));
 
-		data = rects;
+		//data = rects;
 		renderOptions.rects = rects;
 
 		if(exporter.content) {
@@ -219,16 +254,6 @@ function startExporter(exporter, data, options) {
 			finishExporter(exporter, renderOptions, resolve, reject);
 		}, () => reject(new Error(exporter.template + " not found")));
 	});
-}
-
-function finishExporter(exporter, renderOptions, resolve, reject) {
-	try {
-		let ret = mustache.render(exporter.content, renderOptions);
-		resolve(ret);
-	}
-	catch(e) {
-		reject(e.message);
-	}
 }
 
 export {getExporterByType, startExporter};
