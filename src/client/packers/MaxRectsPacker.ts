@@ -1,8 +1,5 @@
-import { type IRectangle, MaxRectsPacker as MaxRectsPackerEngine } from "maxrects-packer";
-import { PACKING_LOGIC } from "maxrects-packer";
-
-
-import { type Rect } from "types";
+import { MaxRectsPacker as MaxRectsPackerEngine, PACKING_LOGIC, type IRectangle } from "maxrects-packer";
+import type { Rect } from "types";
 import Packer, { type MethodList } from "./Packer";
 
 const METHODS = {

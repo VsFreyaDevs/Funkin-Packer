@@ -4,7 +4,7 @@ import OptimalPacker from "./OptimalPacker";
 import GrowingPacker from "./GrowingPacker";
 import OrderedPacker from "./OrderedPacker";
 import FixedOrderedPacker from "./FixedOrderedPacker";
-import { type PackerClass } from "./Packer";
+import type { PackerClass } from "./Packer";
 
 const list:PackerClass[] = [
 	MaxRectsBin,

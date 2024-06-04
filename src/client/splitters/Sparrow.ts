@@ -1,4 +1,4 @@
-import { type Rect, type SplitterRect } from 'types';
+import type { Rect, SplitterRect } from 'types';
 import { isNullOrUndefined } from '../utils/common';
 import Splitter from './Splitter';
 

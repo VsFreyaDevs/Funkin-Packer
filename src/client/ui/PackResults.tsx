@@ -3,9 +3,9 @@ import { Observer, GLOBAL_EVENT } from '../Observer';
 import TextureView from './TextureView';
 import SpritesPlayer from './SpritesPlayer';
 import I18 from '../utils/I18';
-import { type PackResultsData } from 'types';
+import type { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
-import { type StatsInfoEvent } from './StatsInfo';
+import type { StatsInfoEvent } from './StatsInfo';
 
 interface Props {}
 

@@ -13,7 +13,7 @@ import I18 from '../utils/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import Globals from '../utils/Globals';
-import { type PackOptions } from 'types';
+import type { PackOptions } from 'types';
 import TypedObserver from 'TypedObserver';
 
 //import FileSystem from 'platform/FileSystem';

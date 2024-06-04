@@ -4,7 +4,7 @@ import { smartSortImages, removeFromArray, isNullOrUndefined } from '../utils/co
 import Globals from '../utils/Globals';
 import finishExporter from './render';
 
-import { type Rect } from 'types';
+import type { Rect } from 'types';
 
 export type Exporter = {
 	type: string;
@@ -17,7 +17,7 @@ export type Exporter = {
 	content?: string;
 };
 
-declare type TemplateSettings = {
+export type TemplateSettings = {
 	rects: ExporterRect[],
 	config: RenderSettings,
 	appInfo: typeof appInfo

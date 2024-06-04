@@ -1,8 +1,7 @@
 import * as JSZip from 'jszip';
 
-import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from './I18';
-import { type LoadedImages } from 'types';
+import type { LoadedImages } from 'types';
 import CustomImage from '../data/CustomImage';
 import TypedObserver from 'TypedObserver';
 

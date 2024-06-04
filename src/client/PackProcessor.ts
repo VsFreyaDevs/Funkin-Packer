@@ -5,8 +5,8 @@ import Trimmer from './utils/Trimmer';
 import TextureRenderer from './utils/TextureRenderer';
 
 import I18 from './utils/I18';
-import { type LoadedImages, type MessageBoxData, type PackOptions, type Rect } from 'types';
-import { type PackerClass, type PackerCombo } from './packers/Packer';
+import type { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
+import type { PackerClass, PackerCombo } from './packers/Packer';
 
 class PackProcessor {
 	private static detectIdentical(rects: Rect[], didTrim: boolean) {

@@ -9,7 +9,7 @@ import LocalImagesLoader from "../utils/LocalImagesLoader";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList";
 import PackProperties from '../ui/PackProperties';
-import { type LoadedImages, type Rect } from 'types';
+import type { LoadedImages, Rect } from 'types';
 import Splitter from '../splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';

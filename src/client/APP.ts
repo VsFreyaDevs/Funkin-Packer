@@ -3,11 +3,12 @@ import PackProcessor from './PackProcessor';
 import TextureRenderer from './utils/TextureRenderer';
 import { getFilterByType } from './filters';
 import I18 from './utils/I18';
-import { type RenderSettings, startExporter } from './exporters';
+import type { RenderSettings } from './exporters';
+import { startExporter } from './exporters';
 import Downloader from 'platform/Downloader';
-import { type LoadedImages, type MessageBoxData, type PackOptions, type PackResultsData, type Rect } from 'types';
+import type { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
-import { type PackerCombo } from './packers/Packer';
+import type { PackerCombo } from './packers/Packer';
 
 let INSTANCE:APP;
 

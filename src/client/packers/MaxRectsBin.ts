@@ -1,6 +1,6 @@
 import Packer, { type MethodList } from "./Packer";
 import Rectangle from "../math/Rectangle";
-import { type Rect } from "types";
+import type { Rect } from "types";
 
 const METHODS = {
 	BestShortSideFit: "BestShortSideFit",

@@ -1,4 +1,4 @@
-import { type Rect } from "types";
+import type { Rect } from "types";
 
 const cns = document.createElement("canvas");
 const ctx = cns.getContext("2d", {willReadFrequently: true});

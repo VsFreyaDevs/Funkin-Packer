@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 import I18 from '../utils/I18';
-import { type PackResultsData } from 'types';
+import type { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 
 import { formatBytes } from '../utils/common';
-import { type PackerCombo } from '../packers/Packer';
+import type { PackerCombo } from '../packers/Packer';
 
 (globalThis as any).formatBytes = formatBytes;
 

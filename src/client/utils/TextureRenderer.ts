@@ -1,4 +1,4 @@
-import { type PackOptions, type Rect } from "types";
+import type { PackOptions, Rect } from "types";
 
 class TextureRenderer {
 	readonly buffer: HTMLCanvasElement;

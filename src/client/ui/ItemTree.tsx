@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import CustomImage from '../data/CustomImage';
 import TypedObserver from 'TypedObserver';
 

@@ -1,4 +1,4 @@
-import { type Rect, type SplitterRect } from 'types';
+import type { Rect, SplitterRect } from 'types';
 import Splitter from './Splitter';
 
 import { Parser as XmlParser } from 'xml2js';

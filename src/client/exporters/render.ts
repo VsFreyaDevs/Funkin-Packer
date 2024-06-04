@@ -1,5 +1,6 @@
 import mustache from 'mustache';
 import wax from '@jvitela/mustache-wax';
+import type { Exporter, TemplateSettings } from 'exporters';
 
 wax(mustache);
 
@@ -23,18 +24,12 @@ mustache.Formatters = {
 	escapeName: (name) => name.replace(/%/g, "%25").replace(/#/g, "%23").replace(/:/g, "%3A").replace(/;/g, "%3B").replace(/\\/g, "-").replace(/\//g, "-")
 };
 
-/**
- * @param {Exporter} exporter
- * @param {TemplateSettings} renderOptions
- * @param {(value: string | PromiseLike<string>) => void} resolve
- * @param {(value: string | PromiseLike<string>) => void} reject
- */
-export default function finishExporter(exporter, renderOptions, resolve, reject) {
+export default function finishExporter(exporter:Exporter, renderOptions:TemplateSettings, resolve:(value: string | PromiseLike<string>) => void, reject:(reason?: any) => void) {
 	try {
 		let ret = mustache.render(exporter.content, renderOptions);
 		resolve(ret);
 	}
-	catch(e) {
+	catch(e: any) {
 		reject(e.message);
 	}
 }

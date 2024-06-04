@@ -3,7 +3,7 @@ import Storage from '../utils/Storage';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import { getExporterByType } from '../exporters';
-import Mustache from 'mustache';
+import mustache from 'mustache';
 import * as appInfo from '../../../package.json';
 import TypedObserver from 'TypedObserver';
 
@@ -41,7 +41,7 @@ class EditCustomExporter extends React.Component {
 		let fileExt = (this.fileExtRef.current).value;
 
 		try {
-			Mustache.parse(content);
+			mustache.parse(content);
 
 			exporter.content = content;
 			exporter.allowTrim = allowTrim;

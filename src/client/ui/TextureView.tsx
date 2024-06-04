@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type PackResultsData, type Rect } from 'types';
+import type { PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 
 interface TextureViewProps {
