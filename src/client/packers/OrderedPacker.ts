@@ -1,5 +1,5 @@
-import { Rect } from "types";
-import Packer, { MethodList } from "./Packer";
+import { type Rect } from "types";
+import Packer, { type MethodList } from "./Packer";
 
 const METHODS = {
 	SortedAreaDsc: "SortedAreaDsc",
@@ -10,8 +10,8 @@ const METHODS = {
 type MethodType = typeof METHODS[keyof typeof METHODS];
 
 type Block = {
-	x?: number,
-	y?: number,
+	x: number,
+	y: number,
 	w: number,
 	h: number,
 	rect: Rect,
@@ -44,7 +44,7 @@ class OrderedPacker extends Packer {
 		this.padding = padding;
 	}
 
-	pack(_data:Rect[], _method:MethodType):Rect[] {
+	override pack(_data:Rect[], _method:MethodType):Rect[] {
 		let blocks = this._pack(_data, _method, false);
 		if(this.allowRotate) {
 			let new_blocks = this._pack(_data, _method, true);
@@ -70,11 +70,13 @@ class OrderedPacker extends Packer {
 
 	private _pack(_data:Rect[], _method:MethodType, rotated:boolean):Block[] {
 		const blocks:Block[] = [];
-		for (let i = 0; i < _data.length; i++) {
+		for(const rect of _data) {
 			const block:Block = {
-				w: _data[i].frame.w,
-				h: _data[i].frame.h,
-				rect: _data[i]
+				x: 0,
+				y: 0,
+				w: rect.frame.w,
+				h: rect.frame.h,
+				rect: rect
 			};
 			blocks.push(block);
 		}
@@ -139,23 +141,23 @@ class OrderedPacker extends Packer {
 		return sum;
 	}
 
-	static get packerName() {
+	static override get packerName() {
 		return "OrderedPacker";
 	}
 
-	static get defaultMethod():MethodType {
+	static override get defaultMethod():MethodType {
 		return METHODS.SortedAreaDsc;
 	}
 
-	static get methods():MethodList {
+	static override get methods():MethodList {
 		return METHODS;
 	}
 
-	static needsNonRotation(): boolean {
+	static override needsNonRotation(): boolean {
 		return false;
 	}
 
-	static getMethodProps(id:MethodType) {
+	static override getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.SortedAreaAsc:
 				return {name: "SortedAreaAsc", description: "Sorted placement"};

@@ -14,7 +14,7 @@ class ProcessingOverlay extends React.Component {
 		this.showTimer = null;
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		let overlay = this.overlayRef.current;
 		if(overlay) {
 			overlay.style.visibility = "hidden";
@@ -25,11 +25,11 @@ class ProcessingOverlay extends React.Component {
 		}
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		clearTimeout(this.showTimer);
 	}
 
-	render() {
+	override render() {
 		return (
 			<div ref={this.overlayRef} className="processing-overlay color-white">
 				<div className="processing-content">

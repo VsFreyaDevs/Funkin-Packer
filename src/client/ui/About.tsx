@@ -32,7 +32,7 @@ class About extends React.Component {
 		)
 	}
 
-	render() {
+	override render() {
 		return (
 			<div className="about-overlay">
 				<div className="about-content">

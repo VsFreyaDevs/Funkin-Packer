@@ -5,7 +5,7 @@ import { isNullOrUndefined } from '../utils/common';
 
 interface Props {
 	readonly content: string;
-	readonly buttons?: ButtonData[];
+	readonly buttons?: ButtonData[] | null | undefined;
 	readonly closeCallback?: () => void;
 }
 
@@ -37,10 +37,10 @@ class MessageBox extends React.Component<Props> {
 	}
 
 	close = () => {
-		this.props.closeCallback();
+		if(this.props.closeCallback) this.props.closeCallback();
 	}
 
-	render() {
+	override render() {
 		let buttons = [];
 
 		for(let btn of this.buttons) {
@@ -72,7 +72,7 @@ class MessageBoxButton extends React.Component<ButtonProps> {
 		if(this.props.parentBox) this.props.parentBox.close();
 	}
 
-	render() {
+	override render() {
 		return (
 			<div className="btn back-600 border-color-gray color-white" onClick={this.onClick}>{this.props.caption}</div>
 		);

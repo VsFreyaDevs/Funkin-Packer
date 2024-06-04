@@ -1,7 +1,6 @@
 import TypedObserver from "TypedObserver";
-import { Observer, GLOBAL_EVENT } from "../Observer";
 
-let INSTANCE:Globals = null;
+let INSTANCE:Globals;
 
 class Globals {
 	storedOrder: string[];

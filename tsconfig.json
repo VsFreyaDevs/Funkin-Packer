@@ -4,15 +4,26 @@
 		"sourceMap": true,
 		"noImplicitAny": true,
 		"lib": ["ESNext", "dom"],
-		"target": "es5",
+		"target": "es2016",
 		"jsx": "react-jsx",
 		"allowJs": true,
-		"moduleResolution": "Node",
+		"moduleResolution": "Node10",
 		"baseUrl": "./src",
 		"paths": {
 			"*": ["client/*"]
 		},
-		"resolveJsonModule": true
+		"strict": true,
+		"strictNullChecks": false,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"isolatedModules": true,
+		"allowUnusedLabels": false,
+		"alwaysStrict": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitThis": true,
+		"verbatimModuleSyntax": true,
 	},
 	"exclude": [
         "node_modules"

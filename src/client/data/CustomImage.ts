@@ -1,4 +1,4 @@
-import { Rect } from "types";
+import type { Rect } from "types";
 import { dataURItoBlob } from "../utils/common";
 
 export type FileSystemPath = Readonly<{

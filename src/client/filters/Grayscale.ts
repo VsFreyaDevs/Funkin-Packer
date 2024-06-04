@@ -5,7 +5,7 @@ class Grayscale extends Filter {
 		super();
 	}
 
-	applyImageData(imageData: ImageData) {
+	override applyImageData(imageData: ImageData) {
 		for(let i=0; i<imageData.data.length; i+=4) {
 			let v = 0.2126*imageData.data[i] + 0.7152*imageData.data[i+1] + 0.0722*imageData.data[i+2];
 			imageData.data[i] = v;
@@ -16,7 +16,7 @@ class Grayscale extends Filter {
 		return imageData;
 	}
 
-	static get type() {
+	static override get type() {
 		return "grayscale";
 	}
 }

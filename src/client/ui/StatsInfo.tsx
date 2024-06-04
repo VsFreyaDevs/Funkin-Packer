@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
-import { PackResultsData } from 'types';
+import { type PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 
 import { formatBytes } from '../utils/common';
-import { PackerCombo } from 'packers/Packer';
+import { type PackerCombo } from '../packers/Packer';
 
 (globalThis as any).formatBytes = formatBytes;
 
@@ -43,13 +42,13 @@ class StatsInfo extends React.Component<Props, State> {
 		};
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		TypedObserver.statsInfoUpdated.on(this.updateStatsInfo, this);
 		TypedObserver.siUnitsChanged.on(this.setSI, this);
 		TypedObserver.repackInfo.on(this.updateRepackInfo, this);
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		TypedObserver.statsInfoUpdated.off(this.updateStatsInfo, this);
 		TypedObserver.siUnitsChanged.off(this.setSI, this);
 		TypedObserver.repackInfo.off(this.updateRepackInfo, this);
@@ -67,7 +66,7 @@ class StatsInfo extends React.Component<Props, State> {
 		this.setState({ repackInfo });
 	};
 
-	render() {
+	override render() {
 		const sizes = this.state.info.packResults.map((res) => ({ width: res.renderer.width, height: res.renderer.height }));
 		const ramUsage = sizes.reduce((acc, res) => acc + res.width * res.height * 4, 0);
 		let sizeText = sizes.map((res) => res.width + "x" + res.height).join(" + ");

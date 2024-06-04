@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { Observer, GLOBAL_EVENT } from "../Observer";
-import { PropsWithChildren } from 'react';
-import CustomImage from 'data/CustomImage';
+import { type PropsWithChildren } from 'react';
+import CustomImage from '../data/CustomImage';
 import TypedObserver from 'TypedObserver';
 
 export interface TreeListItem {
+	img: CustomImage | null;
 	isFolder: boolean;
 	path: string;
 	name: string;
 	selected: boolean;
 	current: boolean;
-	img: CustomImage;
 	items?: TreeListItem[];
 }
 
@@ -28,8 +27,8 @@ class ItemTreePart extends React.Component<TreeListItem> {
 		super(props);
 	}
 
-	render() {
-		if(!this.props || !this.props.items.length) {
+	override render() {
+		if(!this.props || !this.props.items?.length) {
 			return (<span>&nbsp;</span>);
 		}
 
@@ -73,7 +72,9 @@ class ItemTreeItem extends React.Component<TreeListItem> {
 		return false;
 	}
 
-	render() {
+	override render() {
+		if(!this.props.img) return (<span>&nbsp;</span>);
+
 		return (
 			<div className={"image-list-item" + (this.props.selected ? " back-400" : "") + (this.props.current ? " image-list-item-current" : "")} onClick={this.onSelect} >
 				<div className="image-list-image-container">
@@ -122,7 +123,7 @@ class ItemTreeView extends React.Component<PropsWithChildren<TreeListItem>, Tree
 		return false;
 	}
 
-	render() {
+	override render() {
 		const collapsed = this.state.collapsed;
 		const label = this.props.name;
 		const children = this.props.children;

@@ -1,9 +1,9 @@
-import { IRectangle, MaxRectsPacker as MaxRectsPackerEngine } from "maxrects-packer";
+import { type IRectangle, MaxRectsPacker as MaxRectsPackerEngine } from "maxrects-packer";
 import { PACKING_LOGIC } from "maxrects-packer";
 
 
-import { Rect } from "types";
-import Packer, { MethodList } from "./Packer";
+import { type Rect } from "types";
+import Packer, { type MethodList } from "./Packer";
 
 const METHODS = {
 	Smart: "Smart",
@@ -15,6 +15,11 @@ const METHODS = {
 } as const;
 
 type MethodType = typeof METHODS[keyof typeof METHODS];
+
+interface Rectangle extends IRectangle {
+	data: any;
+	rot: boolean;
+}
 
 class MaxRectsPacker extends Packer {
 	binWidth: number;
@@ -31,7 +36,7 @@ class MaxRectsPacker extends Packer {
 		this.padding = padding;
 	}
 
-	pack(data: Rect[], method: MethodType) {
+	override pack(data: Rect[], method: MethodType) {
 		const options = {
 			smart: (method === METHODS.Smart || method === METHODS.SmartArea || method === METHODS.SmartSquare || method === METHODS.SmartSquareArea),
 			pot: false,
@@ -40,22 +45,28 @@ class MaxRectsPacker extends Packer {
 			logic: (method === METHODS.Smart || method === METHODS.Square || method === METHODS.SmartSquare) ? PACKING_LOGIC.MAX_EDGE : PACKING_LOGIC.MAX_AREA
 		} as const;
 
-		const packer = new MaxRectsPackerEngine<IRectangle>(this.binWidth, this.binHeight, this.padding, options);
+		const packer = new MaxRectsPackerEngine<Rectangle>(this.binWidth, this.binHeight, this.padding, options);
 
-		const input:IRectangle[] = [];
+		const input:Rectangle[] = [];
 
 		for (const item of data) {
-			input.push({ x: 0, y: 0, width: item.frame.w, height: item.frame.h, data: item });
+			input.push({ x: 0, y: 0, width: item.frame.w, height: item.frame.h, data: item, rot: false });
 		}
 
 		packer.addArray(input);
 
 		const bin = packer.bins[0];
+		if(!bin) {
+			return [];
+		}
 		const rects = bin.rects;
 
 		const res = [];
 
 		for (const item of rects) {
+			if(!item) {
+				continue;
+			}
 			item.data.frame.x = item.x;
 			item.data.frame.y = item.y;
 			if (item.rot) {
@@ -67,23 +78,23 @@ class MaxRectsPacker extends Packer {
 		return res;
 	}
 
-	static get packerName() {
+	static override get packerName() {
 		return "MaxRectsPacker";
 	}
 
-	static get defaultMethod():MethodType {
+	static override get defaultMethod():MethodType {
 		return METHODS.Smart;
 	}
 
-	static get methods():MethodList {
+	static override get methods():MethodList {
 		return METHODS;
 	}
 
-	static needsNonRotation(): boolean {
+	static override needsNonRotation(): boolean {
 		return true;
 	}
 
-	static getMethodProps(id:MethodType) {
+	static override getMethodProps(id:MethodType) {
 		switch (id) {
 			case METHODS.Smart:
 				return { name: "Smart edge logic", description: "" };

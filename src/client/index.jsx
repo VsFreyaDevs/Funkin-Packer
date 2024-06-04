@@ -11,7 +11,7 @@ import MainLayout from './ui/MainLayout';
 import Storage from './utils/Storage';
 import { Observer, GLOBAL_EVENT } from './Observer';
 
-import languages from './resources/static/localization/languages.json';
+import {languages} from './resources/static/localization/languages';
 
 import Controller from 'platform/Controller';
 

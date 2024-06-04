@@ -1,5 +1,5 @@
-import { Rect } from "types";
-import Packer, { MethodList } from "./Packer";
+import { type Rect } from "types";
+import Packer, { type MethodList } from "./Packer";
 
 // Based of https://github.com/jakesgordon/bin-packing/blob/master/js/packer.growing.js
 
@@ -17,7 +17,7 @@ type Block = {
 	w: number,
 	h: number,
 	rect: Rect,
-	fit?: Node
+	fit?: Node | null
 }
 
 type Node = {
@@ -43,23 +43,25 @@ class GrowingPacker extends Packer {
 		// nothing to do
 		super(width, height, allowRotate, padding);
 
+		this.root = { x: 0, y: 0, w: width, h: height };
+
 		this.allowRotate = allowRotate;
 		this.padding = padding;
 		this.width = width;
 		this.height = height;
 	}
 
-	static get defaultMethod():MethodType {
+	static override get defaultMethod():MethodType {
 		return METHODS.Sorted;
 	}
 
-	pack(_data:Rect[], _method:MethodType):Rect[] {
+	override pack(_data:Rect[], _method:MethodType):Rect[] {
 		const blocks:Block[] = [];
-		for (let i = 0; i < _data.length; i++) {
+		for (const item of _data) {
 			const block:Block = {
-				w: _data[i].frame.w,
-				h: _data[i].frame.h,
-				rect: _data[i]
+				w: item.frame.w,
+				h: item.frame.h,
+				rect: item
 			};
 			blocks.push(block);
 		}
@@ -79,7 +81,9 @@ class GrowingPacker extends Packer {
 
 		const len = blocks.length;
 		let padding = this.padding;
+		// @ts-ignore
 		const w = len > 0 ? blocks[0].w + padding : 0;
+		// @ts-ignore
 		const h = len > 0 ? blocks[0].h + padding : 0;
 		this.root = { x: 0, y: 0, w: w, h: h };
 		for(let block of blocks) {
@@ -93,7 +97,7 @@ class GrowingPacker extends Packer {
 		const rects:Rect[] = [];
 
 		for(let block of blocks) {
-			if(block.fit === null) continue;
+			if(block.fit === null || block.fit === undefined) continue;
 			block.rect.frame.x = block.fit.x;
 			block.rect.frame.y = block.fit.y;
 			block.fit.w -= padding;
@@ -106,7 +110,9 @@ class GrowingPacker extends Packer {
 		return rects;
 	}
 
-	private findNode = (root:Node, w:number, h:number):Node => {
+	private findNode = (root:Node | null | undefined, w:number, h:number):Node | null => {
+		if (root === null || root === undefined)
+			return null;
 		if (root.used)
 			return this.findNode(root.right, w, h) || this.findNode(root.down, w, h);
 		if ((w <= root.w) && (h <= root.h))
@@ -136,9 +142,8 @@ class GrowingPacker extends Packer {
 			return this.growRight(w, h);
 		if (canGrowDown)
 			return this.growDown(w, h);
-		return null;
 
-		//return null; // need to ensure sensible root starting size to avoid this happening
+		return null; // need to ensure sensible root starting size to avoid this happening
 	}
 
 	private growRight = (w:number, h:number) => {
@@ -173,19 +178,19 @@ class GrowingPacker extends Packer {
 		return null;
 	}
 
-	static get packerName() {
+	static override get packerName() {
 		return "GrowingPacker";
 	}
 
-	static get methods():MethodList {
+	static override get methods():MethodList {
 		return METHODS;
 	}
 
-	static needsNonRotation(): boolean {
+	static override needsNonRotation(): boolean {
 		return true;
 	}
 
-	static getMethodProps(id:MethodType) {
+	static override getMethodProps(id:MethodType) {
 		return {name: "Default", description: "Default placement"};
 	}
 }

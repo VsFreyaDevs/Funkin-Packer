@@ -3,9 +3,9 @@ import { Observer, GLOBAL_EVENT } from '../Observer';
 import TextureView from './TextureView';
 import SpritesPlayer from './SpritesPlayer';
 import I18 from '../utils/I18';
-import { PackResultsData } from 'types';
+import { type PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
-import { StatsInfoEvent } from './StatsInfo';
+import { type StatsInfoEvent } from './StatsInfo';
 
 interface Props {}
 
@@ -48,7 +48,7 @@ class PackResults extends React.Component<Props, State> {
 		};
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
 
 		TypedObserver.packComplete.on(this.updatePackResult, this);
@@ -85,7 +85,7 @@ class PackResults extends React.Component<Props, State> {
 	}
 
 	handleWheel = (e: WheelEvent) => {
-		if(!e.ctrlKey) return;
+		if(!e.ctrlKey) return false;
 
 		let value = this.state.scale;
 		if (e.deltaY >= 0) {
@@ -123,7 +123,7 @@ class PackResults extends React.Component<Props, State> {
 		this.setState({playerVisible: !this.state.playerVisible});
 	}
 
-	render() {
+	override render() {
 		const views = [];
 		let ix=0;
 		if(this.state.packResult) {

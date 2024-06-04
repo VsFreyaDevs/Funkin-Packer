@@ -1,6 +1,7 @@
 import CustomImage from "data/CustomImage";
 import { PackerClass } from "./packers/Packer";
 import TextureRenderer from "./utils/TextureRenderer";
+import { Exporter } from "exporters";
 
 declare type PackOptions = {
 	repackUpdateFileName?: boolean;
@@ -13,7 +14,7 @@ declare type PackOptions = {
 	borderPadding?: number;
 	alphaThreshold?: number;
 	scale?: number;
-	textureFormat?: string;
+	textureFormat?: "png" | "jpg";
 	trimMode?: "trim" | "crop";
 	sortExportedRows?: boolean;
 	fileName?: string;
@@ -28,7 +29,8 @@ declare type PackOptions = {
 	packerCls?: PackerClass;
 	packer?: string;
 	packerMethod?: string;
-	exporter?: any; // TODO: type this
+	exporterCls?: Exporter;
+	exporter?: string;
 
 	statsSI?: number;
 }

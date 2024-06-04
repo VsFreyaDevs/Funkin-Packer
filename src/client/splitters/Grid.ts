@@ -1,12 +1,12 @@
-import { Rect } from 'types';
+import type { Rect } from 'types';
 import Splitter from './Splitter';
 
 class Grid extends Splitter {
-	doCheck(data: string, cb: (checked: boolean) => void) {
+	override doCheck(data: string, cb: (checked: boolean) => void) {
 		cb(false);
 	}
 
-	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		let res:Rect[] = [];
 
 		let fw = (this.options.width + this.options.padding * 2);
@@ -58,7 +58,7 @@ class Grid extends Splitter {
 		cb(res);
 	}
 
-	get splitterName() {
+	override get splitterName() {
 		return 'Grid';
 	}
 }

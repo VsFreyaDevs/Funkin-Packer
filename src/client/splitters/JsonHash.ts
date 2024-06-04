@@ -1,8 +1,8 @@
-import { Rect } from 'types';
+import type { Rect } from 'types';
 import Splitter from './Splitter';
 
 class JsonHash extends Splitter {
-	doCheck(data: string, cb: (checked: boolean) => void) {
+	override doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
 			const json = JSON.parse(data);
 			cb(json && json.frames && !Array.isArray(json.frames));
@@ -12,7 +12,7 @@ class JsonHash extends Splitter {
 		}
 	}
 
-	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		const res = [];
 
 		try {
@@ -34,7 +34,7 @@ class JsonHash extends Splitter {
 		}
 	}
 
-	get splitterName() {
+	override get splitterName() {
 		return 'JSON (hash)';
 	}
 }

@@ -28,7 +28,7 @@ class OldBrowserBlocker extends React.Component {
 		return true;
 	}
 
-	render() {
+	override render() {
 		return (
 			<div ref={this.overlayRef} className="old-browser-overlay">
 				<div className="old-browser-content">

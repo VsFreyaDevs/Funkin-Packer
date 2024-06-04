@@ -1,12 +1,10 @@
-/* eslint-disable no-use-before-define */
-import * as list from './list.json';
 import * as appInfo from '../../../package.json';
 import { sendGet } from '../utils/ajax';
 import { smartSortImages, removeFromArray, isNullOrUndefined } from '../utils/common';
 import Globals from '../utils/Globals';
 import finishExporter from './render';
 
-import { Rect } from 'types';
+import { type Rect } from 'types';
 
 export type Exporter = {
 	type: string;
@@ -56,11 +54,11 @@ type ExporterRect = {
 export type RenderSettings = {
 	imageName: string,
 	imageFile: string,
-	imageData: any,
+	imageData: string,
 	spritePadding: number,
 	borderPadding: number,
 	format: "RGBA8888" | "RGB888",
-	textureFormat: string,
+	textureFormat: 'png' | 'jpg',
 	imageWidth: number,
 	imageHeight: number,
 	removeFileExtension: boolean,
@@ -75,7 +73,165 @@ export type RenderSettings = {
 	base64Prefix?: string,
 }
 
-function getExporterByType(type:string):Exporter {
+let list: Exporter[] = [
+	{
+		type: "Sparrow",
+		description: "Sparrow format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "Sparrow.mst",
+		fileExt: "xml"
+	},
+	{
+		type: "JSON (hash)",
+		description: "Json hash",
+		allowTrim: true,
+		allowRotation: true,
+		template: "JsonHash.mst",
+		fileExt: "json"
+	},
+	{
+		type: "JSON (array)",
+		description: "Json array",
+		allowTrim: true,
+		allowRotation: true,
+		template: "JsonArray.mst",
+		fileExt: "json"
+	},
+	{
+		type: "XML",
+		description: "Plain XML format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "XML.mst",
+		fileExt: "xml"
+	},
+	{
+		type: "css (modern)",
+		description: "css format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "Css.mst",
+		fileExt: "css"
+	},
+	{
+		type: "css (old)",
+		description: "old css format",
+		allowTrim: false,
+		allowRotation: false,
+		template: "OldCss.mst",
+		fileExt: "css"
+	},
+	{
+		type: "pixi.js",
+		description: "pixi.js format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "JsonHash.mst",
+		fileExt: "json"
+	},
+	{
+		type: "Godot (atlas)",
+		description: "Godot Atlas format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "GodotAtlas.mst",
+		fileExt: "tpsheet"
+	},
+	{
+		type: "Godot (tileset)",
+		description: "Godot Tileset format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "GodotTileset.mst",
+		fileExt: "tpset"
+	},
+	{
+		type: "Phaser (hash)",
+		description: "Phaser (json hash)",
+		allowTrim: true,
+		allowRotation: true,
+		template: "JsonHash.mst",
+		fileExt: "json"
+	},
+	{
+		type: "Phaser (array)",
+		description: "Phaser (json array)",
+		allowTrim: true,
+		allowRotation: true,
+		template: "JsonArray.mst",
+		fileExt: "json"
+	},
+	{
+		type: "Phaser 3",
+		description: "Phaser 3",
+		allowTrim: true,
+		allowRotation: true,
+		template: "Phaser3.mst",
+		fileExt: "json"
+	},
+	{
+		type: "Spine",
+		description: "Spine atlas",
+		allowTrim: true,
+		allowRotation: true,
+		template: "Spine.mst",
+		fileExt: "atlas"
+	},
+	{
+		type: "cocos2d",
+		description: "cocos2d format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "Cocos2d.mst",
+		fileExt: "plist"
+	},
+	{
+		type: "UnrealEngine",
+		description: "UnrealEngine - Paper2d",
+		allowTrim: true,
+		allowRotation: true,
+		template: "Unreal.mst",
+		fileExt: "paper2dsprites"
+	},
+	{
+		type: "UIKit",
+		description: "UIKit sprite sheet",
+		allowTrim: true,
+		allowRotation: false,
+		template: "UIKit.mst",
+		fileExt: "plist",
+		predefined: true
+	},
+	{
+		type: "Unity3D",
+		description: "Unity3D sprite sheet",
+		allowTrim: true,
+		allowRotation: false,
+		template: "Unity3D.mst",
+		fileExt: "tpsheet",
+		predefined: true
+	},
+	{
+		type: "Egret2D",
+		description: "Egret2D sprite sheet",
+		allowTrim: false,
+		allowRotation: false,
+		template: "Egret2D.mst",
+		fileExt: "json",
+		predefined: true
+	},
+	{
+		type: "custom",
+		description: "Custom format",
+		allowTrim: true,
+		allowRotation: true,
+		template: "",
+		fileExt: ""
+	}
+];
+
+function getExporterByType(type:string | null | undefined): Exporter {
 	for(const item of list) {
 		if(item.type === type) {
 			return item;
@@ -101,6 +257,7 @@ function prepareData(data: Rect[], options: RenderSettings): {
 
 	for(const item of data) {
 		let name = item.originalFile || item.file;
+		if(!name) continue;
 		const origName = name;
 
 		if(opt.removeFileExtension) {
@@ -222,7 +379,7 @@ function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings
 				const item = nameMap[name];
 				removeFromArray(oldRects, item);
 				return item;
-			});
+			}) as ExporterRect[];
 			rects = array.concat(oldRects);
 		}
 

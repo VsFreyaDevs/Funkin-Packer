@@ -1,5 +1,5 @@
-import { Rect } from "types";
-import Packer, { MethodList } from "./Packer";
+import { type Rect } from "types";
+import Packer, { type MethodList } from "./Packer";
 
 const METHODS = {
 	Automatic: "Automatic"
@@ -12,27 +12,27 @@ class OptimalPacker extends Packer {
 		super(width, height, allowRotate, padding);
 	}
 
-	pack(_data:Rect[], _method:MethodType):Rect[] {
+	override pack(_data:Rect[], _method:MethodType):Rect[] {
 		throw new Error('OptimalPacker is a dummy and cannot be used directly');
 	}
 
-	static get packerName() {
+	static override get packerName() {
 		return "OptimalPacker";
 	}
 
-	static get defaultMethod():MethodType {
+	static override get defaultMethod():MethodType {
 		return METHODS.Automatic;
 	}
 
-	static get methods():MethodList {
+	static override get methods():MethodList {
 		return METHODS;
 	}
 
-	static needsNonRotation(): boolean {
+	static override needsNonRotation(): boolean {
 		return true;
 	}
 
-	static getMethodProps(id:MethodType) {
+	static override getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.Automatic:
 				return {name: "Automatic", description: ""};

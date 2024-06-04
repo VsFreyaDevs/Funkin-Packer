@@ -1,7 +1,7 @@
-import { PackOptions, Rect } from "types";
+import { type PackOptions, type Rect } from "types";
 
 class TextureRenderer {
-	buffer: HTMLCanvasElement;
+	readonly buffer: HTMLCanvasElement;
 	width: number;
 	height: number;
 
@@ -19,7 +19,7 @@ class TextureRenderer {
 		let height = options.height || 0;
 
 		//let padding = options.padding || 0;
-		let borderPadding = options.borderPadding || 0;
+		const borderPadding = options.borderPadding || 0;
 
 		if(!options.fixedSize) {
 			width = 0;
@@ -63,16 +63,16 @@ class TextureRenderer {
 			height = ph;
 		}
 
-		return {width, height};
+		return {width, height} as const;
 	}
 
 	render(data:Rect[], options:PackOptions={}) {
-		let ctx = this.buffer.getContext("2d");
+		const ctx = this.buffer.getContext("2d");
 
 		if(PROFILER)
 			console.time("render");
 
-		let { width, height } = TextureRenderer.getSize(data, options);
+		const { width, height } = TextureRenderer.getSize(data, options);
 
 		this.width = width;
 		this.height = height;
@@ -174,7 +174,7 @@ class TextureRenderer {
 	private renderItem(ctx: CanvasRenderingContext2D, item: Rect, _options: PackOptions) {
 		if(item.skipRender) return;
 
-		let img = item.image;
+		const img = item.image;
 
 		if (item.rotated) {
 			ctx.save();

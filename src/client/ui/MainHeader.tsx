@@ -3,9 +3,14 @@ import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import * as appInfo from '../../../package.json';
-import * as languages from '../resources/static/localization/languages.json';
+import { languages } from '../resources/static/localization/languages';
 import StatsInfo from './StatsInfo';
 import TypedObserver from 'TypedObserver';
+
+const {
+	displayName: appDisplayName,
+	version: appVersion
+} = appInfo;
 
 class MainHeader extends React.Component {
 	/* showAbout() {
@@ -20,13 +25,13 @@ class MainHeader extends React.Component {
 		Observer.emit(GLOBAL_EVENT.SHOW_SHEET_SPLITTER);
 	}
 
-	render() {
+	override render() {
 		return (
 			<div className="main-header back-900 color-white">
 				<div className='left-align'>
 					<div className="main-header-app-name">
 						<img src="static/images/logo.png" alt="Logo" />
-						{appInfo.displayName} {appInfo.version}
+						{appDisplayName} {appVersion}
 						<div className='based-on'>{I18.f("BASED_ON")}</div>
 					</div>
 

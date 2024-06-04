@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+
 const path = require('path');
 const argv = require('optimist').argv;
 const windowStateKeeper = require('electron-window-state');

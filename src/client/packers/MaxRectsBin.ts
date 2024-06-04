@@ -1,6 +1,6 @@
-import Packer, { MethodList } from "./Packer";
+import Packer, { type MethodList } from "./Packer";
 import Rectangle from "../math/Rectangle";
-import { Rect } from "types";
+import { type Rect } from "types";
 
 const METHODS = {
 	BestShortSideFit: "BestShortSideFit",
@@ -46,7 +46,7 @@ class MaxRectsBin extends Packer {
 		));
 	}
 
-	pack(data:Rect[], method:MethodType) {
+	override pack(data:Rect[], method:MethodType) {
 		let res = this.insert2(data, method);
 		return res;
 	}
@@ -93,11 +93,11 @@ class MaxRectsBin extends Packer {
 			let bestRectangleIndex = -1;
 			let bestNode = new Rectangle();
 
-			let len = rectangles.length;
-			for(let i= 0; i < len; i++) {
+			let i = 0;
+			for(const rect of rectangles) {
 				let score1 = new MutatableNumber();
 				let score2 = new MutatableNumber();
-				let newNode = this._scoreRectangle(rectangles[i].frame.w + this.padding, rectangles[i].frame.h + this.padding, method, score1, score2);
+				let newNode = this._scoreRectangle(rect.frame.w + this.padding, rect.frame.h + this.padding, method, score1, score2);
 
 				if (score1.value < bestScore1 || (score1.value === bestScore1 && score2.value < bestScore2)) {
 					bestScore1 = score1.value;
@@ -105,6 +105,7 @@ class MaxRectsBin extends Packer {
 					bestNode = newNode;
 					bestRectangleIndex = i;
 				}
+				i++;
 			}
 
 			if (bestRectangleIndex === -1) {
@@ -113,14 +114,16 @@ class MaxRectsBin extends Packer {
 
 			this._placeRectangle(bestNode);
 			let rect = rectangles.splice(bestRectangleIndex, 1)[0];
-			rect.frame.x = bestNode.x;
-			rect.frame.y = bestNode.y;
+			if(rect) {
+				rect.frame.x = bestNode.x;
+				rect.frame.y = bestNode.y;
 
-			bestNode.width -= this.padding;
-			bestNode.height -= this.padding;
+				bestNode.width -= this.padding;
+				bestNode.height -= this.padding;
 
-			if(rect.frame.w !== bestNode.width || rect.frame.h !== bestNode.height) {
-				rect.rotated = true;
+				if(rect.frame.w !== bestNode.width || rect.frame.h !== bestNode.height) {
+					rect.rotated = true;
+				}
 			}
 
 			res.push(rect);
@@ -131,7 +134,7 @@ class MaxRectsBin extends Packer {
 	private _placeRectangle(node:Rectangle) {
 		let numRectanglesToProcess = this.freeRectangles.length;
 		for(let i= 0; i < numRectanglesToProcess; i++) {
-			if (this._splitFreeNode(this.freeRectangles[i], node)) {
+			if (this._splitFreeNode(this.freeRectangles[i] as Rectangle, node)) {
 				this.freeRectangles.splice(i,1);
 				i--;
 				numRectanglesToProcess--;
@@ -179,8 +182,8 @@ class MaxRectsBin extends Packer {
 	private _occupancy() {
 		let usedRectangles = this.usedRectangles;
 		let usedSurfaceArea = 0;
-		for(let i= 0; i < usedRectangles.length; i++) {
-			usedSurfaceArea += usedRectangles[i].width * usedRectangles[i].height;
+		for(const rect of usedRectangles) {
+			usedSurfaceArea += rect.width * rect.height;
 		}
 
 		return usedSurfaceArea/(this.binWidth * this.binHeight);
@@ -191,12 +194,9 @@ class MaxRectsBin extends Packer {
 		let bestNode = new Rectangle();
 
 		bestY.value = Infinity;
-		let rect;
-		let topSideY;
-		for(let i= 0; i < freeRectangles.length; i++) {
-			rect = freeRectangles[i];
+		for(const rect of freeRectangles) {
 			if (rect.width >= width && rect.height >= height) {
-				topSideY = rect.y + height;
+				const topSideY = rect.y + height;
 				if (topSideY < bestY.value || (topSideY === bestY.value && rect.x < bestX.value)) {
 					bestNode.x = rect.x;
 					bestNode.y = rect.y;
@@ -207,7 +207,7 @@ class MaxRectsBin extends Packer {
 				}
 			}
 			if (this.allowRotate && rect.width >= height && rect.height >= width) {
-				topSideY = rect.y + width;
+				const topSideY = rect.y + width;
 				if (topSideY < bestY.value || (topSideY === bestY.value && rect.x < bestX.value)) {
 					bestNode.x = rect.x;
 					bestNode.y = rect.y;
@@ -227,19 +227,12 @@ class MaxRectsBin extends Packer {
 
 		bestShortSideFit.value = Infinity;
 
-		let rect,
-			leftoverHoriz,
-			leftoverVert,
-			shortSideFit,
-			longSideFit;
-
-		for(let i= 0; i < freeRectangles.length; i++) {
-			rect = freeRectangles[i];
+		for(const rect of freeRectangles) {
 			if (rect.width >= width && rect.height >= height) {
-				leftoverHoriz = Math.abs(rect.width - width);
-				leftoverVert = Math.abs(rect.height - height);
-				shortSideFit = Math.min(leftoverHoriz, leftoverVert);
-				longSideFit = Math.max(leftoverHoriz, leftoverVert);
+				const leftoverHoriz = Math.abs(rect.width - width);
+				const leftoverVert = Math.abs(rect.height - height);
+				const shortSideFit = Math.min(leftoverHoriz, leftoverVert);
+				const longSideFit = Math.max(leftoverHoriz, leftoverVert);
 
 				if (shortSideFit < bestShortSideFit.value || (shortSideFit === bestShortSideFit.value && longSideFit < bestLongSideFit.value)) {
 					bestNode.x = rect.x;
@@ -251,16 +244,11 @@ class MaxRectsBin extends Packer {
 				}
 			}
 
-			let flippedLeftoverHoriz,
-				flippedLeftoverVert,
-				flippedShortSideFit,
-				flippedLongSideFit;
-
 			if (this.allowRotate && rect.width >= height && rect.height >= width) {
-				flippedLeftoverHoriz = Math.abs(rect.width - height);
-				flippedLeftoverVert = Math.abs(rect.height - width);
-				flippedShortSideFit = Math.min(flippedLeftoverHoriz, flippedLeftoverVert);
-				flippedLongSideFit = Math.max(flippedLeftoverHoriz, flippedLeftoverVert);
+				const flippedLeftoverHoriz = Math.abs(rect.width - height);
+				const flippedLeftoverVert = Math.abs(rect.height - width);
+				const flippedShortSideFit = Math.min(flippedLeftoverHoriz, flippedLeftoverVert);
+				const flippedLongSideFit = Math.max(flippedLeftoverHoriz, flippedLeftoverVert);
 
 				if (flippedShortSideFit < bestShortSideFit.value || (flippedShortSideFit === bestShortSideFit.value && flippedLongSideFit < bestLongSideFit.value)) {
 					bestNode.x = rect.x;
@@ -281,20 +269,12 @@ class MaxRectsBin extends Packer {
 		let bestNode = new Rectangle();
 		bestLongSideFit.value = Infinity;
 
-		let rect,
-			leftoverHoriz,
-			leftoverVert,
-			shortSideFit,
-			longSideFit;
-
-		for(let i= 0; i < freeRectangles.length; i++) {
-			rect = freeRectangles[i];
-
+		for(const rect of freeRectangles) {
 			if (rect.width >= width && rect.height >= height) {
-				leftoverHoriz = Math.abs(rect.width - width);
-				leftoverVert = Math.abs(rect.height - height);
-				shortSideFit = Math.min(leftoverHoriz, leftoverVert);
-				longSideFit = Math.max(leftoverHoriz, leftoverVert);
+				const leftoverHoriz = Math.abs(rect.width - width);
+				const leftoverVert = Math.abs(rect.height - height);
+				const shortSideFit = Math.min(leftoverHoriz, leftoverVert);
+				const longSideFit = Math.max(leftoverHoriz, leftoverVert);
 
 				if (longSideFit < bestLongSideFit.value || (longSideFit === bestLongSideFit.value && shortSideFit < bestShortSideFit.value)) {
 					bestNode.x = rect.x;
@@ -307,10 +287,10 @@ class MaxRectsBin extends Packer {
 			}
 
 			if (this.allowRotate && rect.width >= height && rect.height >= width) {
-				leftoverHoriz = Math.abs(rect.width - height);
-				leftoverVert = Math.abs(rect.height - width);
-				shortSideFit = Math.min(leftoverHoriz, leftoverVert);
-				longSideFit = Math.max(leftoverHoriz, leftoverVert);
+				const leftoverHoriz = Math.abs(rect.width - height);
+				const leftoverVert = Math.abs(rect.height - width);
+				const shortSideFit = Math.min(leftoverHoriz, leftoverVert);
+				const longSideFit = Math.max(leftoverHoriz, leftoverVert);
 
 				if (longSideFit < bestLongSideFit.value || (longSideFit === bestLongSideFit.value && shortSideFit < bestShortSideFit.value)) {
 					bestNode.x = rect.x;
@@ -331,20 +311,13 @@ class MaxRectsBin extends Packer {
 
 		bestAreaFit.value = Infinity;
 
-		let rect,
-			leftoverHoriz,
-			leftoverVert,
-			shortSideFit,
-			areaFit;
-
-		for(let i= 0; i < freeRectangles.length; i++) {
-			rect = freeRectangles[i];
-			areaFit = rect.width * rect.height - width * height;
+		for(const rect of freeRectangles) {
+			const areaFit = rect.width * rect.height - width * height;
 
 			if (rect.width >= width && rect.height >= height) {
-				leftoverHoriz = Math.abs(rect.width - width);
-				leftoverVert = Math.abs(rect.height - height);
-				shortSideFit = Math.min(leftoverHoriz, leftoverVert);
+				const leftoverHoriz = Math.abs(rect.width - width);
+				const leftoverVert = Math.abs(rect.height - height);
+				const shortSideFit = Math.min(leftoverHoriz, leftoverVert);
 
 				if (areaFit < bestAreaFit.value || (areaFit === bestAreaFit.value && shortSideFit < bestShortSideFit.value)) {
 					bestNode.x = rect.x;
@@ -357,9 +330,9 @@ class MaxRectsBin extends Packer {
 			}
 
 			if (this.allowRotate && rect.width >= height && rect.height >= width) {
-				leftoverHoriz = Math.abs(rect.width - height);
-				leftoverVert = Math.abs(rect.height - width);
-				shortSideFit = Math.min(leftoverHoriz, leftoverVert);
+				const leftoverHoriz = Math.abs(rect.width - height);
+				const leftoverVert = Math.abs(rect.height - width);
+				const shortSideFit = Math.min(leftoverHoriz, leftoverVert);
 
 				if (areaFit < bestAreaFit.value || (areaFit === bestAreaFit.value && shortSideFit < bestShortSideFit.value)) {
 					bestNode.x = rect.x;
@@ -416,13 +389,9 @@ class MaxRectsBin extends Packer {
 
 		bestContactScore.value = -1;
 
-		let rect,
-			score;
-
-		for(let i= 0; i < freeRectangles.length; i++) {
-			rect = freeRectangles[i];
+		for(const rect of freeRectangles) {
 			if (rect.width >= width && rect.height >= height) {
-				score = this._contactPointScoreNode(rect.x, rect.y, width, height);
+				const score = this._contactPointScoreNode(rect.x, rect.y, width, height);
 				if (score > bestContactScore.value) {
 					bestNode.x = rect.x;
 					bestNode.y = rect.y;
@@ -432,7 +401,7 @@ class MaxRectsBin extends Packer {
 				}
 			}
 			if (this.allowRotate && rect.width >= height && rect.height >= width) {
-				score = this._contactPointScoreNode(rect.x, rect.y, height, width);
+				const score = this._contactPointScoreNode(rect.x, rect.y, height, width);
 				if (score > bestContactScore.value) {
 					bestNode.x = rect.x;
 					bestNode.y = rect.y;
@@ -528,8 +497,16 @@ class MaxRectsBin extends Packer {
         while (i < len) {
             j = i + 1;
             let tmpRect1 = freeRectangles[i];
+			if(tmpRect1 === null || tmpRect1 === undefined) {
+				i++;
+				continue;
+			}
             while (j < len) {
                 let tmpRect2 = freeRectangles[j];
+				if(tmpRect2 === null || tmpRect2 === undefined) {
+					j++;
+					continue;
+				}
 				if (Rectangle.hitTest(tmpRect1, tmpRect2)) {
 					freeRectangles.splice(i, 1);
 					i--;
@@ -547,23 +524,23 @@ class MaxRectsBin extends Packer {
         }
     }
 
-	static get packerName() {
+	static override get packerName() {
 		return "MaxRectsBin";
 	}
 
-	static get defaultMethod():MethodType {
+	static override get defaultMethod():MethodType {
 		return METHODS.BestShortSideFit;
 	}
 
-	static get methods():MethodList {
+	static override get methods():MethodList {
 		return METHODS;
 	}
 
-	static needsNonRotation(): boolean {
+	static override needsNonRotation(): boolean {
 		return true;
 	}
 
-	static getMethodProps(id:MethodType) {
+	static override getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.BestShortSideFit:
 				return {name: "Best short side fit", description: "Positions the Rectangle against the short side of a free Rectangle into which it fits the best."};

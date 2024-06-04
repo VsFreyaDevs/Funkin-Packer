@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Observer, GLOBAL_EVENT } from '../Observer';
-import { PackResultsData, Rect } from 'types';
+import { type PackResultsData, type Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 
 interface TextureViewProps {
@@ -22,11 +21,11 @@ class TextureView extends React.Component<TextureViewProps> {
 		this.viewRef = React.createRef();
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		this.updateView();
 	}
 
-	componentDidUpdate() {
+	override componentDidUpdate() {
 		this.updateView();
 	}
 
@@ -165,7 +164,7 @@ class TextureView extends React.Component<TextureViewProps> {
 		}
 	}
 
-	render() {
+	override render() {
 		return (
 			<div ref={this.backRef} className="texture-view">
 				<canvas ref={this.viewRef} onClick={this.onViewClick}></canvas>

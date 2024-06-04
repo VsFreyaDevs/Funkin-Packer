@@ -1,10 +1,10 @@
-import { Rect } from 'types';
+import { type Rect } from 'types';
 import Splitter from './Splitter';
 
 import { parse as plistParse } from 'plist';
 
 class UIKit extends Splitter {
-	doCheck(data: string, cb: (checked: boolean) => void) {
+	override doCheck(data: string, cb: (checked: boolean) => void) {
 		try {
 			const atlas = plistParse(data);
 			if(!atlas) return cb(false);
@@ -35,7 +35,7 @@ class UIKit extends Splitter {
 		}
 	}
 
-	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		try {
 			const res:Rect[] = [];
 
@@ -85,7 +85,7 @@ class UIKit extends Splitter {
 		}
 	}
 
-	get splitterName() {
+	override get splitterName() {
 		return 'UIKit';
 	}
 }

@@ -1,4 +1,4 @@
-import { Rect, SplitterRect } from 'types';
+import { type Rect, type SplitterRect } from 'types';
 import Splitter from './Splitter';
 
 /*class Point {
@@ -7,7 +7,7 @@ import Splitter from './Splitter';
 }*/
 
 class Spine extends Splitter {
-	doCheck(data: string, cb: (checked: boolean) => void) {
+	override doCheck(data: string, cb: (checked: boolean) => void) {
 		let lines = data.split('\n');
 		if(lines.length < 2) return cb(false);
 		if(lines[0].trim() !== '') return cb(false);
@@ -35,7 +35,7 @@ class Spine extends Splitter {
 		return item;
 	}
 
-	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		const res:Rect[] = [];
 
 		const lines = data.split('\n');
@@ -130,11 +130,11 @@ class Spine extends Splitter {
 		cb(res);
 	}
 
-	get splitterName() {
+	override get splitterName() {
 		return 'Spine';
 	}
 
-	get inverseRotation() {
+	override get inverseRotation() {
 		return true;
 	}
 }

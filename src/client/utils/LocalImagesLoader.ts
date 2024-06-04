@@ -1,5 +1,5 @@
 import CustomImage from "../data/CustomImage";
-import { LoadedImages } from "types";
+import { type LoadedImages } from "types";
 
 class LocalImagesLoader {
 	data: File[];

@@ -9,8 +9,8 @@ import LocalImagesLoader from "../utils/LocalImagesLoader";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList";
 import PackProperties from '../ui/PackProperties';
-import { LoadedImages, Rect } from 'types';
-import Splitter from 'splitters/Splitter';
+import { type LoadedImages, type Rect } from 'types';
+import Splitter from '../splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
 import { fixManualOffsets, formatBytes, setMaxSizes } from '../utils/common';
@@ -97,17 +97,17 @@ class SheetSplitter extends React.Component<Props, State> {
 		this.buffer = document.createElement('canvas');
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		this.updateTexture();
 		this.wheelRef.current.addEventListener('wheel', this.handleWheel, { passive: false });
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		this.wheelRef.current.removeEventListener('wheel', this.handleWheel);
 	}
 
 	handleWheel = (event: WheelEvent) => {
-		if(!event.ctrlKey) return;
+		if(!event.ctrlKey) return false;
 
 		let value = this.state.scale;
 		if (event.deltaY >= 0) {
@@ -169,8 +169,8 @@ class SheetSplitter extends React.Component<Props, State> {
 
 			//let prefix = cleanPrefix(item.originalFile || item.file || item.name);
 
-			const ssw = item.sourceSize.mw;
-			const ssh = item.sourceSize.mh;
+			const ssw = item.sourceSize.mw ?? item.sourceSize.w;
+			const ssh = item.sourceSize.mh ?? item.sourceSize.h;
 
 			let width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
 			let height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
@@ -698,7 +698,7 @@ class SheetSplitter extends React.Component<Props, State> {
 		Observer.emit(GLOBAL_EVENT.HIDE_SHEET_SPLITTER);
 	}
 
-	render() {
+	override render() {
 		const currentSplitterName = splitterMaster.getCurrentSplitter().splitterName;
 
 		let displayGridProperties = 'none';

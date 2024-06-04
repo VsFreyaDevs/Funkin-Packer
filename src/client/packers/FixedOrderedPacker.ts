@@ -1,5 +1,5 @@
-import { Rect } from "types";
-import Packer, { MethodList } from "./Packer";
+import { type Rect } from "types";
+import Packer, { type MethodList } from "./Packer";
 
 const METHODS = {
 	SortedAreaDsc: "SortedAreaDsc",
@@ -91,7 +91,7 @@ class FixedOrderedPacker extends Packer {
 		this.isAlt = false;
 	}
 
-	pack(_data:Rect[], _method:MethodType):Rect[] {
+	override pack(_data:Rect[], _method:MethodType):Rect[] {
 		let method = _method;
 		this.isSmart = false;
 		this.isAlt = false;
@@ -377,23 +377,23 @@ class FixedOrderedPacker extends Packer {
 		return sum;
 	}
 
-	static get packerName() {
+	static override get packerName() {
 		return "FixedOrderedPacker";
 	}
 
-	static get defaultMethod():MethodType {
+	static override get defaultMethod():MethodType {
 		return METHODS.SortedAreaDsc;
 	}
 
-	static get methods():MethodList {
+	static override get methods():MethodList {
 		return METHODS;
 	}
 
-	static needsNonRotation(): boolean {
+	static override needsNonRotation(): boolean {
 		return false;
 	}
 
-	static getMethodProps(id:MethodType) {
+	static override getMethodProps(id:MethodType) {
 		switch(id) {
 			case METHODS.SortedAreaAsc:
 				return {name: "SortedAreaAsc", description: "Sorted placement"};

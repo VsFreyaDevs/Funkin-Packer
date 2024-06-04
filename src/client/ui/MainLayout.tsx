@@ -4,7 +4,7 @@ import ImagesList from './ImagesList';
 import MainHeader from './MainHeader';
 import PackProperties from './PackProperties';
 import PackResults from './PackResults';
-import MessageBox, { ButtonData } from './MessageBox';
+import MessageBox, { type ButtonData } from './MessageBox';
 import ProcessingOverlay from './ProcessingOverlay';
 import OldBrowserBlocker from './OldBrowserBlocker';
 //import About from './About';
@@ -42,7 +42,7 @@ class MainLayout extends React.Component<Props, State> {
 		};
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		TypedObserver.showMessage.on(this.showMessage, this);
 		Observer.on(GLOBAL_EVENT.SHOW_PROCESSING, this.showProcessing, this);
 		Observer.on(GLOBAL_EVENT.HIDE_PROCESSING, this.hideProcessing, this);
@@ -56,7 +56,7 @@ class MainLayout extends React.Component<Props, State> {
 		Observer.on(GLOBAL_EVENT.HIDE_SHEET_SPLITTER, this.hideSheetSplitter, this);
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		TypedObserver.showMessage.off(this.showMessage, this);
 		Observer.off(GLOBAL_EVENT.SHOW_PROCESSING, this.showProcessing, this);
 		Observer.off(GLOBAL_EVENT.HIDE_PROCESSING, this.hideProcessing, this);
@@ -78,7 +78,7 @@ class MainLayout extends React.Component<Props, State> {
 		this.setState({updater: null});
 	} */
 
-	showMessage = (content: string, buttons: ButtonData[] = null) => {
+	showMessage = (content: string, buttons?: ButtonData[]) => {
 		if(this.state.messageBox) return;
 
 		let box = (<MessageBox content={content} buttons={buttons} closeCallback={this.closeMessage} />);
@@ -121,7 +121,7 @@ class MainLayout extends React.Component<Props, State> {
 		this.setState({sheetSplitter: false});
 	}
 
-	render() {
+	override render() {
 		return (
 			<div className="main-wrapper">
 				<MainHeader/>

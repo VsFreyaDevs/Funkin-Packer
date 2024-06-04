@@ -1,10 +1,10 @@
-import { LoadedImages, PackOptions, SelectedEvent } from "types";
-import { ButtonData } from "./ui/MessageBox";
-import { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
+import { type LoadedImages, type PackOptions, type SelectedEvent } from "types";
+import { type ButtonData } from "./ui/MessageBox";
+import { type RepackInfoEvent, type StatsInfoEvent } from "./ui/StatsInfo";
 
 type Callback<T> = (...args: T[]) => void;
 
-class TypedObserver<T, FUNC = Callback<T>> {
+class TypedObserver<T, FUNC extends Function = Callback<T>> {
 	private _callbacks: Array<{callback: FUNC, context?: any}> = [];
 
 	constructor() {}
@@ -39,5 +39,5 @@ export default {
 	imageSelected: new TypedObserver<Readonly<SelectedEvent>>(),
 	changeLanguage: new TypedObserver<Readonly<string>>(),
 	storedOrderChanged: new TypedObserver<Readonly<string>[]>(),
-	repackInfo: new TypedObserver<Readonly<RepackInfoEvent>>(),
+	repackInfo: new TypedObserver<Readonly<RepackInfoEvent> | null>(),
 };

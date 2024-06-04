@@ -5,20 +5,20 @@ import ZipLoader from '../utils/ZipLoader';
 import I18 from '../utils/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import ItemTreePart, { TreeListItem } from './ItemTree';
+import ItemTreePart, { type TreeListItem } from './ItemTree';
 
 //import * as FileSystem from './platform/FileSystem';
 
 import Globals from '../utils/Globals';
 import {fixManualOffsets, getDummyRect, isNullOrUndefined, setMaxSizes, smartSortImages} from '../utils/common';
-import { LoadedImages, SelectedEvent } from 'types';
+import { type LoadedImages, type SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
-import CustomImage from 'data/CustomImage';
-import { ButtonData } from './MessageBox';
+import CustomImage from '../data/CustomImage';
+import { type ButtonData } from './MessageBox';
 
 // TODO: make this not use CustomImage.selected + CustomImage.current
 
-let INSTANCE:ImagesList = null;
+let INSTANCE:ImagesList;
 
 interface Props {
 }
@@ -34,7 +34,7 @@ class ImagesList extends React.Component<Props, State> {
 	readonly addImagesInputRef: React.RefObject<HTMLInputElement>;
 	readonly addZipInputRef: React.RefObject<HTMLInputElement>;
 
-	state:State = {
+	override state:State = {
 		images: {},
 	};
 
@@ -56,7 +56,7 @@ class ImagesList extends React.Component<Props, State> {
 		return INSTANCE;
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		TypedObserver.imageSelected.on(this.handleImageSelected, this);
 		Observer.on(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		//Observer.on(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
@@ -81,7 +81,7 @@ class ImagesList extends React.Component<Props, State> {
 		}
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		TypedObserver.imageSelected.off(this.handleImageSelected, this);
 		Observer.off(GLOBAL_EVENT.IMAGE_CLEAR_SELECTION, this.handleImageClearSelection, this);
 		//Observer.off(GLOBAL_EVENT.FS_CHANGES, this.handleFsChanges, this);
@@ -116,6 +116,8 @@ class ImagesList extends React.Component<Props, State> {
 	onFilesDrop = (e: DragEvent) => {
 		e.preventDefault();
 
+		if(!e.dataTransfer) return false;
+
 		if(e.dataTransfer.files.length) {
 			let loader = new LocalImagesLoader();
 			loader.load(e.dataTransfer.files, null, data => {
@@ -127,6 +129,9 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	addImages = (e:React.ChangeEvent<HTMLInputElement>) => {
+		if(!e.target) return;
+		if(!e.target.files) return;
+
 		if(e.target.files.length) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
 
@@ -138,6 +143,9 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	addZip = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if(!e.target) return;
+		if(!e.target.files) return;
+
 		let file = e.target.files[0];
 		if(file) {
 			Observer.emit(GLOBAL_EVENT.SHOW_PROCESSING);
@@ -221,6 +229,7 @@ class ImagesList extends React.Component<Props, State> {
 			for (const name of names) {
 				images[name] = data[name];
 				const img = images[name];
+				if(!img) continue;
 				if(isNullOrUndefined(img.rect)) img.rect = getDummyRect(name, img.width, img.height);
 				rects.push(img.rect);
 				/*images[name] = {
@@ -244,7 +253,7 @@ class ImagesList extends React.Component<Props, State> {
 	}
 
 	sortImages = (images:LoadedImages) => {
-		const names = Object.keys(images);
+		const names:NonNullable<string>[] = Object.keys(images);
 		names.sort(smartSortImages);
 
 		const sorted:LoadedImages = {};
@@ -570,7 +579,7 @@ class ImagesList extends React.Component<Props, State> {
 		);
 	}*/
 
-	render() {
+	override render() {
 		let data = this.getImagesTree();
 
 		//console.log(data, this.state.images);

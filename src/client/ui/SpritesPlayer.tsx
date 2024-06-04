@@ -1,10 +1,9 @@
 import * as React from 'react';
 import I18 from '../utils/I18';
-import { Observer, GLOBAL_EVENT } from "../Observer";
 import { smartSortImages} from '../utils/common';
-import { PackResultsData, Rect } from 'types';
+import { type PackResultsData, type Rect } from 'types';
 import TypedObserver from 'TypedObserver';
-import { TextureBack } from './SheetSplitter';
+import { type TextureBack } from './SheetSplitter';
 
 interface Props {
 	readonly start: boolean;
@@ -56,14 +55,14 @@ class SpritesPlayer extends React.Component<Props> {
 		this.selectedImages = [];
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		TypedObserver.imagesListSelectedChanged.on(this.onImagesSelected, this);
 
 		if(this.props.start) this.setup();
 		else this.stop();
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		this.stop();
 	}
 
@@ -72,7 +71,7 @@ class SpritesPlayer extends React.Component<Props> {
 		this.updateCurrentTextures();
 	}
 
-	componentDidUpdate = () => {
+	override componentDidUpdate = () => {
 		if(this.props.start) this.setup();
 		else this.stop();
 	}
@@ -279,7 +278,7 @@ class SpritesPlayer extends React.Component<Props> {
 		clearTimeout(this.updateTimer);
 	}
 
-	render() {
+	override render() {
 		return (
 			<div ref={this.containerRef} className="player-container">
 				<div className="player-window border-color-gray">

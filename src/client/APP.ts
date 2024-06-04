@@ -3,18 +3,18 @@ import PackProcessor from './PackProcessor';
 import TextureRenderer from './utils/TextureRenderer';
 import { getFilterByType } from './filters';
 import I18 from './utils/I18';
-import { RenderSettings, startExporter } from './exporters';
+import { type RenderSettings, startExporter } from './exporters';
 import Downloader from 'platform/Downloader';
-import { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
+import { type LoadedImages, type MessageBoxData, type PackOptions, type PackResultsData, type Rect } from 'types';
 import TypedObserver from 'TypedObserver';
-import { PackerCombo } from './packers/Packer';
+import { type PackerCombo } from './packers/Packer';
 
-let INSTANCE:APP = null;
+let INSTANCE:APP;
 
 class APP {
 	images: LoadedImages;
 	packOptions: PackOptions;
-	packResult: PackResultsData[];
+	packResult: PackResultsData[] | null;
 
 	constructor() {
 		INSTANCE = this;
@@ -100,7 +100,7 @@ class APP {
 	}
 
 	private async doExport() {
-		const exporter = this.packOptions.exporter;
+		const exporter = this.packOptions.exporterCls;
 		const fileName = this.packOptions.fileName;
 		const filterClass = getFilterByType(this.packOptions.filter);
 		// eslint-disable-next-line new-cap
@@ -154,7 +154,7 @@ class APP {
 
 			try {
 				files.push({
-					name: fName + "." + this.packOptions.exporter.fileExt,
+					name: fName + "." + exporter.fileExt,
 					content: await startExporter(exporter, item.data, options)
 				});
 			}

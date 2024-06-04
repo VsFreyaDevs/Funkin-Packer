@@ -4,7 +4,7 @@ import OptimalPacker from "./OptimalPacker";
 import GrowingPacker from "./GrowingPacker";
 import OrderedPacker from "./OrderedPacker";
 import FixedOrderedPacker from "./FixedOrderedPacker";
-import { PackerClass } from "./Packer";
+import { type PackerClass } from "./Packer";
 
 const list:PackerClass[] = [
 	MaxRectsBin,
@@ -15,13 +15,14 @@ const list:PackerClass[] = [
 	OptimalPacker
 ] as const;
 
-function getPackerByType(name:string) {
+function getPackerByType(name:string | null | undefined) {
+	if(!name) return OptimalPacker;
 	for(const item of list) {
 		if(item.name === name) {
 			return item;
 		}
 	}
-	return null;
+	return OptimalPacker;
 }
 
 export { getPackerByType };

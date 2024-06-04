@@ -5,19 +5,19 @@ import Trimmer from './utils/Trimmer';
 import TextureRenderer from './utils/TextureRenderer';
 
 import I18 from './utils/I18';
-import { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
-import { PackerClass, PackerCombo } from './packers/Packer';
+import { type LoadedImages, type MessageBoxData, type PackOptions, type Rect } from 'types';
+import { type PackerClass, type PackerCombo } from './packers/Packer';
 
 class PackProcessor {
-	static detectIdentical(rects: Rect[], didTrim: boolean) {
+	private static detectIdentical(rects: Rect[], didTrim: boolean) {
 		const identical:Rect[] = [];
 
 		const len = rects.length;
 
 		for (let i = 0; i < len; i++) {
-			const rect1 = rects[i];
+			const rect1 = rects[i] as Rect;
 			for (let n = i + 1; n < len; n++) {
-				const rect2 = rects[n];
+				const rect2 = rects[n] as Rect;
 				if (identical.indexOf(rect2) === -1 && PackProcessor.compareImages(rect1, rect2, didTrim)) {
 					rect2.identical = rect1;
 					identical.push(rect2);
@@ -35,7 +35,7 @@ class PackProcessor {
 		} as const;
 	}
 
-	static compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
+	private static compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
 		if(!didTrim) {
 			if(rect1.image.base64 === rect2.image.base64) {
 				return true;
@@ -58,7 +58,7 @@ class PackProcessor {
 		return true;
 	}
 
-	static applyIdentical(rects:Rect[], identical:Rect[]) {
+	private static applyIdentical(rects:Rect[], identical:Rect[]) {
 		const clones:Rect[] = [];
 		const removeIdentical:Rect[] = [];
 
@@ -116,6 +116,7 @@ class PackProcessor {
 
 		for (const key of names) {
 			const img = images[key];
+			if(!img) continue;
 
 			const name = key.split(".")[0];
 
@@ -214,10 +215,10 @@ class PackProcessor {
 		const packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
 		const packerCombos:PackerCombo[] = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
 
-		let optimalRes;
+		let optimalRes:Rect[][];
 		let optimalSheets = Infinity;
 		let optimalEfficiency = 0;
-		let usedPacker:PackerCombo = null;
+		let usedPacker:PackerCombo;
 
 		let sourceArea = 0;
 		for (let rect of rects) {

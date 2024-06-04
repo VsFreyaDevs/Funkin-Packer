@@ -13,13 +13,14 @@ const list: FilterClass[] = [
 	Grayscale
 ] as const;
 
-function getFilterByType(type:string) {
+function getFilterByType(type:string | null | undefined) {
+	if(!type) return Filter;
 	for(let item of list) {
 		if(item.type === type) {
 			return item;
 		}
 	}
-	return null;
+	return Filter;
 }
 
 export { getFilterByType };

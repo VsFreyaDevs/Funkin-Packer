@@ -3,9 +3,13 @@ import Storage from '../utils/Storage';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 import { getExporterByType } from '../exporters';
-import * as mustache from 'mustache';
+import Mustache from 'mustache';
 import * as appInfo from '../../../package.json';
 import TypedObserver from 'TypedObserver';
+
+const {
+	homepage: appHomepage
+} = appInfo;
 
 const STORAGE_CUSTOM_EXPORTER_KEY = "custom-exporter";
 
@@ -37,7 +41,7 @@ class EditCustomExporter extends React.Component {
 		let fileExt = (this.fileExtRef.current).value;
 
 		try {
-			mustache.parse(content);
+			Mustache.parse(content);
 
 			exporter.content = content;
 			exporter.allowTrim = allowTrim;
@@ -48,12 +52,12 @@ class EditCustomExporter extends React.Component {
 
 			Observer.emit(GLOBAL_EVENT.HIDE_EDIT_CUSTOM_EXPORTER);
 		}
-		catch(e) {
+		catch(e: any) {
 			TypedObserver.showMessage.emit(I18.f("EXPORTER_ERROR", e.message));
 		}
 	}
 
-	render() {
+	override render() {
 		let exporter = getExporterByType("custom");
 
 		return (
@@ -61,7 +65,7 @@ class EditCustomExporter extends React.Component {
 				<div className="edit-custom-exporter-content">
 
 					<div>
-						<a href={appInfo.homepage} className="color-800" target="_blank">{I18.f("DOCUMENTATION")}</a>
+						<a href={appHomepage} className="color-800" target="_blank">{I18.f("DOCUMENTATION")}</a>
 					</div>
 
 					<div>

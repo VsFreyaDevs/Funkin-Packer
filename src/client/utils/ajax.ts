@@ -14,7 +14,7 @@ type ErrorCallback = (error: string) => void;
 type Method = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
 type DataType = "text" | "arraybuffer" | "xml";
 
-function createXMLHTTPRequest(url: string | URL, callback:SuccessCallback, errorCallback:ErrorCallback, dataType:DataType) {
+function createXMLHTTPRequest(url: string | URL, callback:SuccessCallback, errorCallback?:ErrorCallback, dataType:DataType="text") {
 	let xmlhttp = (globalThis.XMLHttpRequest && new XMLHttpRequest()) || null;
 
 	if (!xmlhttp) return xmlhttp;
@@ -44,7 +44,7 @@ function createXMLHTTPRequest(url: string | URL, callback:SuccessCallback, error
 	return xmlhttp;
 }
 
-function send(url: string | URL, method:Method, params="", callback:SuccessCallback, errorCallback:ErrorCallback, dataType:DataType="text") {
+function send(url: string | URL, method:Method, params="", callback:SuccessCallback, errorCallback?:ErrorCallback, dataType:DataType="text") {
 	let xmlhttp = createXMLHTTPRequest(url, callback, errorCallback, dataType);
 	if (xmlhttp) {
 		let query = createHTTPQuery(params);
@@ -64,11 +64,11 @@ function send(url: string | URL, method:Method, params="", callback:SuccessCallb
 	}
 }
 
-function sendGet(url: string, params="", callback:SuccessCallback, errorCallback:ErrorCallback = null, dataType:DataType="text") {
+function sendGet(url: string, params="", callback:SuccessCallback, errorCallback?:ErrorCallback, dataType:DataType="text") {
 	return send(url, "GET", params, callback, errorCallback, dataType);
 }
 
-function sendPost(url: any, params="", callback:SuccessCallback, errorCallback:ErrorCallback = null, dataType:DataType="text") {
+function sendPost(url: string, params="", callback:SuccessCallback, errorCallback?:ErrorCallback, dataType:DataType="text") {
 	return send(url, "POST", params, callback, errorCallback, dataType);
 }
 

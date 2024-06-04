@@ -13,7 +13,7 @@ import I18 from '../utils/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import Globals from '../utils/Globals';
-import { PackOptions } from 'types';
+import { type PackOptions } from 'types';
 import TypedObserver from 'TypedObserver';
 
 //import FileSystem from 'platform/FileSystem';
@@ -100,14 +100,14 @@ class PackProperties extends React.Component<Props, State> {
 		this.statsSIRef = React.createRef();
 	}
 
-	componentDidMount = () => {
+	override componentDidMount = () => {
 		TypedObserver.storedOrderChanged.on(this.onStoredOrderChanged, this);
 
 		this.updateEditCustomTemplateButton();
 		this.emitChanges();
 	}
 
-	componentWillUnmount = () => {
+	override componentWillUnmount = () => {
 		TypedObserver.storedOrderChanged.off(this.onStoredOrderChanged, this);
 	}
 
@@ -198,7 +198,7 @@ class PackProperties extends React.Component<Props, State> {
 	updatePackOptions = () => {
 		let data:PackOptions = {};
 
-		data.textureFormat = (this.textureFormatRef.current).value;
+		data.textureFormat = (this.textureFormatRef.current).value as "png" | "jpg";
 		data.removeFileExtension = (this.removeFileExtensionRef.current).checked;
 		data.prependFolderName = (this.prependFolderNameRef.current).checked;
 		//data.base64Export = (this.base64ExportRef.current).checked;
@@ -257,7 +257,7 @@ class PackProperties extends React.Component<Props, State> {
 
 	getPackOptions = () => {
 		let data = Object.assign({}, this.packOptions);
-		data.exporter = getExporterByType(data.exporter);
+		data.exporterCls = getExporterByType(data.exporter);
 		data.packerCls = getPackerByType(data.packer);
 		return data;
 	}
@@ -355,7 +355,7 @@ class PackProperties extends React.Component<Props, State> {
 		this.setState({hasStoredOrder: order !== null && order.length > 0});
 	}
 
-	render() {
+	override render() {
 		let exporter = getExporterByType(this.packOptions.exporter);
 		let allowRotation = this.packOptions.allowRotation && exporter.allowRotation;
 		let exporterRotationDisabled = !exporter.allowRotation;
@@ -593,7 +593,7 @@ class PackerMethods extends React.Component<PackerMethodsProps, {
 		this.props.handler(e);
 	}
 
-	render() {
+	override render() {
 		let packerCls = getPackerByType(this.props.packer);
 
 		if(!packerCls) {

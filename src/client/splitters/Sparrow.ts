@@ -1,4 +1,4 @@
-import { Rect, SplitterRect } from 'types';
+import { type Rect, type SplitterRect } from 'types';
 import { isNullOrUndefined } from '../utils/common';
 import Splitter from './Splitter';
 
@@ -32,14 +32,14 @@ type RawSparrowFrame = {
 }
 
 class Sparrow extends Splitter {
-	cleanData(data: string): string {
+	override cleanData(data: string): string {
 		if(isNullOrUndefined(data)) {
 			return data;
 		}
 		return (data.startsWith("ï»¿")) ? data.slice(3) : data;
 	}
 
-	doCheck(data: string, cb: (checked: boolean) => void) {
+	override doCheck(data: string, cb: (checked: boolean) => void) {
 		if(isNullOrUndefined(data)) {
 			cb(false);
 			return;
@@ -75,7 +75,7 @@ class Sparrow extends Splitter {
 		}
 	}
 
-	doSplit(data: string, cb: (res: Rect[] | false) => void) {
+	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
 		if(isNullOrUndefined(data)) {
 			cb(false);
 			return;
@@ -209,7 +209,7 @@ class Sparrow extends Splitter {
 		};
 	}
 
-	get splitterName() {
+	override get splitterName() {
 		return 'Sparrow';
 	}
 }

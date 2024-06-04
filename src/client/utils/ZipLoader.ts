@@ -2,7 +2,7 @@ import * as JSZip from 'jszip';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from './I18';
-import { LoadedImages } from 'types';
+import { type LoadedImages } from 'types';
 import CustomImage from '../data/CustomImage';
 import TypedObserver from 'TypedObserver';
 
@@ -24,7 +24,7 @@ class ZipLoader {
 		this.loadedCnt = 0;
 	}
 
-	load = (file: File, onProgress: (loaded: number) => void = null, onEnd: (data: LoadedImages) => void = null) => {
+	load = (file: File, onProgress?: (loaded: number) => void, onEnd?: (data: LoadedImages) => void) => {
 		this.onProgress = onProgress;
 		this.onEnd = onEnd;
 
@@ -46,10 +46,10 @@ class ZipLoader {
 
 		this.filesList = [];
 		for(const name of files) {
-			const file = this.zip.files[name];
+			const file = this.zip.files[name] as JSZip.JSZipObject;
 
 			if(!file.dir) {
-				const ext = name.split(".").pop().toLowerCase();
+				const ext = name.split(".").pop()?.toLowerCase() || "png";
 				if(extensions.indexOf(ext) >= 0 && name.toUpperCase().indexOf("__MACOSX") < 0) {
 					this.filesList.push(name);
 				}
@@ -68,9 +68,13 @@ class ZipLoader {
 		}
 
 		const name = this.filesList.shift();
+		if(!name) {
+			this.waitImages();
+			return;
+		}
 
-		this.zip.file(name).async("base64").then((d: string) => {
-			const ext = name.split(".").pop().toLowerCase();
+		this.zip.file(name)?.async("base64").then((d: string) => {
+			const ext = name.split(".").pop()?.toLowerCase() || "png";
 			const content = "data:image/"+ext+";base64," + d;
 
 			const img = new CustomImage(new Image());
@@ -93,7 +97,7 @@ class ZipLoader {
 		let ready = true;
 
 		for(const key of Object.keys(this.loaded)) {
-			if(!this.loaded[key].complete) {
+			if(!this.loaded[key]?.complete) {
 				ready = false;
 				break;
 			}
