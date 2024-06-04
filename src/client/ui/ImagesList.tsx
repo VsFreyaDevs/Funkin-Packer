@@ -10,7 +10,7 @@ import ItemTreePart, { type TreeListItem } from './ItemTree';
 //import * as FileSystem from './platform/FileSystem';
 
 import Globals from '../utils/Globals';
-import {fixManualOffsets, getDummyRect, isNullOrUndefined, setMaxSizes, smartSortImages} from '../utils/common';
+import {fixManualOffsets, getDummyRect, setMaxSizes, smartSortImages} from '../utils/common';
 import type { LoadedImages, SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
@@ -230,7 +230,8 @@ class ImagesList extends React.Component<Props, State> {
 				images[name] = data[name];
 				const img = images[name];
 				if(!img) continue;
-				if(isNullOrUndefined(img.rect)) img.rect = getDummyRect(name, img.width, img.height);
+				if(!img.rect)
+					img.rect = getDummyRect(name, img.width, img.height);
 				rects.push(img.rect);
 				/*images[name] = {
 					image: data[name],

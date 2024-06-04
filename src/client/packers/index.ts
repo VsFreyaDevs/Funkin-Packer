@@ -15,8 +15,9 @@ const list:PackerClass[] = [
 	OptimalPacker
 ] as const;
 
-function getPackerByType(name:string | null | undefined) {
+function getPackerByType(name:string) {
 	if(!name) return OptimalPacker;
+
 	for(const item of list) {
 		if(item.name === name) {
 			return item;

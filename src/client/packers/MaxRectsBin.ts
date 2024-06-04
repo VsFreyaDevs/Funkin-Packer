@@ -497,13 +497,13 @@ class MaxRectsBin extends Packer {
         while (i < len) {
             j = i + 1;
             let tmpRect1 = freeRectangles[i];
-			if(tmpRect1 === null || tmpRect1 === undefined) {
+			if(!tmpRect1) {
 				i++;
 				continue;
 			}
             while (j < len) {
                 let tmpRect2 = freeRectangles[j];
-				if(tmpRect2 === null || tmpRect2 === undefined) {
+				if(!tmpRect2) {
 					j++;
 					continue;
 				}

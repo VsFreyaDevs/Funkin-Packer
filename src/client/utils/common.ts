@@ -57,7 +57,7 @@ export function removeFromArray<T>(arr: T[], item: T) {
 }
 
 export function deepClone(obj:any):any {
-	if (obj === null || typeof obj !== 'object') {
+	if (obj === undefined || obj === null || typeof obj !== 'object') {
 		return obj;
 	}
 
@@ -77,10 +77,6 @@ export function deepClone(obj:any):any {
 	}
 
 	return newObj;
-}
-
-export function isNullOrUndefined(val: any) {
-	return val === null || val === undefined;
 }
 
 export function dataURItoBlob(dataURI: string) {
@@ -141,15 +137,13 @@ export function getDummyRect(name:string, width: number, height: number):Rect {
 }
 
 export function setMaxSizes(rects:Rect[]) {
-	let maxSizes:{
-		[key: string]: {
-			mw: number,
-			mh: number,
-		}
-	} = {};
+	let maxSizes:Record<string, {
+		mw: number,
+		mh: number,
+	}> = {};
 	for(let item of rects) {
 		let prefix = cleanPrefix(item.name);
-		if(isNullOrUndefined(maxSizes[prefix])) {
+		if(!maxSizes[prefix]) {
 			maxSizes[prefix] = {
 				mw: -Infinity,
 				mh: -Infinity,

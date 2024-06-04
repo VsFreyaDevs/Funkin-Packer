@@ -13,8 +13,9 @@ const list: FilterClass[] = [
 	Grayscale
 ] as const;
 
-function getFilterByType(type:string | null | undefined) {
+function getFilterByType(type:string) {
 	if(!type) return Filter;
+
 	for(let item of list) {
 		if(item.type === type) {
 			return item;

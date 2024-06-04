@@ -2,10 +2,14 @@ import type { Rect, SplitterRect } from 'types';
 import Splitter from './Splitter';
 
 import { Parser as XmlParser } from 'xml2js';
-import { isNullOrUndefined } from '../utils/common';
 
 class XML extends Splitter {
 	override doCheck(data: string, cb: (checked: boolean) => void) {
+		if(!data) {
+			cb(false);
+			return;
+		}
+
 		try {
 			var parser = new XmlParser();
 			parser.parseString(data, (err, atlas) => {
@@ -23,7 +27,7 @@ class XML extends Splitter {
 	}
 
 	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
-		if(isNullOrUndefined(data)) {
+		if(!data) {
 			cb(false);
 			return;
 		}

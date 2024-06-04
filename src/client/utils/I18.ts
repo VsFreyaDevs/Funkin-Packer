@@ -1,5 +1,4 @@
 import { sendGet } from './ajax';
-import { isNullOrUndefined } from './common';
 
 type ParserFunction = (data: string) => Record<string, string>;
 
@@ -117,7 +116,7 @@ class I18 {
 		return strings;
 	}
 
-	static load(callback: () => void): void {
+	private static load(callback: () => void): void {
 		const url = `${this.config.path}/${this.config.iniPrefix}${this.currentLocale}.${this.config.iniExt}?v=${Date.now()}`;
 		sendGet(url, null, data => {
 			this.setup(this.parse(data));
@@ -125,7 +124,7 @@ class I18 {
 		});
 	}
 
-	static setup(data: Record<string, string>): void {
+	private static setup(data: Record<string, string>): void {
 		this.strings = data;
 	}
 
@@ -138,7 +137,8 @@ class I18 {
 	}
 
 	static getString(key: string, values?: any): string {
-		if (typeof values === "undefined") values = null;
+		if (!values)
+			values = null;
 
 		const str = this.getStringOrNull(key, values);
 		if (str === null) return `{${key}}`;
@@ -146,11 +146,11 @@ class I18 {
 		return str;
 	}
 
-	static getStringOrNull(key: string, args: any): string | null {
-		if (isNullOrUndefined(args)) return null;
+	private static getStringOrNull(key: string, args: any): string | null {
+		if (!args) return null;
 
 		let value = this.config.strings[key];
-		if (isNullOrUndefined(value)) return null;
+		if (!value) return null;
 
 		args = [value].concat(this.arrayAntidot(args));
 		return this.sprintf(...args);
@@ -173,8 +173,9 @@ class I18 {
 		return this.getString(`${prefix}_${key}_${suffix}`, this.arrayAntidot(values));
 	}
 
+	private static regex = /%%|%(\d+\$)?([-+\'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
+
 	static sprintf(...values: any[]): string {
-		const regex = /%%|%(\d+\$)?([-+\'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
 		let i = 0;
 		const format = values[i++];
 
@@ -293,6 +294,7 @@ class I18 {
 				case 'G':
 					type Method = 'toExponential' | 'toFixed' | 'toPrecision';
 					type Transform = 'toString' | 'toUpperCase';
+
 					let method = (['toExponential', 'toFixed', 'toPrecision'] as Method[])['efg'.indexOf(type.toLowerCase())];
 					let textTransform = (['toString', 'toUpperCase'] as Transform[])['eEfFgG'.indexOf(type) % 2];
 					value = prefix + Math.abs(number)[method](precision);
@@ -302,7 +304,7 @@ class I18 {
 			}
 		};
 
-		return format.replace(regex, doFormat);
+		return format.replace(I18.regex, doFormat);
 	}
 }
 

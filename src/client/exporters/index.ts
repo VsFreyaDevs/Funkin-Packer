@@ -1,6 +1,6 @@
 import * as appInfo from '../../../package.json';
 import { sendGet } from '../utils/ajax';
-import { smartSortImages, removeFromArray, isNullOrUndefined } from '../utils/common';
+import { smartSortImages, removeFromArray } from '../utils/common';
 import Globals from '../utils/Globals';
 import finishExporter from './render';
 
@@ -231,7 +231,7 @@ let list: Exporter[] = [
 	}
 ];
 
-function getExporterByType(type:string | null | undefined): Exporter {
+function getExporterByType(type:string): Exporter {
 	for(const item of list) {
 		if(item.type === type) {
 			return item;
@@ -375,7 +375,7 @@ function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings
 			}
 
 			// filter for frames which exist
-			let array = sparrowOrder.filter((v) => !isNullOrUndefined(nameMap[v])).map(name => {
+			let array = sparrowOrder.filter((v) => !!nameMap[v]).map(name => {
 				const item = nameMap[name];
 				removeFromArray(oldRects, item);
 				return item;

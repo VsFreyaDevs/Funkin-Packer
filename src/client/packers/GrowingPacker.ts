@@ -97,7 +97,7 @@ class GrowingPacker extends Packer {
 		const rects:Rect[] = [];
 
 		for(let block of blocks) {
-			if(block.fit === null || block.fit === undefined) continue;
+			if(!block.fit) continue;
 			block.rect.frame.x = block.fit.x;
 			block.rect.frame.y = block.fit.y;
 			block.fit.w -= padding;
@@ -111,7 +111,7 @@ class GrowingPacker extends Packer {
 	}
 
 	private findNode = (root:Node | null | undefined, w:number, h:number):Node | null => {
-		if (root === null || root === undefined)
+		if (!root)
 			return null;
 		if (root.used)
 			return this.findNode(root.right, w, h) || this.findNode(root.down, w, h);

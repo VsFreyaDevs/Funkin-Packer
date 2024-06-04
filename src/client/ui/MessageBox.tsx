@@ -1,11 +1,10 @@
 import * as React from 'react';
 
 import I18 from '../utils/I18';
-import { isNullOrUndefined } from '../utils/common';
 
 interface Props {
 	readonly content: string;
-	readonly buttons?: ButtonData[] | null | undefined;
+	readonly buttons?: ButtonData[];
 	readonly closeCallback?: () => void;
 }
 

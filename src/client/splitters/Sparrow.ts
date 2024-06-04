@@ -1,5 +1,4 @@
 import type { Rect, SplitterRect } from 'types';
-import { isNullOrUndefined } from '../utils/common';
 import Splitter from './Splitter';
 
 import { Parser as XmlParser } from 'xml2js';
@@ -33,14 +32,14 @@ type RawSparrowFrame = {
 
 class Sparrow extends Splitter {
 	override cleanData(data: string): string {
-		if(isNullOrUndefined(data)) {
+		if(!data) {
 			return data;
 		}
 		return (data.startsWith("ï»¿")) ? data.slice(3) : data;
 	}
 
 	override doCheck(data: string, cb: (checked: boolean) => void) {
-		if(isNullOrUndefined(data)) {
+		if(!data) {
 			cb(false);
 			return;
 		}
@@ -76,7 +75,7 @@ class Sparrow extends Splitter {
 	}
 
 	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
-		if(isNullOrUndefined(data)) {
+		if(!data) {
 			cb(false);
 			return;
 		}
@@ -160,7 +159,7 @@ class Sparrow extends Splitter {
 			rotated: rotated
 		};
 
-		if(!isNullOrUndefined(attribs.frameX)) {
+		if(attribs.frameX) {
 			item.frameX = -parseInt(attribs.frameX, 10);
 			item.frameY = -parseInt(attribs.frameY, 10);
 			item.frameWidth = parseInt(attribs.frameWidth, 10);
