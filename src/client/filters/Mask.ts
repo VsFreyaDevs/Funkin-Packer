@@ -22,6 +22,10 @@ class Mask extends Filter {
 		return imageData;
 	}
 
+	override shouldApply(buffer: HTMLCanvasElement) {
+		return true;
+	}
+
 	static override get type() {
 		return "mask";
 	}

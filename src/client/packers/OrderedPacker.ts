@@ -25,7 +25,7 @@ function calculateArea(blocks:Block[]) {
 		rightBound = Math.max(rightBound, block.x + block.w);
 		bottomBound = Math.max(bottomBound, block.y + block.h);
 	}
-	return (rightBound) * (bottomBound);
+	return rightBound * bottomBound;
 }
 
 class OrderedPacker extends Packer {
@@ -45,11 +45,35 @@ class OrderedPacker extends Packer {
 	}
 
 	override pack(_data:Rect[], _method:MethodType):Rect[] {
-		let blocks = this._pack(_data, _method, false);
+		let blocks:Block[] = null;
+		let currentBest:number = -1;
+		function setBest(bb:Block[]) {
+			if(bb != null) {
+				blocks = bb;
+				currentBest = calculateArea(bb);
+				//console.log("setBest", calculateWidth(bb), calculateHeight(bb), currentBest);
+			}
+		}
+
+		let new_blocks = this._pack(_data, _method, false);
+		if(blocks == null || new_blocks != null && calculateArea(new_blocks) < currentBest) {
+			setBest(new_blocks);
+		}
 		if(this.allowRotate) {
 			let new_blocks = this._pack(_data, _method, true);
-			if(calculateArea(new_blocks) < calculateArea(blocks)) {
-				blocks = new_blocks;
+			if(blocks == null || new_blocks != null && calculateArea(new_blocks) < currentBest) {
+				setBest(new_blocks);
+			}
+		}
+		if(blocks == null) {
+			let new_blocks = this._pack(_data, _method, false, true);
+			setBest(new_blocks);
+			if(this.allowRotate) {
+				let new_blocks = this._pack(_data, _method, true, true);
+				if(calculateArea(new_blocks) <= currentBest && new_blocks.length > blocks.length) {
+					// fits more blocks in the same or less size
+					blocks = new_blocks;
+				}
 			}
 		}
 		//let blocks = this._pack(_data, _method, this.allowRotate);
@@ -68,17 +92,16 @@ class OrderedPacker extends Packer {
 		return rects;
 	}
 
-	private _pack(_data:Rect[], _method:MethodType, rotated:boolean):Block[] {
+	private _pack(_data:Rect[], _method:MethodType, rotated:boolean, stopWhenFull:boolean = false):Block[] {
 		const blocks:Block[] = [];
 		for(const rect of _data) {
-			const block:Block = {
+			blocks.push({
 				x: 0,
 				y: 0,
 				w: rect.frame.w,
 				h: rect.frame.h,
 				rect: rect
-			};
-			blocks.push(block);
+			});
 		}
 
 		if(_method == METHODS.SortedAreaDsc)
@@ -97,6 +120,8 @@ class OrderedPacker extends Packer {
 		let curr_y = 0;
 		let current_max_height = 0;
 
+		const packed_blocks:Block[] = [];
+
 		for(const bl of blocks) {
 			bl.x = curr_x;
 			bl.y = curr_y;
@@ -112,6 +137,10 @@ class OrderedPacker extends Packer {
 
 			let old_x = curr_x + bl.w;
 
+			if(bl.x + bl.w > this.width || bl.y + bl.h > this.height) {
+				return stopWhenFull ? packed_blocks : null;
+			}
+
 			curr_x += bl.w + this.padding;
 			if(bl.h > current_max_height) {
 				current_max_height = bl.h;
@@ -121,8 +150,10 @@ class OrderedPacker extends Packer {
 				curr_y += current_max_height + this.padding;
 				current_max_height = 0;
 			}
+
+			packed_blocks.push(bl);
 		}
-		return blocks;
+		return packed_blocks;
 	}
 
 	private _get_total_width(blocks: Block[]): number {

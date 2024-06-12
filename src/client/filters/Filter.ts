@@ -4,6 +4,7 @@ class Filter {
 	}
 
 	apply(buffer: HTMLCanvasElement) {
+		if(!this.shouldApply(buffer)) return buffer;
 
 		let retCanvas = document.createElement("canvas");
 		let retCtx = retCanvas.getContext("2d");
@@ -21,6 +22,10 @@ class Filter {
 
 	applyImageData(imageData: ImageData) {
 		return imageData;
+	}
+
+	shouldApply(buffer: HTMLCanvasElement) {
+		return false;
 	}
 
 	static get type() {

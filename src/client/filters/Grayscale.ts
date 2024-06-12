@@ -16,6 +16,10 @@ class Grayscale extends Filter {
 		return imageData;
 	}
 
+	override shouldApply(buffer: HTMLCanvasElement) {
+		return true;
+	}
+
 	static override get type() {
 		return "grayscale";
 	}

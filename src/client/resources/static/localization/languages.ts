@@ -1,4 +1,4 @@
-export type Language = {
+type Language = {
 	lang: string;
 	name: string;
 }

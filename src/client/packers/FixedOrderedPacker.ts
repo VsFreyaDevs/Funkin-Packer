@@ -21,7 +21,7 @@ type Block = {
 	w: number,
 	h: number,
 	rect: Rect,
-	rotated?: boolean,
+	rotated: boolean,
 }
 
 function calculateWidth(blocks: Block[]): number {
@@ -167,6 +167,11 @@ class FixedOrderedPacker extends Packer {
 		this.width = originalWidth;
 		this.height = originalHeight;
 
+		if(blocks == null) {
+			let newBlocks = this._pack(sortedData, true, true);
+			setBest(newBlocks);
+		}
+
 		/*
 		let alternate = false;
 		let cw = 2;
@@ -227,27 +232,28 @@ class FixedOrderedPacker extends Packer {
 		return rects;
 	}
 
-	private _pack(_data:Rect[], allowRotation:boolean):Block[] {
+	private _pack(_data:Rect[], allowRotation:boolean, stopWhenFull:boolean = false):Block[] {
 		const blocks:Block[] = [];
 		for(const data of _data) {
 			const block:Block = {
 				w: data.frame.w,
 				h: data.frame.h,
-				rect: data
+				rect: data,
+				rotated: false
 			};
 			blocks.push(block);
 		}
 
 		let packedBlocks:Block[] = null;
 		if(this.isAlt) {
-			packedBlocks = this.packAlt(blocks, allowRotation);
+			packedBlocks = this.packAlt(blocks, allowRotation, stopWhenFull);
 		} else {
-			packedBlocks = this.packNormal(blocks, allowRotation);
+			packedBlocks = this.packNormal(blocks, allowRotation, stopWhenFull);
 		}
 		return packedBlocks;
 	}
 
-	private packNormal(blocks: Block[], allowRotation: boolean): Block[] {
+	private packNormal(blocks: Block[], allowRotation: boolean, stopWhenFull: boolean = false): Block[] {
 		let xPos = 0;
 		let yPos = 0;
 		let maxRowHeight = 0;
@@ -284,7 +290,7 @@ class FixedOrderedPacker extends Packer {
 				xPos = 0;
 				yPos += maxRowHeight + this.padding;
 				if(yPos + bl.h > this.height) {
-					return null;
+					return stopWhenFull ? packedBlocks : null;
 				}
 				maxRowHeight = 0;
 				firstOfRow = true;
@@ -313,7 +319,7 @@ class FixedOrderedPacker extends Packer {
 		return packedBlocks;
 	}
 
-	private packAlt(blocks: Block[], allowRotation: boolean) {
+	private packAlt(blocks: Block[], allowRotation: boolean, stopWhenFull: boolean = false) {
 		let xPos = 0;
 		let yPos = 0;
 		let maxRowHeight = 0;
@@ -346,7 +352,7 @@ class FixedOrderedPacker extends Packer {
 
 			if(firstOfRow) {
 				if(yPos + bl.h > this.height) {
-					return null;
+					return stopWhenFull ? packedBlocks : null;
 				}
 			}
 

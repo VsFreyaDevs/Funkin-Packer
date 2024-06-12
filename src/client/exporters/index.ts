@@ -229,7 +229,7 @@ let list: Exporter[] = [
 		template: "",
 		fileExt: ""
 	}
-];
+] as const;
 
 function getExporterByType(type:string): Exporter {
 	for(const item of list) {

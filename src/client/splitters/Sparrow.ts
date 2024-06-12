@@ -10,11 +10,11 @@ type SparrowFrame = {
 	name: string,
 	width: number,
 	height: number,
-	frameX?: number,
-	frameY?: number,
-	frameWidth?: number,
-	frameHeight?: number,
-	rotated?: boolean
+	frameX: number,
+	frameY: number,
+	frameWidth: number,
+	frameHeight: number,
+	rotated: boolean
 }
 
 type RawSparrowFrame = {
@@ -23,11 +23,11 @@ type RawSparrowFrame = {
 	name: string,
 	width: string,
 	height: string,
-	frameX?: string,
-	frameY?: string,
-	frameWidth?: string,
-	frameHeight?: string,
-	rotated?: string
+	frameX: string,
+	frameY: string,
+	frameWidth: string,
+	frameHeight: string,
+	rotated: string
 }
 
 class Sparrow extends Splitter {
@@ -150,12 +150,19 @@ class Sparrow extends Splitter {
 			attribs.height = temp;
 		}
 
+		const width = parseInt(attribs.width, 10);
+		const height = parseInt(attribs.height, 10);
+
 		const item: SparrowFrame = {
 			name: name,
 			x: parseInt(attribs.x, 10),
 			y: parseInt(attribs.y, 10),
-			width: parseInt(attribs.width, 10),
-			height: parseInt(attribs.height, 10),
+			width: width,
+			height: height,
+			frameX: 0,
+			frameY: 0,
+			frameWidth: width,
+			frameHeight: height,
 			rotated: rotated
 		};
 
@@ -164,11 +171,6 @@ class Sparrow extends Splitter {
 			item.frameY = -parseInt(attribs.frameY, 10);
 			item.frameWidth = parseInt(attribs.frameWidth, 10);
 			item.frameHeight = parseInt(attribs.frameHeight, 10);
-		} else {
-			item.frameX = 0;
-			item.frameY = 0;
-			item.frameWidth = item.width;
-			item.frameHeight = item.height;
 		}
 
 		//console.log(name, item);
@@ -188,14 +190,14 @@ class Sparrow extends Splitter {
 				h: item.height
 			},
 			spriteSourceSize: {
-				x: item.frameX,
-				y: item.frameY,
+				x: 0,
+				y: 0,
 				w: item.width,
 				h: item.height
 			},
 			sourceSize: {
-				w: item.frameWidth,
-				h: item.frameHeight
+				w: item.width,
+				h: item.height
 			},
 			frameSize: {
 				x: item.frameX,
