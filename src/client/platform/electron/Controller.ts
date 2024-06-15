@@ -1,11 +1,11 @@
-const {ipcRenderer} = require('electron');
+import { ipcRenderer } from 'electron';
 
 import { Observer, GLOBAL_EVENT } from "../../Observer";
 import I18 from '../../utils/I18';
-import appInfo from '../../../../package.json';
-import languages from '../../resources/static/localization/languages.json';
+import * as appInfo from '../../../../package.json';
+import { languages} from '../../resources/static/localization/languages';
 
-import Project from 'platform/Project';
+import Project from './Project';
 
 import PackProperties from '../../ui/PackProperties';
 import ImagesList from "../../ui/ImagesList";
@@ -49,11 +49,11 @@ class Controller {
 		});
 
 		ipcRenderer.on("action-add-images", (_e, _payload) => {
-			ImagesList.i.addImagesFs();
+			//ImagesList.i.addImagesFs();
 		});
 
 		ipcRenderer.on("action-add-folder", (_e, _payload) => {
-			ImagesList.i.addFolderFs();
+			//ImagesList.i.addFolderFs();
 		});
 
 		ipcRenderer.on("action-delete", (_e, _payload) => {
@@ -100,7 +100,7 @@ class Controller {
 		ipcRenderer.send('project-update', {path});
 	}
 
-	static updateProjectModified(val) {
+	static updateProjectModified(val: unknown) {
 		ipcRenderer.send('project-modified', {val});
 	}
 

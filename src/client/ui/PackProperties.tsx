@@ -147,7 +147,7 @@ class PackProperties extends React.Component<Props, State> {
 		data.prependFolderName = data.prependFolderName === undefined ? true : data.prependFolderName;
 		data.scale = data.scale || 1;
 		data.filter = getFilterByType(data.filter) ? data.filter : filters[0].type;
-		data.exporter = getExporterByType(data.exporter) ? data.exporter : exporters[0].type;
+		data.exporter = getExporterByType(data.exporter) ? data.exporter : exporters[0].exporterName;
 		data.base64Export = false;//data.base64Export === undefined ? false : data.base64Export;
 		//data.savePath = data.savePath || "";
 		data.width = data.width === undefined ? 8192 : data.width;
@@ -298,7 +298,7 @@ class PackProperties extends React.Component<Props, State> {
 
 	updateEditCustomTemplateButton = () => {
 		let exporter = getExporterByType(this.exporterRef.current.value);
-		(this.editCustomFormatRef.current).style.visibility = exporter.type === "custom" ? "visible" : "hidden";
+		(this.editCustomFormatRef.current).style.visibility = exporter.exporterName === "custom" ? "visible" : "hidden";
 	}
 
 	onExporterPropChanged = () => {
@@ -407,7 +407,7 @@ class PackProperties extends React.Component<Props, State> {
 								<td>
 									<select ref={this.exporterRef} className="border-color-gray" onChange={this.onExporterChanged} defaultValue={this.packOptions.exporter}>
 									{exporters.map(node => {
-										return (<option key={"exporter-" + node.type} defaultValue={node.type}>{node.type}</option>)
+										return (<option key={"exporter-" + node.exporterName} defaultValue={node.exporterName}>{node.exporterName}</option>)
 									})}
 									</select>
 								</td>

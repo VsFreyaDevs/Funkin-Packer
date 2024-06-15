@@ -10,6 +10,7 @@
 		"moduleResolution": "Node10",
 		"baseUrl": "./src",
 		"paths": {
+			"platform/*": ["client/platform/web/*"],
 			"*": ["client/*"]
 		},
 		"strict": true,

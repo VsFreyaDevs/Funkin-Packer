@@ -1,9 +1,10 @@
-import JSZip from 'jszip';
-import FileSaver from 'file-saver';
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver';
+import type { FileData } from 'types';
 
 class Downloader {
 
-	static run(files, fileName, _savePath) {
+	static run(files: FileData[], fileName: string, _savePath: any) {
 
 		let zip = new JSZip();
 

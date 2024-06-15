@@ -1,34 +1,39 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-use-before-define */
-import React from 'react';
+import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import Globals from './utils/Globals';
 
 import I18 from './utils/I18';
 import APP from './APP';
 import MainLayout from './ui/MainLayout';
 
 import Storage from './utils/Storage';
-import { Observer, GLOBAL_EVENT } from './Observer';
 
 import {languages} from './resources/static/localization/languages';
 
 import Controller from 'platform/Controller';
+import TypedObserver from 'TypedObserver';
 
 let app = null;
-let layoutRef = null;
+let layoutRef: React.RefObject<MainLayout> = null;
 
 const STORAGE_LANGUAGE_KEY = "language";
 
 function run() {
-	Object.defineProperty(
-		HTMLImageElement.prototype,'toDataURL',
-		{enumerable:false,configurable:false,writable:false,value:(m,q) => {
-			let c=document.createElement('canvas');
-			c.width=this.naturalWidth; c.height=this.naturalHeight;
-			c.getContext('2d').drawImage(this,0,0); return c.toDataURL(m,q);
-		}}
-	);
+	Object.defineProperty(HTMLImageElement.prototype, 'toDataURL', {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function (this: HTMLImageElement, m?: string, q?: any): string {
+			const canvas = document.createElement('canvas');
+			canvas.width = this.naturalWidth;
+			canvas.height = this.naturalHeight;
+			const context = canvas.getContext('2d');
+			if (context) {
+				context.drawImage(this, 0, 0);
+				return canvas.toDataURL(m, q);
+			}
+			throw new Error("Unable to get canvas context");
+		}
+	});
 
 	Controller.init();
 	if(PLATFORM === "electron") {
@@ -48,7 +53,7 @@ function loadLocalization() {
 
 	I18.load(renderLayout);
 
-	Observer.on(GLOBAL_EVENT.CHANGE_LANG, setLocale);
+	TypedObserver.changeLanguage.on(setLocale);
 }
 
 function renderLayout() {
@@ -63,7 +68,7 @@ function renderLayout() {
 	);
 }
 
-function injectCss(path) {
+function injectCss(path: string) {
 	let el = document.createElement("link");
 	el.rel = "stylesheet";
 	el.type = "text/css";
@@ -71,7 +76,7 @@ function injectCss(path) {
 	document.head.appendChild(el);
 }
 
-function setLocale(locale) {
+function setLocale(locale: string) {
 	if(!layoutRef) return;
 
 	I18.init(locale);

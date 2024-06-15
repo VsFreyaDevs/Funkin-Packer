@@ -4,7 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 //const argv = require('optimist').argv;
 
 let entry = [
-	'./src/client/index.jsx'
+	'./src/client/index.tsx'
 ];
 
 let plugins = [];
@@ -130,7 +130,6 @@ if (target === 'electron-renderer') {
 		alias: {'platform': path.resolve(__dirname, './src/client/platform/web')}
 	};
 }
-config.resolve.alias.types = path.resolve(__dirname, './src/client/types');
 config.resolve.alias.TypedObserver = path.resolve(__dirname, './src/client/TypedObserver');
 config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js'];
 

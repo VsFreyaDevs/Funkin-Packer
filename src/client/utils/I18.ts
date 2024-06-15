@@ -116,7 +116,7 @@ class I18 {
 		return strings;
 	}
 
-	private static load(callback: () => void): void {
+	static load(callback: () => void): void {
 		const url = `${this.config.path}/${this.config.iniPrefix}${this.currentLocale}.${this.config.iniExt}?v=${Date.now()}`;
 		sendGet(url, null, data => {
 			this.setup(this.parse(data));

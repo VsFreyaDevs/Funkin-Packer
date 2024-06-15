@@ -1,13 +1,29 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../../Observer';
 import Storage from '../../utils/Storage';
 import I18 from '../../utils/I18';
+import TypedObserver from 'TypedObserver';
 
 const STORAGE_SKIPPED_VERSIONS_KEY = "skipped-versions";
 
-class Updater extends React.Component {
-	constructor(props) {
+interface Props {
+	data: {
+		releaseName: string,
+		releaseNotes: string
+	}
+}
+
+interface State {
+	installation: boolean,
+	downloadProgress: number
+}
+
+class Updater extends React.Component<Props, State> {
+	readonly downloadProgressRef: React.RefObject<HTMLDivElement>;
+	skippedVersion: string[];
+
+	constructor(props: Props) {
 		super(props);
 
 		this.downloadProgressRef = React.createRef();
@@ -45,7 +61,7 @@ class Updater extends React.Component {
 		this.close();
 	}
 
-	changeDownloadProgress = (val) => {
+	changeDownloadProgress = (val: number) => {
 		this.setState({downloadProgress: val});
 	}
 
@@ -54,7 +70,7 @@ class Updater extends React.Component {
 		Observer.emit(GLOBAL_EVENT.INSTALL_UPDATE);
 	}
 
-	render() {
+	override render() {
 		return (
 			<div className="updater-overlay">
 				<div className="updater-content">

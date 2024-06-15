@@ -6,7 +6,7 @@ import I18 from './utils/I18';
 import type { RenderSettings } from './exporters';
 import { startExporter } from './exporters';
 import Downloader from 'platform/Downloader';
-import type { LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
+import type { FileData, LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 import type { PackerCombo } from './packers/Packer';
 
@@ -107,7 +107,7 @@ class APP {
 		// eslint-disable-next-line new-cap
 		const filter = new filterClass();
 
-		const files = [];
+		const files:FileData[] = [];
 
 		let ix = 0;
 		for (const item of this.packResult) {
@@ -156,7 +156,8 @@ class APP {
 			try {
 				files.push({
 					name: fName + "." + exporter.fileExt,
-					content: await startExporter(exporter, item.data, options)
+					content: await startExporter(exporter, item.data, options),
+					base64: false
 				});
 			}
 			catch (e) {

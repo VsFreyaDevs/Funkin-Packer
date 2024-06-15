@@ -7,7 +7,7 @@ import finishExporter from './render';
 import type { Rect } from 'types';
 
 export type Exporter = {
-	type: string;
+	exporterName: string;
 	description: string;
 	allowTrim: boolean;
 	allowRotation: boolean;
@@ -75,7 +75,7 @@ export type RenderSettings = {
 
 let list: Exporter[] = [
 	{
-		type: "Sparrow",
+		exporterName: "Sparrow",
 		description: "Sparrow format",
 		allowTrim: true,
 		allowRotation: true,
@@ -83,7 +83,7 @@ let list: Exporter[] = [
 		fileExt: "xml"
 	},
 	{
-		type: "JSON (hash)",
+		exporterName: "JSON (hash)",
 		description: "Json hash",
 		allowTrim: true,
 		allowRotation: true,
@@ -91,7 +91,7 @@ let list: Exporter[] = [
 		fileExt: "json"
 	},
 	{
-		type: "JSON (array)",
+		exporterName: "JSON (array)",
 		description: "Json array",
 		allowTrim: true,
 		allowRotation: true,
@@ -99,7 +99,7 @@ let list: Exporter[] = [
 		fileExt: "json"
 	},
 	{
-		type: "XML",
+		exporterName: "XML",
 		description: "Plain XML format",
 		allowTrim: true,
 		allowRotation: true,
@@ -107,7 +107,7 @@ let list: Exporter[] = [
 		fileExt: "xml"
 	},
 	{
-		type: "css (modern)",
+		exporterName: "css (modern)",
 		description: "css format",
 		allowTrim: true,
 		allowRotation: true,
@@ -115,7 +115,7 @@ let list: Exporter[] = [
 		fileExt: "css"
 	},
 	{
-		type: "css (old)",
+		exporterName: "css (old)",
 		description: "old css format",
 		allowTrim: false,
 		allowRotation: false,
@@ -123,7 +123,7 @@ let list: Exporter[] = [
 		fileExt: "css"
 	},
 	{
-		type: "pixi.js",
+		exporterName: "pixi.js",
 		description: "pixi.js format",
 		allowTrim: true,
 		allowRotation: true,
@@ -131,7 +131,7 @@ let list: Exporter[] = [
 		fileExt: "json"
 	},
 	{
-		type: "Godot (atlas)",
+		exporterName: "Godot (atlas)",
 		description: "Godot Atlas format",
 		allowTrim: true,
 		allowRotation: true,
@@ -139,7 +139,7 @@ let list: Exporter[] = [
 		fileExt: "tpsheet"
 	},
 	{
-		type: "Godot (tileset)",
+		exporterName: "Godot (tileset)",
 		description: "Godot Tileset format",
 		allowTrim: true,
 		allowRotation: true,
@@ -147,7 +147,7 @@ let list: Exporter[] = [
 		fileExt: "tpset"
 	},
 	{
-		type: "Phaser (hash)",
+		exporterName: "Phaser (hash)",
 		description: "Phaser (json hash)",
 		allowTrim: true,
 		allowRotation: true,
@@ -155,7 +155,7 @@ let list: Exporter[] = [
 		fileExt: "json"
 	},
 	{
-		type: "Phaser (array)",
+		exporterName: "Phaser (array)",
 		description: "Phaser (json array)",
 		allowTrim: true,
 		allowRotation: true,
@@ -163,7 +163,7 @@ let list: Exporter[] = [
 		fileExt: "json"
 	},
 	{
-		type: "Phaser 3",
+		exporterName: "Phaser 3",
 		description: "Phaser 3",
 		allowTrim: true,
 		allowRotation: true,
@@ -171,7 +171,7 @@ let list: Exporter[] = [
 		fileExt: "json"
 	},
 	{
-		type: "Spine",
+		exporterName: "Spine",
 		description: "Spine atlas",
 		allowTrim: true,
 		allowRotation: true,
@@ -179,7 +179,7 @@ let list: Exporter[] = [
 		fileExt: "atlas"
 	},
 	{
-		type: "cocos2d",
+		exporterName: "cocos2d",
 		description: "cocos2d format",
 		allowTrim: true,
 		allowRotation: true,
@@ -187,7 +187,7 @@ let list: Exporter[] = [
 		fileExt: "plist"
 	},
 	{
-		type: "UnrealEngine",
+		exporterName: "UnrealEngine",
 		description: "UnrealEngine - Paper2d",
 		allowTrim: true,
 		allowRotation: true,
@@ -195,7 +195,7 @@ let list: Exporter[] = [
 		fileExt: "paper2dsprites"
 	},
 	{
-		type: "UIKit",
+		exporterName: "UIKit",
 		description: "UIKit sprite sheet",
 		allowTrim: true,
 		allowRotation: false,
@@ -204,7 +204,7 @@ let list: Exporter[] = [
 		predefined: true
 	},
 	{
-		type: "Unity3D",
+		exporterName: "Unity3D",
 		description: "Unity3D sprite sheet",
 		allowTrim: true,
 		allowRotation: false,
@@ -213,7 +213,7 @@ let list: Exporter[] = [
 		predefined: true
 	},
 	{
-		type: "Egret2D",
+		exporterName: "Egret2D",
 		description: "Egret2D sprite sheet",
 		allowTrim: false,
 		allowRotation: false,
@@ -222,7 +222,7 @@ let list: Exporter[] = [
 		predefined: true
 	},
 	{
-		type: "custom",
+		exporterName: "custom",
 		description: "Custom format",
 		allowTrim: true,
 		allowRotation: true,
@@ -233,7 +233,7 @@ let list: Exporter[] = [
 
 function getExporterByType(type:string): Exporter {
 	for(const item of list) {
-		if(item.type === type) {
+		if(item.exporterName === type) {
 			return item;
 		}
 	}

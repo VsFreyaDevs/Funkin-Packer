@@ -1,11 +1,12 @@
 import APP from '../../APP';
 import PackProperties from '../../ui/PackProperties';
 import ImagesList from '../../ui/ImagesList';
-import FileSystem from 'platform/FileSystem';
-import Controller from 'platform/Controller';
-import appInfo from '../../../../package.json';
+import FileSystem from './FileSystem';
+import Controller from './Controller';
+import * as appInfo from '../../../../package.json';
 import I18 from '../../utils/I18';
 import TypedObserver from 'TypedObserver';
+import type { LoadedImages } from 'types';
 
 const RECENT_PROJECTS_KEY = "recent-projects";
 
@@ -16,13 +17,13 @@ class Project {
 	static startObserv() {
 		Project.stopObserv();
 
-		TypedObserver.imagesListChanged.on(Project.onImagesListChanged);
+		//TypedObserver.imagesListChanged.on(Project.onImagesListChanged);
 		TypedObserver.packOptionsChanged.on(Project.onProjectChanged);
 		TypedObserver.packExporterChanged.on(Project.onProjectChanged);
 	}
 
 	static stopObserv() {
-		TypedObserver.imagesListChanged.off(Project.onImagesListChanged);
+		//TypedObserver.imagesListChanged.off(Project.onImagesListChanged);
 		TypedObserver.packOptionsChanged.off(Project.onProjectChanged);
 		TypedObserver.packExporterChanged.off(Project.onProjectChanged);
 	}
@@ -31,7 +32,7 @@ class Project {
 		Project.setProjectChanged(true);
 	}
 
-	static setProjectChanged(val) {
+	static setProjectChanged(val: boolean) {
 		CURRENT_PROJECT_MODIFIED = !!val;
 		Controller.updateProjectModified(CURRENT_PROJECT_MODIFIED);
 	}
@@ -54,8 +55,8 @@ class Project {
 		}
 
 		let packOptions = {...APP.i.packOptions};
-		packOptions.packer = APP.i.packOptions.packer.type;
-		packOptions.exporter = APP.i.packOptions.exporter.type;
+		packOptions.packer = APP.i.packOptions.packerCls.packerName;
+		packOptions.exporter = APP.i.packOptions.exporterCls.exporterName;
 
 		let meta = {
 			version: appInfo.version
@@ -71,9 +72,10 @@ class Project {
 	}
 
 	static getRecentProjects() {
-		let recentProjects = localStorage.getItem(RECENT_PROJECTS_KEY);
-		if (recentProjects) {
-			try { recentProjects = JSON.parse(recentProjects) }
+		let recentProjectsRaw = localStorage.getItem(RECENT_PROJECTS_KEY);
+		let recentProjects: string[] = [];
+		if (recentProjectsRaw) {
+			try { recentProjects = JSON.parse(recentProjectsRaw) }
 			catch (e) { recentProjects = [] }
 		}
 		else {
@@ -83,7 +85,7 @@ class Project {
 		return recentProjects;
 	}
 
-	static updateRecentProjects(path) {
+	static updateRecentProjects(path: string) {
 		let recentProjects = Project.getRecentProjects();
 
 		let res = [];
@@ -107,24 +109,26 @@ class Project {
 			return;
 		}
 
-		let path = FileSystem.saveProject(Project.getData(), CURRENT_PROJECT_PATH);
-		if (path) {
-			CURRENT_PROJECT_PATH = path;
-			Project.setProjectChanged(false);
-			Project.updateRecentProjects(path);
-		}
+		let path = FileSystem.saveProject(Project.getData(), CURRENT_PROJECT_PATH).then((result) => {
+			if (result) {
+				CURRENT_PROJECT_PATH = result;
+				Project.setProjectChanged(false);
+				Project.updateRecentProjects(result);
+			}
+		});
 	}
 
 	static saveAs() {
-		let path = FileSystem.saveProject(Project.getData());
-		if (path) {
-			CURRENT_PROJECT_PATH = path;
-			Project.setProjectChanged(false);
-			Project.updateRecentProjects(path);
-		}
+		let path = FileSystem.saveProject(Project.getData()).then((result) => {
+			if (result) {
+				CURRENT_PROJECT_PATH = result;
+				Project.setProjectChanged(false);
+				Project.updateRecentProjects(result);
+			}
+		});
 	}
 
-	static saveChanges(cb = null) {
+	static saveChanges(cb: () => void = null) {
 		if (CURRENT_PROJECT_MODIFIED) {
 			let buttons = [
 				{ name: "yes", caption: I18.f("YES"), callback: () => { Project.save(); if (cb) cb(); } },
@@ -140,8 +144,8 @@ class Project {
 	}
 
 	static load(pathToLoad = "") {
-		Project.saveChanges(() => {
-			let { path, data } = FileSystem.loadProject(pathToLoad);
+		Project.saveChanges(async () => {
+			let { path, data } = await FileSystem.loadProject(pathToLoad);
 
 			if (data) {
 				Project.stopObserv();
@@ -152,7 +156,7 @@ class Project {
 
 				PackProperties.i.setOptions(data.packOptions);
 
-				let images;
+				let images: LoadedImages;
 
 				FileSystem.loadImages(data.images, res => {
 					images = res;

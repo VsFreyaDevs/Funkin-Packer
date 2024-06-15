@@ -1,11 +1,11 @@
 import type { Rect } from "types";
 import { dataURItoBlob } from "../utils/common";
 
-export type FileSystemPath = Readonly<{
+export type FileSystemPath = {
 	name: string;
 	path: string;
 	folder: string;
-}>;
+};
 
 class CustomImage {
 	//name: string;

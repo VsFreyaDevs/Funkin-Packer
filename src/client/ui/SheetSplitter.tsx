@@ -9,7 +9,7 @@ import LocalImagesLoader from "../utils/LocalImagesLoader";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList";
 import PackProperties from '../ui/PackProperties';
-import type { LoadedImages, Rect } from 'types';
+import type { FileData, LoadedImages, Rect } from 'types';
 import Splitter from '../splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
@@ -227,8 +227,8 @@ class SheetSplitter extends React.Component<Props, State> {
 
 			files.push({
 				name: item.name,
-				//content: base64,
-				base64: base64,
+				content: base64,
+				base64: !!base64,
 				rect: item
 			});
 		}
@@ -238,8 +238,8 @@ class SheetSplitter extends React.Component<Props, State> {
 
 		for(const file of files) {
 			const image = new CustomImage(new Image());
-			image.src = file.base64;
-			image.base64 = file.base64;
+			image.src = file.content;
+			image.base64 = file.content;
 			image.rect = file.rect;
 
 			images[file.name] = image;
@@ -273,7 +273,7 @@ class SheetSplitter extends React.Component<Props, State> {
 		}
 
 		const ctx = this.buffer.getContext('2d');
-		const files = [];
+		const files:FileData[] = [];
 
 		const disableUntrim = this.disableUntrimRef.current.checked;
 
@@ -333,7 +333,7 @@ class SheetSplitter extends React.Component<Props, State> {
 			files.push({
 				name: item.name,
 				content: base64,
-				base64: base64
+				base64: !!base64
 			});
 		}
 

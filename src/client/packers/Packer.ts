@@ -1,8 +1,6 @@
 import type { Rect } from "types";
 
-export type MethodList = {
-	readonly [key:string]: string
-};
+export type MethodList = Readonly<Record<string, string>>;
 
 export type PackerClass = {
 	readonly packerName: string,

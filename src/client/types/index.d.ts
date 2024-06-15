@@ -1,6 +1,6 @@
 import CustomImage from "data/CustomImage";
-import { PackerClass } from "./packers/Packer";
-import TextureRenderer from "./utils/TextureRenderer";
+import { PackerClass } from "../packers/Packer";
+import TextureRenderer from "../utils/TextureRenderer";
 import { Exporter } from "exporters";
 
 declare type PackOptions = {
@@ -96,4 +96,10 @@ declare type SelectedEvent = {
 	path: string,
 	ctrlKey: boolean,
 	shiftKey: boolean
+};
+
+declare type FileData = {
+	name: string;
+	content: string;
+	base64: boolean;
 };
