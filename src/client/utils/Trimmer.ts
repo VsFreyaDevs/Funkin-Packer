@@ -82,17 +82,7 @@ class Trimmer {
 				const {data} = ctx.getImageData(0, 0, img.width, img.height);
 
 				spaces = this.getSpacing(data, img.width, img.height, threshold);
-
-				/*spaces.left = this.getLeftSpace(data, img.width, img.height, threshold);
-
-				if(spaces.left !== img.width) { // was able to trim it
-					spaces.right = this.getRightSpace(data, img.width, img.height, threshold);
-					spaces.top = this.getTopSpace(data, img.width, img.height, threshold);
-					spaces.bottom = this.getBottomSpace(data, img.width, img.height, threshold);
-				}*/
 			}
-
-			//console.log(spaces);
 
 			if(spaces.left !== img.width) { // was able to trim it
 				if(spaces.left > 0 || spaces.right > 0 || spaces.top > 0 || spaces.bottom > 0) {

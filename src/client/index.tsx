@@ -12,8 +12,8 @@ import {languages} from './resources/static/localization/languages';
 import Controller from 'platform/Controller';
 import TypedObserver from 'TypedObserver';
 
-let app = null;
-let layoutRef: React.RefObject<MainLayout> = null;
+let app:APP;
+let layoutRef: React.RefObject<MainLayout>;
 
 const STORAGE_LANGUAGE_KEY = "language";
 

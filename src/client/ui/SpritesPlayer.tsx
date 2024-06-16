@@ -30,7 +30,7 @@ class SpritesPlayer extends React.Component<Props> {
 	height: number;
 	selectedImages: string[];
 
-	updateTimer: any;
+	updateTimer: NodeJS.Timeout | number;
 
 	constructor(props: Props) {
 		super(props);

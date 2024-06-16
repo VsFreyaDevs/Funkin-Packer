@@ -4,7 +4,7 @@ import type { FileData } from 'types';
 
 class Downloader {
 
-	static run(files: FileData[], fileName: string, _savePath: any) {
+	static run(files: FileData[], fileName: string, _savePath: string) {
 
 		let zip = new JSZip();
 

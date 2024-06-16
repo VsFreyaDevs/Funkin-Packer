@@ -13,7 +13,7 @@ const list: FilterClass[] = [
 	Grayscale
 ] as const;
 
-function getFilterByType(type:string) {
+export function getFilterByType(type:string) {
 	if(!type) return Filter;
 
 	for(let item of list) {
@@ -24,5 +24,4 @@ function getFilterByType(type:string) {
 	return Filter;
 }
 
-export { getFilterByType };
 export default list;

@@ -5,15 +5,15 @@ import type { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
 type Callback<T> = (...args: T[]) => void;
 
 class TypedObserver<T, FUNC extends Function = Callback<T>> {
-	private _callbacks: Array<{callback: FUNC, context?: any}> = [];
+	private _callbacks: Array<{callback: FUNC, context?: ThisType<FUNC>}> = [];
 
 	constructor() {}
 
-	on(callback: FUNC, context?: any) {
+	on(callback: FUNC, context?: ThisType<FUNC>) {
 		this._callbacks.push({callback, context});
 	}
 
-	off(callback: FUNC, context?: any) {
+	off(callback: FUNC, context?: ThisType<FUNC>) {
 		const index = this._callbacks.findIndex(item => item.callback === callback && item.context === context);
 		if (index >= 0) {
 			this._callbacks.splice(index, 1);

@@ -1,8 +1,14 @@
-import CustomImage from "data/CustomImage";
+import CustomImage, { type FileSystemPath } from "data/CustomImage";
 import type { LoadedImages } from "types";
 
+export type Base64LoaderData = {
+	name: string;
+	url: string;
+	fsPath: FileSystemPath;
+}
+
 class Base64ImagesLoader {
-	data: any[];
+	data: Base64LoaderData[];
 	loaded: LoadedImages;
 	loadedCnt: number;
 	onProgress: (loaded: number) => void;
@@ -15,7 +21,7 @@ class Base64ImagesLoader {
 		this.onEnd = null;
 	}
 
-	load = (data: any[], onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) => {
+	load = (data: Base64LoaderData[], onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) => {
 		this.data = data.slice();
 
 		this.onProgress = onProgress;

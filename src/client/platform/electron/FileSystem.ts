@@ -5,7 +5,7 @@ import { dialog } from '@electron/remote';
 
 import Controller from './Controller';
 import I18 from '../../utils/I18';
-import Base64ImagesLoader from '../../utils/Base64ImagesLoader';
+import Base64ImagesLoader, { type Base64LoaderData } from '../../utils/Base64ImagesLoader';
 import { Observer, GLOBAL_EVENT } from '../../Observer';
 import type { LoadedImages } from 'types';
 import type { FileSystemPath } from 'data/CustomImage';
@@ -149,7 +149,7 @@ class FileSystem {
 	}
 
 	static loadImages(list: FileSystemPath[], cb: (res: LoadedImages) => void) {
-		let files = [];
+		let files:Base64LoaderData[] = [];
 
 		for (let item of list) {
 			let path = item.path;

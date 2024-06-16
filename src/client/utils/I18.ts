@@ -128,15 +128,15 @@ class I18 {
 		this.strings = data;
 	}
 
-	static arrayAntidot(values: any): any {
+	/*static arrayAntidot(values: string[]): string | string[] {
 		if (!values)
 			return null;
 		if (values.length > 0 && Array.isArray(values[0]))
 			return values[0];
 		return values;
-	}
+	}*/
 
-	static getString(key: string, values?: any): string {
+	static getString(key: string, values?: string[]): string {
 		if (!values)
 			values = null;
 
@@ -146,36 +146,36 @@ class I18 {
 		return str;
 	}
 
-	private static getStringOrNull(key: string, args: any): string | null {
+	private static getStringOrNull(key: string, args: string[]): string | null {
 		if (!args) return null;
 
 		let value = this.config.strings[key];
 		if (!value) return null;
 
-		args = [value].concat(this.arrayAntidot(args));
+		args = [value].concat(args);
 		return this.sprintf(...args);
 	}
 
-	static f(key: string, ...values: any[]): string {
+	static f(key: string, ...values: string[]): string {
 		return this.getString(key, values);
 	}
 
-	static s(prefix: string, key: string, values: any): string {
+	static s(prefix: string, key: string, values: string[]): string {
 		if (!Array.isArray(values)) values = [values];
-		return this.getString(`${prefix}_${key}`, this.arrayAntidot(values));
+		return this.getString(`${prefix}_${key}`, values);
 	}
 
-	static sf(key: string, suffix: string, values: any): string {
-		return this.getString(`${key}_${suffix}`, this.arrayAntidot(values));
+	static sf(key: string, suffix: string, values: string[]): string {
+		return this.getString(`${key}_${suffix}`, values);
 	}
 
-	static psf(prefix: string, key: string, suffix: string, values: any): string {
-		return this.getString(`${prefix}_${key}_${suffix}`, this.arrayAntidot(values));
+	static psf(prefix: string, key: string, suffix: string, values: string[]): string {
+		return this.getString(`${prefix}_${key}_${suffix}`, values);
 	}
 
 	private static regex = /%%|%(\d+\$)?([-+\'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
 
-	static sprintf(...values: any[]): string {
+	static sprintf(...values: string[]): string {
 		let i = 0;
 		const format = values[i++];
 
@@ -271,15 +271,15 @@ class I18 {
 				case 'c':
 					return formatString(String.fromCharCode(+value), leftJustify, minimumWidth, precision, zeroPad, customPadChar);
 				case 'b':
-					return formatBaseX(value, 2, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
+					return formatBaseX(number, 2, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
 				case 'o':
-					return formatBaseX(value, 8, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
+					return formatBaseX(number, 8, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
 				case 'x':
-					return formatBaseX(value, 16, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
+					return formatBaseX(number, 16, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
 				case 'X':
-					return formatBaseX(value, 16, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar).toUpperCase();
+					return formatBaseX(number, 16, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar).toUpperCase();
 				case 'u':
-					return formatBaseX(value, 10, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
+					return formatBaseX(number, 10, prefixBaseX, leftJustify, minimumWidth, precision, zeroPad, customPadChar);
 				case 'i':
 				case 'd':
 					number = Math.round(number - number % 1);

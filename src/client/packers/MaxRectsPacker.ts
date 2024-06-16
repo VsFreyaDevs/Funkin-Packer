@@ -14,7 +14,7 @@ const METHODS = {
 type MethodType = typeof METHODS[keyof typeof METHODS];
 
 interface Rectangle extends IRectangle {
-	data: any;
+	data: Rect;
 	rot: boolean;
 }
 

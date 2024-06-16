@@ -96,7 +96,7 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void = null, onError:(data:MessageBoxData) => void = null, onProgress:(data:any) => void = null) {
+	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void = null, onError:(data:MessageBoxData) => void = null) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
@@ -171,7 +171,7 @@ class PackProcessor {
 
 		if (width < minWidth || height < minHeight) {
 			if (onError) onError({
-				description: I18.f("INVALID_SIZE_ERROR", minWidth, minHeight)
+				description: I18.f("INVALID_SIZE_ERROR", minWidth.toString(10), minHeight.toString(10))
 			});
 			if(PROFILER)
 				console.timeEnd("pack");
