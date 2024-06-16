@@ -20,4 +20,8 @@ export class ApiError extends Error {
 		this.code = code;
 		this.args = args;
 	}
+
+	override toString() {
+		return `ApiError: ${getErrorID(this.code)} (${this.code}): ${this.args.join(", ")}`;
+	}
 }

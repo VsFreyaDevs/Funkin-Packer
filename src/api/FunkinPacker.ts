@@ -1,8 +1,7 @@
-import type CustomImage from "client/data/CustomImage";
-import type { PackOptions } from "api/types";
+import type { LoadedImages, PackOptions } from "api/types";
 
 export default class FunkinPacker {
-	private images: CustomImage[];
+	private images: LoadedImages[];
 	private options: PackOptions;
 	private onComplete: (res:unknown) => void;
 	private onError: (err:string) => void;
@@ -10,7 +9,7 @@ export default class FunkinPacker {
 	constructor() {
 	}
 
-	loadImages(images:CustomImage[]) {
+	loadImages(images:LoadedImages[]) {
 		this.images = images;
 	}
 

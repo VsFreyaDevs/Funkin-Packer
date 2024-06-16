@@ -111,6 +111,10 @@ const config = {
 			{
 				test: /\.(html|htm)$/,
 				use: [{loader: 'dom'}]
+			},
+			{
+				test: /\.mst$/,
+				use: [{loader: 'raw-loader'}]
 			}
 		]
 	},

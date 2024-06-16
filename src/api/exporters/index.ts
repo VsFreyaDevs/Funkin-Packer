@@ -1,10 +1,24 @@
 import * as appInfo from '../../../package.json';
-import { sendGet } from 'client/utils/ajax';
 import { smartSortImages, removeFromArray } from '../utils/common';
 import Globals from 'client/utils/Globals';
 import finishExporter from './render';
-
 import type { Rect, SplitterRect } from 'api/types';
+
+import * as TemplateCocos2d from './templates/Cocos2d.mst';
+import * as TemplateCss from './templates/Css.mst';
+import * as TemplateEgret2D from './templates/Egret2D.mst';
+import * as TemplateGodotAtlas from './templates/GodotAtlas.mst';
+import * as TemplateGodotTileset from './templates/GodotTileset.mst';
+import * as TemplateJsonArray from './templates/JsonArray.mst';
+import * as TemplateJsonHash from './templates/JsonHash.mst';
+import * as TemplateOldCss from './templates/OldCss.mst';
+import * as TemplatePhaser3 from './templates/Phaser3.mst';
+import * as TemplateSparrow from './templates/Sparrow.mst';
+import * as TemplateSpine from './templates/Spine.mst';
+import * as TemplateUIKit from './templates/UIKit.mst';
+import * as TemplateUnity3D from './templates/Unity3D.mst';
+import * as TemplateUnreal from './templates/Unreal.mst';
+import * as TemplateXml from './templates/XML.mst';
 
 export type Exporter = {
 	exporterName: string;
@@ -13,7 +27,6 @@ export type Exporter = {
 	allowRotation: boolean;
 	template: string;
 	fileExt: string;
-	predefined?: boolean;
 	content?: string;
 };
 
@@ -59,7 +72,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "Sparrow.mst",
-		fileExt: "xml"
+		fileExt: "xml",
+		content: TemplateSparrow.default
 	},
 	{
 		exporterName: "JSON (hash)",
@@ -67,7 +81,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "JsonHash.mst",
-		fileExt: "json"
+		fileExt: "json",
+		content: TemplateJsonHash.default
 	},
 	{
 		exporterName: "JSON (array)",
@@ -75,7 +90,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "JsonArray.mst",
-		fileExt: "json"
+		fileExt: "json",
+		content: TemplateJsonArray.default
 	},
 	{
 		exporterName: "XML",
@@ -83,7 +99,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "XML.mst",
-		fileExt: "xml"
+		fileExt: "xml",
+		content: TemplateXml.default
 	},
 	{
 		exporterName: "css (modern)",
@@ -91,7 +108,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "Css.mst",
-		fileExt: "css"
+		fileExt: "css",
+		content: TemplateCss.default
 	},
 	{
 		exporterName: "css (old)",
@@ -99,7 +117,8 @@ let list: Exporter[] = [
 		allowTrim: false,
 		allowRotation: false,
 		template: "OldCss.mst",
-		fileExt: "css"
+		fileExt: "css",
+		content: TemplateOldCss.default
 	},
 	{
 		exporterName: "pixi.js",
@@ -107,7 +126,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "JsonHash.mst",
-		fileExt: "json"
+		fileExt: "json",
+		content: TemplateJsonHash.default
 	},
 	{
 		exporterName: "Godot (atlas)",
@@ -115,7 +135,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "GodotAtlas.mst",
-		fileExt: "tpsheet"
+		fileExt: "tpsheet",
+		content: TemplateGodotAtlas.default
 	},
 	{
 		exporterName: "Godot (tileset)",
@@ -123,7 +144,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "GodotTileset.mst",
-		fileExt: "tpset"
+		fileExt: "tpset",
+		content: TemplateGodotTileset.default
 	},
 	{
 		exporterName: "Phaser (hash)",
@@ -131,7 +153,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "JsonHash.mst",
-		fileExt: "json"
+		fileExt: "json",
+		content: TemplateJsonHash.default
 	},
 	{
 		exporterName: "Phaser (array)",
@@ -139,7 +162,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "JsonArray.mst",
-		fileExt: "json"
+		fileExt: "json",
+		content: TemplateJsonArray.default
 	},
 	{
 		exporterName: "Phaser 3",
@@ -147,7 +171,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "Phaser3.mst",
-		fileExt: "json"
+		fileExt: "json",
+		content: TemplatePhaser3.default
 	},
 	{
 		exporterName: "Spine",
@@ -155,7 +180,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "Spine.mst",
-		fileExt: "atlas"
+		fileExt: "atlas",
+		content: TemplateSpine.default
 	},
 	{
 		exporterName: "cocos2d",
@@ -163,7 +189,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "Cocos2d.mst",
-		fileExt: "plist"
+		fileExt: "plist",
+		content: TemplateCocos2d.default
 	},
 	{
 		exporterName: "UnrealEngine",
@@ -171,7 +198,8 @@ let list: Exporter[] = [
 		allowTrim: true,
 		allowRotation: true,
 		template: "Unreal.mst",
-		fileExt: "paper2dsprites"
+		fileExt: "paper2dsprites",
+		content: TemplateUnreal.default
 	},
 	{
 		exporterName: "UIKit",
@@ -180,7 +208,7 @@ let list: Exporter[] = [
 		allowRotation: false,
 		template: "UIKit.mst",
 		fileExt: "plist",
-		predefined: true
+		content: TemplateUIKit.default
 	},
 	{
 		exporterName: "Unity3D",
@@ -189,7 +217,7 @@ let list: Exporter[] = [
 		allowRotation: false,
 		template: "Unity3D.mst",
 		fileExt: "tpsheet",
-		predefined: true
+		content: TemplateUnity3D.default
 	},
 	{
 		exporterName: "Egret2D",
@@ -198,7 +226,7 @@ let list: Exporter[] = [
 		allowRotation: false,
 		template: "Egret2D.mst",
 		fileExt: "json",
-		predefined: true
+		content: TemplateEgret2D.default
 	},
 	{
 		exporterName: "custom",
@@ -394,10 +422,10 @@ function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings
 			return;
 		}
 
-		sendGet("static/exporters/" + exporter.template, null, (template) => {
-			exporter.content = template as string;
-			finishExporter(exporter, renderOptions, resolve, reject);
-		}, () => reject(new Error(exporter.template + " not found")));
+		//sendGet("static/exporters/" + exporter.template, null, (template) => {
+		//	exporter.content = template as string;
+		//	finishExporter(exporter, renderOptions, resolve, reject);
+		//}, () => reject(new Error(exporter.template + " not found")));
 	});
 }
 

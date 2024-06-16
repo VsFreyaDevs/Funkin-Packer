@@ -1,6 +1,5 @@
 import CustomImage from "data/CustomImage";
 import { PackerClass } from "api/packers/Packer";
-import TextureRenderer from "client/utils/TextureRenderer";
 import { Exporter } from "api/exporters";
 
 declare type PackOptions = {
