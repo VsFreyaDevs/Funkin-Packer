@@ -119,7 +119,7 @@ class I18 {
 	static load(callback: () => void): void {
 		const url = `${this.config.path}/${this.config.iniPrefix}${this.currentLocale}.${this.config.iniExt}?v=${Date.now()}`;
 		sendGet(url, null, data => {
-			this.setup(this.parse(data));
+			this.setup(this.parse(data as string));
 			if (callback) callback();
 		});
 	}

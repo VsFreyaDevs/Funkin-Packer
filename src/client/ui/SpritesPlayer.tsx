@@ -26,12 +26,12 @@ class SpritesPlayer extends React.Component<Props> {
 	readonly containerRef: React.RefObject<HTMLDivElement>;
 	textures: Texture[];
 	currentTextures: Texture[];
-	currentFrame: number;
-	width: number;
-	height: number;
+	currentFrame: number = 0;
+	width: number = 0;
+	height: number = 0;
 	selectedImages: string[];
 
-	updateTimer: NodeJS.Timeout | number | null;
+	updateTimer: NodeJS.Timeout | number | null = null;
 
 	constructor(props: Props) {
 		super(props);
@@ -46,12 +46,6 @@ class SpritesPlayer extends React.Component<Props> {
 		this.textures = [];
 
 		this.currentTextures = [];
-		this.currentFrame = 0;
-
-		this.width = 0;
-		this.height = 0;
-
-		this.updateTimer = null;
 
 		this.selectedImages = [];
 	}

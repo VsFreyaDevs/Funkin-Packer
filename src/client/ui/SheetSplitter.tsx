@@ -15,9 +15,6 @@ import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
 import { fixManualOffsets, formatBytes, setMaxSizes } from '../utils/common';
 
-/**
- * @type {SplitterMaster}
- */
 const splitterMaster = new SplitterMaster();
 
 interface Props {
@@ -461,6 +458,7 @@ class SheetSplitter extends React.Component<Props, State> {
 				let weirdSize = 0;
 				let totalFrames = 0;
 
+				const DEFAULT_COLOR = "0,0,255";
 				const MANUAL_OFFSETS_COLOR = "160,32,240";
 				const WEIRD_SIZE_COLOR = "227,164,39";
 
@@ -491,7 +489,7 @@ class SheetSplitter extends React.Component<Props, State> {
 						}
 					}
 
-					let color = "0,0,255";
+					let color = DEFAULT_COLOR;
 					if(frameHasManualOffsets) {
 						color = MANUAL_OFFSETS_COLOR;
 					} else if(frameHasWeirdSize) {
@@ -540,13 +538,13 @@ class SheetSplitter extends React.Component<Props, State> {
 
 					const HAS_CREDIT				= 1;
 
-					const ADOBE_ANIMATE				= 1+0;
-					const FUNKIN_PACKER				= 2+1;
-					const FREE_TEX_PACKER			= 3+2;
-					const LESHY_PACKER				= 4+3;
-					const CODENWEB_TEXTURE_PACKER	= 5+4;
-					const UNCERTAINPROD_PACKER_WEB	= 6+5;
-					const UNCERTAINPROD_PACKER_APP	= 7+6;
+					const ADOBE_ANIMATE				= 1 << ((1 << 1) - 1);
+					const FUNKIN_PACKER				= 1 << ((2 << 1) - 1);
+					const FREE_TEX_PACKER			= 1 << ((3 << 1) - 1);
+					const LESHY_PACKER				= 1 << ((4 << 1) - 1);
+					const CODENWEB_TEXTURE_PACKER	= 1 << ((5 << 1) - 1);
+					const UNCERTAINPROD_PACKER_WEB	= 1 << ((6 << 1) - 1);
+					const UNCERTAINPROD_PACKER_APP	= 1 << ((7 << 1) - 1);
 
 					let header_is_animate = false;
 					let header_is_common = false;
@@ -554,25 +552,24 @@ class SheetSplitter extends React.Component<Props, State> {
 
 					// 0bPCPCPCPC // P = packer, C = credit
 
-					const isCredited = (packer: number) => (packers & ((1 << packer) >> HAS_CREDIT)) != 0;
-					const hasPacker = (packer: number) => (packers & (1 << packer)) != 0;
-					const setPacker = (packer: number) => 1 << packer;
-					const setCreditedPacker = (packer: number) => (1 << packer) | ((1 << packer) >> HAS_CREDIT);
-					const setCredit = (packer: number) => (1 << packer) >> HAS_CREDIT;
-					const removePacker = (packer: number) => ~(1 << packer);
+					const isCredited = (packer: number) => (packers & ((packer) >> HAS_CREDIT)) != 0;
+					const hasPacker = (packer: number) => (packers & (packer)) != 0;
+					const setCreditedPacker = (packer: number) => (packer) | ((packer) >> HAS_CREDIT);
+					const setCredit = (packer: number) => (packer) >> HAS_CREDIT;
+					const removePacker = (packer: number) => ~(packer);
 
-					const commonPackers = setPacker(FUNKIN_PACKER) | setPacker(FREE_TEX_PACKER) | setPacker(CODENWEB_TEXTURE_PACKER);
+					const commonPackers = FUNKIN_PACKER | FREE_TEX_PACKER | CODENWEB_TEXTURE_PACKER;
 
 					if(data.startsWith('<?xml version="1.0" encoding="UTF-8"?>')) {
 						packers |= commonPackers;
 						header_is_common = true;
 					} else if(data.startsWith('<?xml version="1.0" encoding="utf-8"?>')) {
-						packers |= setPacker(ADOBE_ANIMATE);
+						packers |= ADOBE_ANIMATE;
 						header_is_animate = true;
 					} else if(data.startsWith("<?xml version='1.0' encoding='utf-8'?>")) {
-						packers |= setPacker(UNCERTAINPROD_PACKER_APP);
+						packers |= UNCERTAINPROD_PACKER_APP;
 					} else if(/<textureatlas xmlns="http:\/\/www\.w3\.org\/1999\/xhtml" imagepath="[^"]+"/i.test(data)) {
-						packers |= setPacker(LESHY_PACKER);
+						packers |= LESHY_PACKER;
 						header_is_leshy = true;
 					}
 
@@ -606,10 +603,10 @@ class SheetSplitter extends React.Component<Props, State> {
 					// TODO: add haxe xml parser
 					if(/ {4}<SubTexture/.test(data)) {
 						packers &= ~commonPackers;
-						packers |= setPacker(CODENWEB_TEXTURE_PACKER);
+						packers |= CODENWEB_TEXTURE_PACKER;
 					} else if(/ {2}<SubTexture/.test(data) || /y="[^"]+"  width="[^"]+"/.test(data)) {
 						packers &= ~commonPackers;
-						packers |= setPacker(FREE_TEX_PACKER);
+						packers |= FREE_TEX_PACKER;
 					}
 
 					if(hasPacker(FUNKIN_PACKER)) {
@@ -647,11 +644,7 @@ class SheetSplitter extends React.Component<Props, State> {
 					//}
 				}
 
-				if(detectedPackers.length > 0) {
-					this.setState({detectedPacker: detectedPackers.join(', ')});
-				} else {
-					this.setState({detectedPacker: ''});
-				}
+				this.setState({detectedPacker: detectedPackers.join(', ')});
 			}
 		});
 	}

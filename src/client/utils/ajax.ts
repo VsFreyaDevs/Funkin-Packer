@@ -9,7 +9,7 @@ function createHTTPQuery(params: Record<string, any> | string | null): string {
 	return query.join('&');
 }
 
-type SuccessCallback = (data: any) => void;
+type SuccessCallback = (data: string | ArrayBuffer | Document | null) => void;
 type ErrorCallback = (error: string) => void;
 type Method = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
 type DataType = "text" | "arraybuffer" | "xml";

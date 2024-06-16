@@ -17,10 +17,6 @@ export type TreeListItems = {
 	readonly [key: string]: TreeListItem
 };
 
-type TreeItemProps = {
-	readonly data: TreeListItem;
-}
-
 
 class ItemTreePart extends React.Component<TreeListItem> {
 	constructor(props: TreeListItem) {

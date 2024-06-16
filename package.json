@@ -18,7 +18,9 @@
 		{
 			"name": "Ne_Eo",
 			"homepage": "https://github.com/NeeEoo"
-		},
+		}
+	],
+	"originalContributors": [
 		{
 			"name": "Alexander Norinchak",
 			"homepage": "https://github.com/odrick"

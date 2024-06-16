@@ -196,7 +196,7 @@ class FileSystem {
 		}
 	}
 
-	static saveProject(data: any, path = ""): Promise<string | void> {
+	static saveProject(data: Record<string, any>, path = ""): Promise<string | void> {
 		let options: SaveDialogOptions = {
 			filters: filters
 		};

@@ -4,14 +4,12 @@ import I18 from '../utils/I18';
 
 class ProcessingOverlay extends React.Component {
 	readonly overlayRef: React.RefObject<HTMLDivElement>;
-	showTimer: NodeJS.Timeout | null;
+	showTimer: NodeJS.Timeout | null = null;
 
 	constructor(props:any) {
 		super(props);
 
 		this.overlayRef = React.createRef();
-
-		this.showTimer = null;
 	}
 
 	override componentDidMount = () => {

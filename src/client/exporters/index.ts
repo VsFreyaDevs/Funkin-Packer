@@ -415,7 +415,7 @@ function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings
 		}
 
 		sendGet("static/exporters/" + exporter.template, null, (template) => {
-			exporter.content = template;
+			exporter.content = template as string;
 			finishExporter(exporter, renderOptions, resolve, reject);
 		}, () => reject(new Error(exporter.template + " not found")));
 	});
