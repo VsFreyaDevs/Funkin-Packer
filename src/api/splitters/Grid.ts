@@ -7,15 +7,15 @@ class Grid extends Splitter {
 	}
 
 	override doSplit(data: string, cb: (res: Rect[] | false) => void) {
-		let res:Rect[] = [];
+		const res:Rect[] = [];
 
-		let fw = (this.options.width + this.options.padding * 2);
-		let fh = (this.options.height + this.options.padding * 2);
+		const fw = (this.options.width + this.options.padding * 2);
+		const fh = (this.options.height + this.options.padding * 2);
 
-		let cols = Math.floor(this.options.textureWidth / fw);
-		let rows = Math.floor(this.options.textureHeight / fh);
+		const cols = Math.floor(this.options.textureWidth / fw);
+		const rows = Math.floor(this.options.textureHeight / fh);
 
-		let nc = (cols * rows) + '';
+		const nc = (cols * rows) + '';
 
 		let ix = 0;
 		for(let y=0; y<rows; y++) {

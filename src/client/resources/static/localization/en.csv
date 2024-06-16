@@ -143,3 +143,4 @@ STATS_USED_PACKER;Packer
 STATS_SI_TITLE;SI units (Used for ram usage stat)\nCodename Engine SI = 1024\nPsych 0.7+ SI = 1024\nPsych 0.6 and below SI = 1000
 STATS_SI;SI units:
 BASED_ON;Based on Free Texture Packer
+UNKNOWN_ERROR;Unknown error: %s

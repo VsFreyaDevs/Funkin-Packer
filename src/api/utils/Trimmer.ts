@@ -7,11 +7,6 @@ if(!_ctx) {
 }
 const ctx = _ctx;
 
-/*#__PURE__*/
-/*function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) {
-	return data[((y * (width * 4)) + (x * 4)) + 3];
-}*/
-
 class Trimmer {
 	private static getSpacing(data: Uint8ClampedArray, width: number, height: number, threshold: number) {
 		const stride = width * 4;
@@ -96,8 +91,8 @@ class Trimmer {
 					item.spriteSourceSize.y = spaces.top;
 					//item.spriteSourceSize.w = img.width-spaces.right;
 					//item.spriteSourceSize.h = img.height-spaces.bottom;
-					item.spriteSourceSize.w = img.width-spaces.left-spaces.right;
-					item.spriteSourceSize.h = img.height-spaces.top-spaces.bottom;
+					item.spriteSourceSize.w = img.width - spaces.left - spaces.right;
+					item.spriteSourceSize.h = img.height - spaces.top - spaces.bottom;
 					//console.log(item.name, spaces);
 				}
 			} else { // wasn't able to trim it empty image

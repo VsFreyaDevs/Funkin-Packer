@@ -1,4 +1,4 @@
-import type CustomImage from "data/CustomImage";
+import type CustomImage from "client/data/CustomImage";
 import type { PackOptions } from "api/types";
 
 export default class FunkinPacker {

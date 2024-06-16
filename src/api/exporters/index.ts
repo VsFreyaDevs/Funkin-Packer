@@ -4,7 +4,7 @@ import { smartSortImages, removeFromArray } from '../utils/common';
 import Globals from 'client/utils/Globals';
 import finishExporter from './render';
 
-import type { Rect } from 'api/types';
+import type { Rect, SplitterRect } from 'api/types';
 
 export type Exporter = {
 	exporterName: string;
@@ -23,33 +23,12 @@ export type TemplateSettings = {
 	appInfo: typeof appInfo
 };
 
-type ExporterRect = {
-	name: string;
+type ExporterRect = SplitterRect & {
 	origName: string;
-	frame: {
-		x: number;
-		y: number;
-		w: number;
-		h: number;
-	};
-	spriteSourceSize: {
-		x: number;
-		y: number;
-		w: number;
-		h: number;
-	};
-	sourceSize: {
-		w: number;
-		h: number;
-		mw: number;
-		mh: number;
-	};
-	rotated: boolean;
-	trimmed: boolean;
 
 	first: boolean;
 	last: boolean;
-}
+};
 
 export type RenderSettings = {
 	imageName: string,
@@ -326,6 +305,7 @@ function prepareData(data: Rect[], options: RenderSettings): {
 			frame,
 			spriteSourceSize,
 			sourceSize,
+			frameSize: item.frameSize,
 			rotated: item.rotated,
 			trimmed,
 			first: false,
@@ -356,7 +336,7 @@ function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings
 			rects = rects.sort((a, b) => smartSortImages(a.name, b.name));
 		}
 
-		let sparrowOrder = Globals.sparrowOrder;//window.__sparrow_order;
+		let sparrowOrder = Globals.sparrowOrder;
 
 		// Make order the same as before
 		if(sparrowOrder !== null) {

@@ -2,12 +2,10 @@ import MaxRectsBinPack from './packers/MaxRectsBin';
 import OptimalPacker from './packers/OptimalPacker';
 import allPackers, { getPackerByType } from './packers';
 import Trimmer from './utils/Trimmer';
-import TextureRenderer from 'client/utils/TextureRenderer';
-
-import I18 from 'client/utils/I18';
+import { ApiError, ErrorCodes } from 'api/Errors';
 import type { LoadedImages, PackOptions, Rect } from 'api/types';
-import type { MessageBoxData } from 'client/types';
 import type { PackerClass, PackerCombo } from './packers/Packer';
+import { getSheetSize } from './utils/Frames';
 
 class PackProcessor {
 	private static detectIdentical(rects: Rect[], didTrim: boolean) {
@@ -100,7 +98,7 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void, onError:(data:MessageBoxData) => void) {
+	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
@@ -174,12 +172,9 @@ class PackProcessor {
 		}
 
 		if (width < minWidth || height < minHeight) {
-			if (onError) onError({
-				description: I18.f("INVALID_SIZE_ERROR", minWidth.toString(10), minHeight.toString(10))
-			});
 			if(PROFILER)
 				console.timeEnd("pack");
-			return;
+			throw new ApiError(ErrorCodes.INVALID_SIZE_ERROR, minWidth.toString(10), minHeight.toString(10));
 		}
 
 		if (options.allowTrim) {
@@ -273,7 +268,7 @@ class PackProcessor {
 					this.removeRect(_rects, item.name);
 				}
 
-				const { width: sheetWidth, height: sheetHeight } = TextureRenderer.getSize(result, options);
+				const { width: sheetWidth, height: sheetHeight } = getSheetSize(result, options);
 				sheetArea += sheetWidth * sheetHeight;
 			}
 

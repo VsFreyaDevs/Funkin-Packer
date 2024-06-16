@@ -10,6 +10,7 @@ import type { FileData, MessageBoxData, PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 import type { PackerCombo } from 'api/packers/Packer';
 import type { LoadedImages, PackOptions, Rect } from 'api/types';
+import ErrorHandler from './ErrorHandler';
 
 let INSTANCE:APP;
 
@@ -63,7 +64,14 @@ class APP {
 	}
 
 	private doPack() {
-		PackProcessor.pack(this.images, this.packOptions, this.onPackComplete, this.onPackError);
+		try {
+			PackProcessor.pack(this.images, this.packOptions, this.onPackComplete);
+		}
+		catch (e:any) {
+			this.onPackError({
+				description: ErrorHandler.translateError(e)
+			});
+		}
 	}
 
 	private onPackComplete = (res:Rect[][], usedPacker:PackerCombo) => {

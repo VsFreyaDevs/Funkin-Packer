@@ -8,7 +8,7 @@ import Splitter from './Splitter';
 
 class Spine extends Splitter {
 	override doCheck(data: string, cb: (checked: boolean) => void) {
-		let lines = data.split('\n');
+		const lines = data.split('\n');
 		if(lines.length < 2) return cb(false);
 		if(lines[0].trim() !== '') return cb(false);
 

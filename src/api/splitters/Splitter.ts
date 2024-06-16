@@ -28,8 +28,8 @@ class Splitter {
 	}
 
 	static fixFileName(name: string) {
-		let validExts = ['png', 'jpg', 'jpeg'];
-		let ext = name.split('.').pop().toLowerCase();
+		const validExts = ['png', 'jpg', 'jpeg'];
+		const ext = name.split('.').pop().toLowerCase();
 
 		if(validExts.indexOf(ext) < 0) name += '.png';
 

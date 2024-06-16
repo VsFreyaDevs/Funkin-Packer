@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import I18 from '../utils/I18';
+import I18 from 'client/utils/I18';
 import type { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 
