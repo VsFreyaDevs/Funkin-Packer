@@ -19,20 +19,20 @@ type Texture = {
 }
 
 class SpritesPlayer extends React.Component<Props> {
-	readonly fpsRef: React.RefObject<HTMLInputElement>;
-	readonly speedRef: React.RefObject<HTMLInputElement>;
-	readonly bufferRef: React.RefObject<HTMLCanvasElement>;
-	readonly viewRef: React.RefObject<HTMLCanvasElement>;
-	readonly playerContainerRef: React.RefObject<HTMLDivElement>;
-	readonly containerRef: React.RefObject<HTMLDivElement>;
-	textures: Texture[];
-	currentTextures: Texture[];
-	currentFrame: number = 0;
-	width: number = 0;
-	height: number = 0;
-	selectedImages: string[];
+	private readonly fpsRef: React.RefObject<HTMLInputElement>;
+	private readonly speedRef: React.RefObject<HTMLInputElement>;
+	private readonly bufferRef: React.RefObject<HTMLCanvasElement>;
+	private readonly viewRef: React.RefObject<HTMLCanvasElement>;
+	private readonly playerContainerRef: React.RefObject<HTMLDivElement>;
+	private readonly containerRef: React.RefObject<HTMLDivElement>;
+	private textures: Texture[];
+	private currentTextures: Texture[];
+	private currentFrame: number = 0;
+	private width: number = 0;
+	private height: number = 0;
+	private selectedImages: string[];
 
-	updateTimer: NodeJS.Timeout | number | null = null;
+	private updateTimer: NodeJS.Timeout | number | null = null;
 
 	constructor(props: Props) {
 		super(props);

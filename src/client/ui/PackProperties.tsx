@@ -32,29 +32,29 @@ interface State {
 
 class PackProperties extends React.Component<Props, State> {
 	packOptions: PackOptions;
-	readonly fileNameRef: React.RefObject<HTMLInputElement>;
-	readonly textureFormatRef: React.RefObject<HTMLSelectElement>;
-	readonly removeFileExtensionRef: React.RefObject<HTMLInputElement>;
-	readonly prependFolderNameRef: React.RefObject<HTMLInputElement>;
-	readonly scaleRef: React.RefObject<HTMLInputElement>;
-	readonly filterRef: React.RefObject<HTMLSelectElement>;
-	readonly exporterRef: React.RefObject<HTMLSelectElement>;
-	readonly editCustomFormatRef: React.RefObject<HTMLInputElement>;
-	readonly widthRef: React.RefObject<HTMLInputElement>;
-	readonly heightRef: React.RefObject<HTMLInputElement>;
-	readonly spritePaddingRef: React.RefObject<HTMLInputElement>;
-	readonly borderPaddingRef: React.RefObject<HTMLInputElement>;
-	readonly allowRotationRef: React.RefObject<HTMLInputElement>;
-	readonly allowTrimRef: React.RefObject<HTMLInputElement>;
-	readonly detectIdenticalRef: React.RefObject<HTMLInputElement>;
-	readonly packerRef: React.RefObject<HTMLSelectElement>;
-	readonly packerMethodRef: React.RefObject<PackerMethods>;
-	readonly sortExportedRowsRef: React.RefObject<HTMLInputElement>;
-	readonly fixedSizeRef: React.RefObject<HTMLInputElement>;
-	readonly powerOfTwoRef: React.RefObject<HTMLInputElement>;
-	readonly trimModeRef: React.RefObject<HTMLSelectElement>;
-	readonly alphaThresholdRef: React.RefObject<HTMLInputElement>;
-	readonly statsSIRef: React.RefObject<HTMLInputElement>;
+	private readonly fileNameRef: React.RefObject<HTMLInputElement>;
+	private readonly textureFormatRef: React.RefObject<HTMLSelectElement>;
+	private readonly removeFileExtensionRef: React.RefObject<HTMLInputElement>;
+	private readonly prependFolderNameRef: React.RefObject<HTMLInputElement>;
+	private readonly scaleRef: React.RefObject<HTMLInputElement>;
+	private readonly filterRef: React.RefObject<HTMLSelectElement>;
+	private readonly exporterRef: React.RefObject<HTMLSelectElement>;
+	private readonly editCustomFormatRef: React.RefObject<HTMLInputElement>;
+	private readonly widthRef: React.RefObject<HTMLInputElement>;
+	private readonly heightRef: React.RefObject<HTMLInputElement>;
+	private readonly spritePaddingRef: React.RefObject<HTMLInputElement>;
+	private readonly borderPaddingRef: React.RefObject<HTMLInputElement>;
+	private readonly allowRotationRef: React.RefObject<HTMLInputElement>;
+	private readonly allowTrimRef: React.RefObject<HTMLInputElement>;
+	private readonly detectIdenticalRef: React.RefObject<HTMLInputElement>;
+	private readonly packerRef: React.RefObject<HTMLSelectElement>;
+	private readonly packerMethodRef: React.RefObject<PackerMethods>;
+	private readonly sortExportedRowsRef: React.RefObject<HTMLInputElement>;
+	private readonly fixedSizeRef: React.RefObject<HTMLInputElement>;
+	private readonly powerOfTwoRef: React.RefObject<HTMLInputElement>;
+	private readonly trimModeRef: React.RefObject<HTMLSelectElement>;
+	private readonly alphaThresholdRef: React.RefObject<HTMLInputElement>;
+	private readonly statsSIRef: React.RefObject<HTMLInputElement>;
 
 	constructor(props: Props) {
 		super(props);

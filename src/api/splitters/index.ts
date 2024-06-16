@@ -8,6 +8,7 @@ import Sparrow from './Sparrow';
 import Splitter, { type SplitterOptions } from './Splitter';
 import type { Rect } from 'api/types';
 import TypedObserver from 'TypedObserver';
+import APP from 'client/APP';
 
 const GridSplitter = new Grid();
 
@@ -88,6 +89,7 @@ export class SplitterMaster {
 
 	finishSplit = () => {
 		if(this._storedSplitterOrder === null) return;
+		APP.i.api.setStoredOrder(this._storedSplitterOrder);
 		TypedObserver.storedOrderChanged.emit(this._storedSplitterOrder);
 		this._storedSplitterOrder = null;
 	}

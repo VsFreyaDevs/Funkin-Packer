@@ -1,13 +1,13 @@
 import type { Language } from './languages';
 
-type ParserFunction = (data: string) => Record<string, string>;
+//type ParserFunction = (data: string) => Record<string, string>;
 
 interface I18Config {
 	//currentLocale: string;
 	currentLanguage: Language;
 	supportedLanguages: string[];
 	strings: Record<string, string>;
-	path: string;
+	//path: string;
 	//iniPrefix: string;
 	//iniExt: string;
 	//iniSeparator: string;
@@ -24,7 +24,7 @@ class I18 {
 		},
 		supportedLanguages: ["en"],
 		strings: {},
-		path: "localization",
+		//path: "localization",
 		//iniPrefix: "",
 		//iniExt: "csv",
 		//iniSeparator: ";",
@@ -55,7 +55,7 @@ class I18 {
 		this.config.strings = val;
 	}
 
-	static get path(): string {
+	/*static get path(): string {
 		return this.config.path;
 	}
 
@@ -63,7 +63,7 @@ class I18 {
 		this.config.path = val;
 	}
 
-	/*static get iniPrefix(): string {
+	static get iniPrefix(): string {
 		return this.config.iniPrefix;
 	}
 

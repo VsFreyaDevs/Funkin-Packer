@@ -1,5 +1,4 @@
 import { Observer, GLOBAL_EVENT } from './Observer';
-import PackProcessor from 'api/PackProcessor';
 import TextureRenderer from './utils/TextureRenderer';
 import { getFilterByType } from './filters';
 import I18 from './locale/I18';

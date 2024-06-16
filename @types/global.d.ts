@@ -1,5 +1,5 @@
 declare const PROFILER: string;
-declare const PLATFORM: string;
+declare const PLATFORM: "web" | "electron";
 declare const DEBUG: string;
 
 declare module "*.mst" {

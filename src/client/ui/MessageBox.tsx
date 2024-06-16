@@ -19,7 +19,7 @@ type ButtonProps = ButtonData & {
 }
 
 class MessageBox extends React.Component<Props> {
-	readonly buttons: ButtonProps[];
+	private readonly buttons: ButtonProps[];
 	constructor(props:Props) {
 		super(props);
 

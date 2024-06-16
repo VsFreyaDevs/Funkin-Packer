@@ -2,6 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 //const argv = require('optimist').argv;
+// eslint-disable-next-line no-unused-vars
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let entry = [
 	'./src/client/index.tsx'
@@ -66,6 +68,10 @@ else {
 		],
 	}));
 }
+
+/*plugins.push(
+	new BundleAnalyzerPlugin()
+);*/
 
 const config = {
 	entry,

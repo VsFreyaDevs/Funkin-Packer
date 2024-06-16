@@ -29,11 +29,11 @@ interface State {
 };
 
 class ImagesList extends React.Component<Props, State> {
-	readonly imagesTreeRef: React.RefObject<HTMLDivElement>;
-	readonly imagesTreePartRef: React.RefObject<ItemTreePart>;
-	readonly dropHelpRef: React.RefObject<HTMLDivElement>;
-	readonly addImagesInputRef: React.RefObject<HTMLInputElement>;
-	readonly addZipInputRef: React.RefObject<HTMLInputElement>;
+	private readonly imagesTreeRef: React.RefObject<HTMLDivElement>;
+	private readonly imagesTreePartRef: React.RefObject<ItemTreePart>;
+	private readonly dropHelpRef: React.RefObject<HTMLDivElement>;
+	private readonly addImagesInputRef: React.RefObject<HTMLInputElement>;
+	private readonly addZipInputRef: React.RefObject<HTMLInputElement>;
 
 	override state:State = {
 		images: {},

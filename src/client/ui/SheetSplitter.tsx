@@ -35,26 +35,26 @@ const valTextureBackColors = ["grid-back", "white-back", "pink-back", "black-bac
 export type TextureBack = typeof valTextureBackColors;
 
 class SheetSplitter extends React.Component<Props, State> {
-	readonly disableUntrimRef: React.RefObject<HTMLInputElement>;
-	readonly updateFileNameRef: React.RefObject<HTMLInputElement>;
-	readonly dataFormatRef: React.RefObject<HTMLSelectElement>;
-	readonly selectTextureInputRef: React.RefObject<HTMLInputElement>;
-	readonly dataFileNameRef: React.RefObject<HTMLInputElement>;
-	readonly fileNameRef: React.RefObject<HTMLInputElement>;
-	readonly viewRef: React.RefObject<HTMLCanvasElement>;
-	readonly paddingRef: React.RefObject<HTMLInputElement>;
-	readonly widthRef: React.RefObject<HTMLInputElement>;
-	readonly heightRef: React.RefObject<HTMLInputElement>;
-	readonly textureBackColors: TextureBack;
-	step: number;
-	readonly rangeRef: React.RefObject<HTMLInputElement>;
-	readonly wheelRef: React.RefObject<HTMLInputElement>;
-	texture: CustomImage;
-	data: string;
-	frames: Rect[];
-	fileName: string;
-	dataName: string;
-	readonly buffer: HTMLCanvasElement;
+	private readonly disableUntrimRef: React.RefObject<HTMLInputElement>;
+	private readonly updateFileNameRef: React.RefObject<HTMLInputElement>;
+	private readonly dataFormatRef: React.RefObject<HTMLSelectElement>;
+	private readonly selectTextureInputRef: React.RefObject<HTMLInputElement>;
+	private readonly dataFileNameRef: React.RefObject<HTMLInputElement>;
+	private readonly fileNameRef: React.RefObject<HTMLInputElement>;
+	private readonly viewRef: React.RefObject<HTMLCanvasElement>;
+	private readonly paddingRef: React.RefObject<HTMLInputElement>;
+	private readonly widthRef: React.RefObject<HTMLInputElement>;
+	private readonly heightRef: React.RefObject<HTMLInputElement>;
+	private readonly textureBackColors: TextureBack;
+	private step: number;
+	private readonly rangeRef: React.RefObject<HTMLInputElement>;
+	private readonly wheelRef: React.RefObject<HTMLInputElement>;
+	private texture: CustomImage;
+	private data: string;
+	private frames: Rect[];
+	private fileName: string;
+	private dataName: string;
+	private readonly buffer: HTMLCanvasElement;
 
 	constructor(props: Props) {
 		super(props);

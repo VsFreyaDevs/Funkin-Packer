@@ -20,7 +20,7 @@ interface State {
 }
 
 class Updater extends React.Component<Props, State> {
-	readonly downloadProgressRef: React.RefObject<HTMLDivElement>;
+	private readonly downloadProgressRef: React.RefObject<HTMLDivElement>;
 	skippedVersion: string[];
 
 	constructor(props: Props) {

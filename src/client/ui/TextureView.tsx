@@ -14,8 +14,8 @@ interface TextureViewProps {
 }
 
 class TextureView extends React.Component<TextureViewProps> {
-	readonly backRef: React.RefObject<HTMLDivElement>;
-	readonly viewRef: React.RefObject<HTMLCanvasElement>;
+	private readonly backRef: React.RefObject<HTMLDivElement>;
+	private readonly viewRef: React.RefObject<HTMLCanvasElement>;
 
 	constructor(props: TextureViewProps) {
 		super(props);

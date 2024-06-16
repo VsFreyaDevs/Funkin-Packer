@@ -14,10 +14,10 @@ const {
 const STORAGE_CUSTOM_EXPORTER_KEY = "custom-exporter";
 
 class EditCustomExporter extends React.Component {
-	readonly contentRef: React.RefObject<HTMLTextAreaElement>;
-	readonly allowTrimRef: React.RefObject<HTMLInputElement>;
-	readonly allowRotationRef: React.RefObject<HTMLInputElement>;
-	readonly fileExtRef: React.RefObject<HTMLInputElement>;
+	private readonly contentRef: React.RefObject<HTMLTextAreaElement>;
+	private readonly allowTrimRef: React.RefObject<HTMLInputElement>;
+	private readonly allowRotationRef: React.RefObject<HTMLInputElement>;
+	private readonly fileExtRef: React.RefObject<HTMLInputElement>;
 
 	constructor(props: any) {
 		super(props);

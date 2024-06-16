@@ -47,7 +47,6 @@ function loadLocalization() {
 	for(let i = 0; i < languages.length; i++) {
 		I18.supportedLanguages.push(languages[i].lang);
 	}
-	I18.path = "static/localization";
 	I18.currentLanguage = getLanguageByCode(Storage.load(STORAGE_LANGUAGE_KEY, false));
 
 	app = new APP();

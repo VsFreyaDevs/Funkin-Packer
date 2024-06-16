@@ -22,10 +22,10 @@ interface State {
 }
 
 class PackResults extends React.Component<Props, State> {
-	readonly spritesPlayerRef: React.RefObject<SpritesPlayer>;
-	readonly rangeRef: React.RefObject<HTMLInputElement>;
-	readonly wheelRef: React.RefObject<HTMLInputElement>;
-	readonly textureBackColors: TextureBack;
+	private readonly spritesPlayerRef: React.RefObject<SpritesPlayer>;
+	private readonly rangeRef: React.RefObject<HTMLInputElement>;
+	private readonly wheelRef: React.RefObject<HTMLInputElement>;
+	private readonly textureBackColors: TextureBack;
 	step: number;
 
 	constructor(props: Props) {
