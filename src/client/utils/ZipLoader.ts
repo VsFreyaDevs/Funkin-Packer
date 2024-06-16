@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip';
 
-import I18 from './I18';
+import I18 from '../locale/I18';
 import type { LoadedImages } from 'api/types';
 import CustomImage from '../data/CustomImage';
 import TypedObserver from 'TypedObserver';

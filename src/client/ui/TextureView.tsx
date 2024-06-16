@@ -3,7 +3,7 @@ import type { PackResultsData } from 'types';
 import type { Rect } from 'api/types';
 import TypedObserver from 'TypedObserver';
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 
 interface TextureViewProps {
 	readonly data: PackResultsData;

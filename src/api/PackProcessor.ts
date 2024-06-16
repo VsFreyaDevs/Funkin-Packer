@@ -109,7 +109,7 @@ class PackProcessor {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
-		console.log(images);
+		//console.log(images);
 		let rects:Rect[] = [];
 
 		const spritePadding = options.spritePadding || 0;
@@ -118,8 +118,7 @@ class PackProcessor {
 		let maxWidth = 0, maxHeight = 0;
 		let minWidth = 0, minHeight = 0;
 
-		let alphaThreshold = options.alphaThreshold || 0;
-		if (alphaThreshold > 255) alphaThreshold = 255;
+		let alphaThreshold = Math.max(Math.min(options.alphaThreshold || 0, 255), 0);
 
 		const names = Object.keys(images).sort();
 
@@ -200,17 +199,17 @@ class PackProcessor {
 		const getAllPackers = () => {
 			const methods:PackerCombo[] = [];
 			for (const packerClass of allPackers) {
-				if (packerClass !== OptimalPacker) {
-					for (const method in packerClass.methods) {
-						if(!Object.hasOwn(packerClass.methods, method)) continue;
+				if (packerClass === OptimalPacker) continue;
 
-						if(options.allowRotation && packerClass.needsNonRotation() || !options.allowRotation) {
-							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false } as const);
-						}
+				for (const method in packerClass.methods) {
+					if(!Object.hasOwn(packerClass.methods, method)) continue;
 
-						if (options.allowRotation) {
-							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: true } as const);
-						}
+					if(options.allowRotation && packerClass.needsNonRotation() || !options.allowRotation) {
+						methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false } as const);
+					}
+
+					if (options.allowRotation) {
+						methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: true } as const);
 					}
 				}
 			}

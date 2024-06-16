@@ -1,5 +1,5 @@
 import { ApiError, ErrorCodes } from 'api/Errors';
-import I18 from './utils/I18';
+import I18 from './locale/I18';
 
 export default class ErrorHandler {
 	public static translateError(e:any) {

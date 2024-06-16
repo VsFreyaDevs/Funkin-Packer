@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 
 import * as appInfo from '../../../package.json';
 

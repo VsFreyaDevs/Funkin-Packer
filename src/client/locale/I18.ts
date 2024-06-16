@@ -1,36 +1,42 @@
-import { sendGet } from './ajax';
+import type { Language } from './languages';
 
 type ParserFunction = (data: string) => Record<string, string>;
 
 interface I18Config {
-	currentLocale: string;
+	//currentLocale: string;
+	currentLanguage: Language;
 	supportedLanguages: string[];
 	strings: Record<string, string>;
 	path: string;
-	iniPrefix: string;
-	iniExt: string;
-	iniSeparator: string;
-	parser: ParserFunction | null;
+	//iniPrefix: string;
+	//iniExt: string;
+	//iniSeparator: string;
+	//parser: ParserFunction | null;
 }
 
 class I18 {
 	private static config: I18Config = {
-		currentLocale: "en",
+		//currentLocale: "en",
+		currentLanguage: {
+			lang: "null",
+			name: "None",
+			mapping: {}
+		},
 		supportedLanguages: ["en"],
 		strings: {},
 		path: "localization",
-		iniPrefix: "",
-		iniExt: "csv",
-		iniSeparator: ";",
-		parser: null,
+		//iniPrefix: "",
+		//iniExt: "csv",
+		//iniSeparator: ";",
+		//parser: null,
 	};
 
-	static get currentLocale(): string {
-		return this.config.currentLocale;
+	static get currentLanguage(): Language {
+		return this.config.currentLanguage;
 	}
 
-	static set currentLocale(val: string) {
-		this.config.currentLocale = val;
+	static set currentLanguage(val: Language) {
+		this.config.currentLanguage = val;
 	}
 
 	static get supportedLanguages(): string[] {
@@ -57,7 +63,7 @@ class I18 {
 		this.config.path = val;
 	}
 
-	static get iniPrefix(): string {
+	/*static get iniPrefix(): string {
 		return this.config.iniPrefix;
 	}
 
@@ -87,18 +93,18 @@ class I18 {
 
 	static set parser(val: ParserFunction | null) {
 		this.config.parser = val;
-	}
+	}*/
 
-	static init(locale: string | null = null): void {
+	/*static init(locale: string | null = null): void {
 		const lang = navigator.language || "";
 		if (!locale) locale = lang.substr(0, 2);
 		if (this.config.supportedLanguages.indexOf(locale) < 0) {
 			locale = this.config.supportedLanguages[0];
 		}
 		this.currentLocale = locale;
-	}
+	}*/
 
-	static parse(data: string): Record<string, string> {
+	/*private static parse(data: string): Record<string, string> {
 		const strings: Record<string, string> = {};
 
 		if (this.config.parser) {
@@ -114,14 +120,19 @@ class I18 {
 		}
 
 		return strings;
-	}
+	}*/
 
-	static load(callback: () => void): void {
-		const url = `${this.config.path}/${this.config.iniPrefix}${this.currentLocale}.${this.config.iniExt}?v=${Date.now()}`;
-		sendGet(url, null, data => {
-			this.setup(this.parse(data as string));
-			if (callback) callback();
-		});
+	//static load(callback: () => void): void {
+	//	const url = `${this.config.path}/${this.config.iniPrefix}${this.currentLocale}.${this.config.iniExt}?v=${Date.now()}`;
+	//	sendGet(url, null, data => {
+	//		this.setup(this.parse(data as string));
+	//		if (callback) callback();
+	//	});
+	//}
+
+	static load(callback: () => void) {
+		this.setup(this.currentLanguage.mapping);
+		if (callback) callback();
 	}
 
 	private static setup(data: Record<string, string>): void {

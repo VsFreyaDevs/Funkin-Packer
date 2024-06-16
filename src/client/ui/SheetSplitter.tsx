@@ -2,7 +2,7 @@ import * as React from 'react';
 import APP from '../APP';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 
 import { SplitterMaster } from 'api/splitters';
 import LocalImagesLoader from "../utils/LocalImagesLoader";

@@ -3,7 +3,7 @@ import * as path from 'path';
 import { dialog } from '@electron/remote';
 
 import type { FileData } from 'types';
-import I18 from 'client/utils/I18';
+import I18 from 'client/locale/I18';
 
 class Downloader {
 

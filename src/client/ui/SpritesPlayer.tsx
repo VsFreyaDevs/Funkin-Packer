@@ -1,5 +1,5 @@
 import * as React from 'react';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 import { smartSortImages} from 'api/utils/common';
 import type { PackResultsData } from 'types';
 import type { Rect } from 'api/types';

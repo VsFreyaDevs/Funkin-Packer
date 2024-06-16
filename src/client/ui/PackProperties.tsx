@@ -9,7 +9,7 @@ import { getPackerByType } from 'api/packers';
 import filters from '../filters';
 import { getFilterByType } from '../filters';
 
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import type { PackOptions } from 'api/types';
@@ -177,7 +177,6 @@ class PackProperties extends React.Component<Props, State> {
 					break;
 				}
 			}
-			console.log(methodValid, packerMethods, data.packerMethod, packer.defaultMethod);
 
 			if(!methodValid) data.packerMethod = packer.defaultMethod;
 

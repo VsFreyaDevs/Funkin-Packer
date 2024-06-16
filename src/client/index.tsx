@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import I18 from './utils/I18';
+import I18 from './locale/I18';
 import APP from './APP';
 import MainLayout from './ui/MainLayout';
 
 import Storage from './utils/Storage';
 
-import {languages} from './resources/static/localization/languages';
+import {getLanguageByCode, languages, type Language} from './locale/languages';
 
 import Controller from 'platform/Controller';
 import TypedObserver from 'TypedObserver';
@@ -43,11 +43,12 @@ function run() {
 }
 
 function loadLocalization() {
-	for(let i = 1; i < languages.length; i++) {
+	I18.supportedLanguages = [];
+	for(let i = 0; i < languages.length; i++) {
 		I18.supportedLanguages.push(languages[i].lang);
 	}
 	I18.path = "static/localization";
-	I18.init(Storage.load(STORAGE_LANGUAGE_KEY, false));
+	I18.currentLanguage = getLanguageByCode(Storage.load(STORAGE_LANGUAGE_KEY, false));
 
 	app = new APP();
 
@@ -76,12 +77,13 @@ function injectCss(path: string) {
 	document.head.appendChild(el);
 }
 
-function setLocale(locale: string) {
+function setLocale(locale: Language) {
 	if(!layoutRef) return;
 
-	I18.init(locale);
+	I18.currentLanguage = locale;
+	//I18.init(locale);
 	I18.load(() => {
-		Storage.save(STORAGE_LANGUAGE_KEY, I18.currentLocale);
+		Storage.save(STORAGE_LANGUAGE_KEY, I18.currentLanguage.lang);
 		Controller.updateLocale();
 		layoutRef.current.forceUpdate();
 	});

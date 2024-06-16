@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import LocalImagesLoader from '../utils/LocalImagesLoader';
 import ZipLoader from '../utils/ZipLoader';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import ItemTreePart, { type TreeListItem } from './ItemTree';

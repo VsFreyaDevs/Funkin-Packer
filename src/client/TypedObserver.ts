@@ -4,6 +4,7 @@ import type { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
 import type { LoadedImages, PackOptions } from "api/types";
 
 import TypedObserver from "api/TypedObserver";
+import type { Language } from "./locale/languages";
 
 export default {
 	imagesListChanged: new TypedObserver<Readonly<LoadedImages>>(),
@@ -15,7 +16,7 @@ export default {
 	packExporterChanged: new TypedObserver<Readonly<PackOptions>>(),
 	showMessage: new TypedObserver<Readonly<string | ButtonData[]>, (content: string, buttons?: ButtonData[]) => void>(),
 	imageSelected: new TypedObserver<Readonly<SelectedEvent>>(),
-	changeLanguage: new TypedObserver<Readonly<string>>(),
+	changeLanguage: new TypedObserver<Readonly<Language>>(),
 	storedOrderChanged: new TypedObserver<Readonly<string>[]>(),
 	repackInfo: new TypedObserver<Readonly<RepackInfoEvent> | null>(),
 };

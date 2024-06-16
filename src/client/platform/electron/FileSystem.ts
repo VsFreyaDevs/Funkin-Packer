@@ -4,7 +4,7 @@ import { dialog } from '@electron/remote';
 
 
 import Controller from './Controller';
-import I18 from '../../utils/I18';
+import I18 from '../../locale/I18';
 import Base64ImagesLoader, { type Base64LoaderData } from '../../utils/Base64ImagesLoader';
 import { Observer, GLOBAL_EVENT } from '../../Observer';
 import type { LoadedImages } from 'api/types';

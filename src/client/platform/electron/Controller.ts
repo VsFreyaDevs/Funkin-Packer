@@ -1,9 +1,9 @@
 import { ipcRenderer } from 'electron';
 
 import { Observer, GLOBAL_EVENT } from "client/Observer";
-import I18 from 'client/utils/I18';
+import I18 from 'client/locale/I18';
 import * as appInfo from '../../../../package.json';
-import { languages} from '../../resources/static/localization/languages';
+import { languages } from '../../locale/languages';
 
 import Project from './Project';
 
@@ -110,7 +110,7 @@ class Controller {
 
 	static updateLocale() {
 		ipcRenderer.send('update-locale', {
-			currentLocale: I18.currentLocale,
+			currentLocale: I18.currentLanguage.lang,
 			strings: I18.strings
 		});
 	}

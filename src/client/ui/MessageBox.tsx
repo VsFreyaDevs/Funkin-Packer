@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 
 interface Props {
 	readonly content: string;

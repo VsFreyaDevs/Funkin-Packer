@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import TextureView from './TextureView';
 import SpritesPlayer from './SpritesPlayer';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 import type { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 import type { StatsInfoEvent } from './StatsInfo';

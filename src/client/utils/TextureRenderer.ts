@@ -1,7 +1,7 @@
 import { GLOBAL_EVENT, Observer } from "../Observer";
 import TypedObserver from "TypedObserver";
 import type { PackOptions, Rect } from "api/types";
-import I18 from "./I18";
+import I18 from "../locale/I18";
 import { getSheetSize } from "api/utils/Frames";
 
 class TextureRenderer {

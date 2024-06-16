@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../../Observer';
 import Storage from '../../utils/Storage';
-import I18 from '../../utils/I18';
+import I18 from '../../locale/I18';
 import TypedObserver from 'TypedObserver';
 
 const STORAGE_SKIPPED_VERSIONS_KEY = "skipped-versions";

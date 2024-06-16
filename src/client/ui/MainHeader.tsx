@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import I18 from '../utils/I18';
+import I18 from '../locale/I18';
 import * as appInfo from '../../../package.json';
-import { languages } from '../resources/static/localization/languages';
+import { getLanguageByCode, languages } from '../locale/languages';
 import StatsInfo from './StatsInfo';
 import TypedObserver from 'TypedObserver';
 
@@ -18,7 +18,7 @@ class MainHeader extends React.Component {
 	} */
 
 	changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		TypedObserver.changeLanguage.emit(e.target.value);
+		TypedObserver.changeLanguage.emit(getLanguageByCode(e.target.value));
 	}
 
 	showSplitter = () => {
@@ -65,7 +65,7 @@ class MainHeader extends React.Component {
 
 					<div className="main-header-language border-color-gray">
 						{I18.f("LANGUAGE")}
-						<select defaultValue={I18.currentLocale} onChange={this.changeLanguage}>
+						<select defaultValue={I18.currentLanguage.lang} onChange={this.changeLanguage}>
 							{
 								languages.map((item) => {
 									return (

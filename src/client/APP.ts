@@ -2,7 +2,7 @@ import { Observer, GLOBAL_EVENT } from './Observer';
 import PackProcessor from 'api/PackProcessor';
 import TextureRenderer from './utils/TextureRenderer';
 import { getFilterByType } from './filters';
-import I18 from './utils/I18';
+import I18 from './locale/I18';
 import type { RenderSettings } from 'api/exporters';
 import { startExporter } from 'api/exporters';
 import Downloader from 'platform/Downloader';
