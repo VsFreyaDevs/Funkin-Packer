@@ -1,8 +1,8 @@
 import * as appInfo from '../../../package.json';
 import { smartSortImages, removeFromArray } from '../utils/common';
-import Globals from 'client/utils/Globals';
 import finishExporter from './render';
 import type { Rect, SplitterRect } from 'api/types';
+import FunkinPackerApi from 'api/FunkinPackerApi';
 
 import * as TemplateCocos2d from './templates/Cocos2d.mst';
 import * as TemplateCss from './templates/Css.mst';
@@ -350,7 +350,7 @@ function prepareData(data: Rect[], options: RenderSettings): {
 	return {rects: ret, config: opt};
 }
 
-function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings): Promise<string> {
+function startExporter(api:FunkinPackerApi, exporter: Exporter, data: Rect[], options: RenderSettings): Promise<string> {
 	return new Promise((resolve, reject) => {
 		let {rects, config} = prepareData(data, options);
 		const renderOptions = {
@@ -364,7 +364,7 @@ function startExporter(exporter: Exporter, data: Rect[], options: RenderSettings
 			rects = rects.sort((a, b) => smartSortImages(a.name, b.name));
 		}
 
-		let sparrowOrder = Globals.sparrowOrder;
+		let sparrowOrder = api.getStoredOrder();
 
 		// Make order the same as before
 		if(sparrowOrder !== null) {

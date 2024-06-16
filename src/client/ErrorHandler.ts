@@ -7,8 +7,10 @@ export default class ErrorHandler {
 			switch (e.code) {
 				case ErrorCodes.INVALID_SIZE_ERROR:
 					return I18.f("INVALID_SIZE_ERROR", e.args[0], e.args[1]);
-				default:
-					return I18.f("UNKNOWN_ERROR", e.args.join(", "));
+				case ErrorCodes.NO_IMAGES_ERROR:
+					return I18.f("NO_IMAGES_ERROR");
+				case ErrorCodes.UNKNOWN_ERROR:
+					return e.toString();
 			}
 		}
 

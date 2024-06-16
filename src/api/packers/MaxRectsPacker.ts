@@ -66,9 +66,7 @@ class MaxRectsPacker extends Packer {
 			}
 			item.data.frame.x = item.x;
 			item.data.frame.y = item.y;
-			if (item.rot) {
-				item.data.rotated = true;
-			}
+			item.data.rotated = item.rot;
 			res.push(item.data);
 		}
 

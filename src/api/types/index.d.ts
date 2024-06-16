@@ -78,4 +78,4 @@ declare type Rect = SplitterRect & {
 }
 
 declare type LoadedImage = CustomImage;
-declare type LoadedImages = { [key: string]: LoadedImage };
+declare type LoadedImages = Record<string, LoadedImage>;

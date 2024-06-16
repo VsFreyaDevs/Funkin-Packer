@@ -11,6 +11,7 @@ import TypedObserver from 'TypedObserver';
 import type { PackerCombo } from 'api/packers/Packer';
 import type { LoadedImages, PackOptions, Rect } from 'api/types';
 import ErrorHandler from './ErrorHandler';
+import FunkinPackerApi from 'api/FunkinPackerApi';
 
 let INSTANCE:APP;
 
@@ -19,12 +20,16 @@ class APP {
 	packOptions: PackOptions;
 	packResult: PackResultsData[] | null;
 
+	api: FunkinPackerApi;
+
 	constructor() {
 		INSTANCE = this;
 
 		this.images = {};
 		this.packOptions = {};
 		this.packResult = null;
+
+		this.api = new FunkinPackerApi();
 
 		TypedObserver.imagesListChanged.on(this.onImagesListChanged, this);
 		TypedObserver.packOptionsChanged.on(this.onPackOptionsChanged, this);
@@ -65,7 +70,10 @@ class APP {
 
 	private doPack() {
 		try {
-			PackProcessor.pack(this.images, this.packOptions, this.onPackComplete);
+			this.api.loadImages(this.images);
+			this.api.setOptions(this.packOptions);
+			const {result, usedPacker} = this.api.pack();
+			this.onPackComplete(result, usedPacker);
 		}
 		catch (e:any) {
 			this.onPackError({
@@ -166,7 +174,7 @@ class APP {
 			try {
 				files.push({
 					name: fName + "." + exporter.fileExt,
-					content: await startExporter(exporter, item.data, options),
+					content: await startExporter(this.api, exporter, item.data, options),
 					base64: false
 				});
 			}

@@ -11,7 +11,7 @@ import TypedObserver from 'TypedObserver';
 
 const GridSplitter = new Grid();
 
-const list: Splitter[] = [
+export const list: Splitter[] = [
 	new Sparrow(),
 	GridSplitter,
 	new JsonHash(),

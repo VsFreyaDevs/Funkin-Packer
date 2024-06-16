@@ -6,9 +6,16 @@ import { ApiError, ErrorCodes } from 'api/Errors';
 import type { LoadedImages, PackOptions, Rect } from 'api/types';
 import type { PackerClass, PackerCombo } from './packers/Packer';
 import { getSheetSize } from './utils/Frames';
+import FunkinPackerApi from './FunkinPackerApi';
 
 class PackProcessor {
-	private static detectIdentical(rects: Rect[], didTrim: boolean) {
+	private api: FunkinPackerApi;
+
+	constructor(api:FunkinPackerApi) {
+		this.api = api;
+	}
+
+	private detectIdentical(rects: Rect[], didTrim: boolean) {
 		const identical:Rect[] = [];
 
 		const len = rects.length;
@@ -17,7 +24,7 @@ class PackProcessor {
 			const rect1 = rects[i] as Rect;
 			for (let n = i + 1; n < len; n++) {
 				const rect2 = rects[n] as Rect;
-				if (identical.indexOf(rect2) === -1 && PackProcessor.compareImages(rect1, rect2, didTrim)) {
+				if (identical.indexOf(rect2) === -1 && this.compareImages(rect1, rect2, didTrim)) {
 					rect2.identical = rect1;
 					identical.push(rect2);
 				}
@@ -34,7 +41,7 @@ class PackProcessor {
 		} as const;
 	}
 
-	private static compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
+	private compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
 		if(!didTrim) {
 			if(!rect1.image || !rect2.image) return false;
 			if(rect1.image.base64 === rect2.image.base64) {
@@ -60,7 +67,7 @@ class PackProcessor {
 		return true;
 	}
 
-	private static applyIdentical(rects:Rect[], identical:Rect[]) {
+	private applyIdentical(rects:Rect[], identical:Rect[]) {
 		const clones:Rect[] = [];
 		const removeIdentical:Rect[] = [];
 
@@ -98,7 +105,7 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void) {
+	pack(images:LoadedImages, options: PackOptions = {}) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
@@ -184,7 +191,7 @@ class PackProcessor {
 		let identical:Rect[] = [];
 
 		if (options.detectIdentical) {
-			const res = PackProcessor.detectIdentical(rects, options.allowTrim ?? true);
+			const res = this.detectIdentical(rects, options.allowTrim ?? true);
 
 			rects = res.rects;
 			identical = res.identical;
@@ -259,7 +266,7 @@ class PackProcessor {
 				let result = packer.pack(_rects, combo.packerMethod);
 
 				if (options.detectIdentical) {
-					result = PackProcessor.applyIdentical(result, _identical);
+					result = this.applyIdentical(result, _identical);
 				}
 
 				res.push(result);
@@ -301,12 +308,13 @@ class PackProcessor {
 		if(PROFILER)
 			console.timeEnd("pack");
 
-		if (onComplete) {
-			onComplete(optimalRes, usedPacker);
-		}
+		return {
+			result: optimalRes,
+			usedPacker
+		} as const;
 	}
 
-	private static removeRect(rects:Rect[], name:string) {
+	private removeRect(rects:Rect[], name:string) {
 		for (let i = 0; i < rects.length; i++) {
 			if (rects[i].name === name) {
 				rects.splice(i, 1);

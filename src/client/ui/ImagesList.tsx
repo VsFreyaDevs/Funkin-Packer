@@ -9,13 +9,13 @@ import ItemTreePart, { type TreeListItem } from './ItemTree';
 
 //import * as FileSystem from './platform/FileSystem';
 
-import Globals from '../utils/Globals';
 import {fixManualOffsets, getDummyRect, setMaxSizes, smartSortImages} from 'api/utils/common';
 import type { SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
 import type { ButtonData } from './MessageBox';
 import type { LoadedImages } from 'api/types';
+import APP from 'client/APP';
 
 // TODO: make this not use CustomImage.selected + CustomImage.current
 
@@ -282,7 +282,7 @@ class ImagesList extends React.Component<Props, State> {
 	doClear = () => {
 		TypedObserver.imagesListChanged.emit({});
 		TypedObserver.imagesListSelectedChanged.emit([]);
-		Globals.didClearImageList();
+		APP.i.api.reset();
 		this.setState({images: {}});
 	}
 

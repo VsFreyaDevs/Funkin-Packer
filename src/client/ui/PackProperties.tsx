@@ -12,9 +12,9 @@ import { getFilterByType } from '../filters';
 import I18 from '../utils/I18';
 
 import { Observer, GLOBAL_EVENT } from '../Observer';
-import Globals from '../utils/Globals';
 import type { PackOptions } from 'api/types';
 import TypedObserver from 'TypedObserver';
+import APP from 'client/APP';
 
 //import FileSystem from 'platform/FileSystem';
 
@@ -66,7 +66,7 @@ class PackProperties extends React.Component<Props, State> {
 
 		this.state = {
 			packer: this.packOptions.packer,
-			hasStoredOrder: Globals.hasStoredOrder()
+			hasStoredOrder: APP.i.api.hasStoredOrder()
 		};
 
 		this.fileNameRef = React.createRef();
@@ -500,7 +500,7 @@ class PackProperties extends React.Component<Props, State> {
 								<td colSpan={3} className="center-align">
 									{
 										this.state.hasStoredOrder ?
-											<div className="btn back-800 border-color-gray color-white" onClick={Globals.clearOrder}>{I18.f("CLEAR_STORED_ORDER")}</div> :
+											<div className="btn back-800 border-color-gray color-white" onClick={APP.i.api.clearOrder}>{I18.f("CLEAR_STORED_ORDER")}</div> :
 											<></>
 										//<div className="btn back-400 border-color-gray color-white">{I18.f("CLEAR_STORED_ORDER")}</div>
 									}
