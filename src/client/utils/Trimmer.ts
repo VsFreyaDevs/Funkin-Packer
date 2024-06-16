@@ -1,7 +1,11 @@
 import type { Rect } from "types";
 
 const cns = document.createElement("canvas");
-const ctx = cns.getContext("2d", {willReadFrequently: true});
+const _ctx = cns.getContext("2d", {willReadFrequently: true});
+if(!_ctx) {
+	throw new Error("No canvas context");
+}
+const ctx = _ctx;
 
 /*#__PURE__*/
 /*function getAlpha(data: Uint8ClampedArray, width: number, x: number, y: number) {
@@ -64,12 +68,13 @@ class Trimmer {
 			console.time("trim");
 		for(const item of rects) {
 			const img = item.image;
+			if(!img) continue;
 
 			let spaces = {left: 0, right: 0, top: 0, bottom: 0};
 
 			const cached = img.cachedTrim !== undefined && img.cachedTrim === threshold;
 
-			if(cached) {
+			if(cached && img.cachedSpaces) {
 				spaces = img.cachedSpaces;
 			} else {
 				cns.width = img.width;

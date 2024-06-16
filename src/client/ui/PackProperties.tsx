@@ -357,6 +357,7 @@ class PackProperties extends React.Component<Props, State> {
 
 	override render() {
 		let exporter = getExporterByType(this.packOptions.exporter);
+		if(!exporter) return <span>Failed to load exporter, please reload the page, if issue persists, report it to the developer. Data: {JSON.stringify(this.packOptions)}</span>;
 		let allowRotation = this.packOptions.allowRotation && exporter.allowRotation;
 		let exporterRotationDisabled = !exporter.allowRotation;
 		let allowTrim = this.packOptions.allowTrim && exporter.allowTrim;

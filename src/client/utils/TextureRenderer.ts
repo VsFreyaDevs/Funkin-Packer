@@ -1,4 +1,7 @@
+import { GLOBAL_EVENT, Observer } from "../Observer";
+import TypedObserver from "TypedObserver";
 import type { PackOptions, Rect } from "types";
+import I18 from "./I18";
 
 class TextureRenderer {
 	readonly buffer: HTMLCanvasElement;
@@ -68,6 +71,13 @@ class TextureRenderer {
 
 	render(data:Rect[], options:PackOptions={}) {
 		const ctx = this.buffer.getContext("2d");
+
+		if(!ctx) {
+			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
+			TypedObserver.showMessage.emit(I18.f('ERROR_NO_CONTEXT'));
+
+			return;
+		}
 
 		if(PROFILER)
 			console.time("render");
@@ -175,6 +185,7 @@ class TextureRenderer {
 		if(item.skipRender) return;
 
 		const img = item.image;
+		if(!img) return;
 
 		if (item.rotated) {
 			ctx.save();

@@ -9,12 +9,13 @@ class ZipLoader {
 	data: File[];
 	loaded: LoadedImages;
 	loadedCnt: number;
-	onProgress: (loaded: number) => void;
-	onEnd: (data: LoadedImages) => void;
+	onProgress: ((loaded: number) => void) | null;
+	onEnd: ((data: LoadedImages) => void) | null;
 	zip: JSZip;
 	filesList: string[];
 
 	constructor() {
+		this.data = [];
 		this.onProgress = null;
 		this.onEnd = null;
 		this.zip = null;
@@ -23,7 +24,7 @@ class ZipLoader {
 		this.loadedCnt = 0;
 	}
 
-	load = (file: File, onProgress?: (loaded: number) => void, onEnd?: (data: LoadedImages) => void) => {
+	load = (file: File, onProgress: (loaded: number) => void, onEnd: (data: LoadedImages) => void) => {
 		this.onProgress = onProgress;
 		this.onEnd = onEnd;
 
@@ -39,7 +40,7 @@ class ZipLoader {
 		);
 	}
 
-	parseZip = () => {
+	private parseZip = () => {
 		const files = Object.keys(this.zip.files);
 		const extensions = ["png", "jpg", "jpeg", "gif"];
 
@@ -60,7 +61,7 @@ class ZipLoader {
 		this.loadNext();
 	}
 
-	loadNext = () => {
+	private loadNext = () => {
 		if(!this.filesList.length) {
 			this.waitImages();
 			return;

@@ -231,7 +231,9 @@ let list: Exporter[] = [
 	}
 ] as const;
 
-function getExporterByType(type:string): Exporter {
+function getExporterByType(type:string | undefined | null): Exporter | null {
+	if(!type) return null;
+
 	for(const item of list) {
 		if(item.exporterName === type) {
 			return item;

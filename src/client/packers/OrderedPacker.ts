@@ -18,7 +18,9 @@ type Block = {
 	rotated?: boolean,
 }
 
-function calculateArea(blocks:Block[]) {
+function calculateArea(blocks:Block[] | null) {
+	if(!blocks) return 0;
+	if(blocks.length === 0) return 0;
 	let rightBound = 0;
 	let bottomBound = 0;
 	for(const block of blocks) {
@@ -45,12 +47,14 @@ class OrderedPacker extends Packer {
 	}
 
 	override pack(_data:Rect[], _method:MethodType):Rect[] {
-		let blocks:Block[] = null;
+		let blocks:Block[] | null = null;
 		let currentBest:number = -1;
-		function setBest(bb:Block[]) {
+		let currentLength = Number.NEGATIVE_INFINITY;
+		function setBest(bb:Block[] | null) {
 			if(bb != null) {
 				blocks = bb;
 				currentBest = calculateArea(bb);
+				currentLength = bb.length;
 				//console.log("setBest", calculateWidth(bb), calculateHeight(bb), currentBest);
 			}
 		}
@@ -70,10 +74,13 @@ class OrderedPacker extends Packer {
 			setBest(new_blocks);
 			if(this.allowRotate) {
 				let new_blocks = this._pack(_data, _method, true, true);
-				if(calculateArea(new_blocks) <= currentBest && new_blocks.length > blocks.length) {
+				if(new_blocks != null && calculateArea(new_blocks) <= currentBest && new_blocks.length > currentLength) {
 					// fits more blocks in the same or less size
 					blocks = new_blocks;
 				}
+			}
+			if(blocks == null) {
+				throw new Error("No blocks found");
 			}
 		}
 		//let blocks = this._pack(_data, _method, this.allowRotate);
@@ -92,7 +99,7 @@ class OrderedPacker extends Packer {
 		return rects;
 	}
 
-	private _pack(_data:Rect[], _method:MethodType, rotated:boolean, stopWhenFull:boolean = false):Block[] {
+	private _pack(_data:Rect[], _method:MethodType, rotated:boolean, stopWhenFull:boolean = false):Block[] | null {
 		const blocks:Block[] = [];
 		for(const rect of _data) {
 			blocks.push({

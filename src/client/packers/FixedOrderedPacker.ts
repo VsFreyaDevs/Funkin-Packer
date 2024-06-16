@@ -24,33 +24,44 @@ type Block = {
 	rotated: boolean,
 }
 
-function calculateWidth(blocks: Block[]): number {
+function calculateWidth(blocks: Block[] | null): number {
+	if(!blocks) return 0;
+	if(blocks.length === 0) return 0;
+
 	let rightBound = 0;
 	for(const block of blocks) {
-		rightBound = Math.max(rightBound, block.x + block.w);
+		rightBound = Math.max(rightBound, (block.x ?? 0) + block.w);
 	}
 	return rightBound;
 }
 
-function calculateHeight(blocks: Block[]): number {
+function calculateHeight(blocks: Block[] | null): number {
+	if(!blocks) return 0;
+	if(blocks.length === 0) return 0;
+
 	let bottomBound = 0;
 	for (const block of blocks) {
-		bottomBound = Math.max(bottomBound, block.y + block.h);
+		bottomBound = Math.max(bottomBound, (block.y ?? 0) + block.h);
 	}
 	return bottomBound;
 }
 
-function calculateArea(blocks:Block[]) {
+function calculateArea(blocks:Block[] | null) {
+	if(!blocks) return 0;
+	if(blocks.length === 0) return 0;
+
 	let rightBound = 0;
 	let bottomBound = 0;
 	for(const block of blocks) {
-		rightBound = Math.max(rightBound, block.x + block.w);
-		bottomBound = Math.max(bottomBound, block.y + block.h);
+		rightBound = Math.max(rightBound, (block.x ?? 0) + block.w);
+		bottomBound = Math.max(bottomBound, (block.y ?? 0) + block.h);
 	}
 	return (rightBound) * (bottomBound);
 }
 
-function getMinimumSize(blocks: Rect[]) {
+function getMinimumSize(blocks: Rect[] | null) {
+	if(!blocks) return {w: 0, h: 0};
+	if(blocks.length === 0) return {w: 0, h: 0};
 	let width = Number.POSITIVE_INFINITY;
 	let height = Number.POSITIVE_INFINITY;
 	for(const block of blocks) {
@@ -130,9 +141,9 @@ class FixedOrderedPacker extends Packer {
 
 		const originalWidth = this.width;
 		const originalHeight = this.height;
-		let blocks:Block[] = null;
+		let blocks:Block[] | null = null;
 		let currentBest:number = -1;
-		function setBest(bb:Block[]) {
+		function setBest(bb:Block[] | null) {
 			if(bb != null) {
 				blocks = bb;
 				currentBest = calculateArea(bb);
@@ -170,6 +181,11 @@ class FixedOrderedPacker extends Packer {
 		if(blocks == null) {
 			let newBlocks = this._pack(sortedData, true, true);
 			setBest(newBlocks);
+		}
+
+		if(blocks == null) {
+			throw new Error("No blocks found");
+			return [];
 		}
 
 		/*
@@ -221,6 +237,9 @@ class FixedOrderedPacker extends Packer {
 		const rects:Rect[] = [];
 
 		for(let block of blocks) {
+			if(block.x == null || block.y == null) {
+				continue;
+			}
 			block.rect.frame.x = block.x;
 			block.rect.frame.y = block.y;
 			//block.fit.w -= this.padding;
@@ -244,7 +263,7 @@ class FixedOrderedPacker extends Packer {
 			blocks.push(block);
 		}
 
-		let packedBlocks:Block[] = null;
+		let packedBlocks:Block[];
 		if(this.isAlt) {
 			packedBlocks = this.packAlt(blocks, allowRotation, stopWhenFull);
 		} else {
@@ -253,7 +272,7 @@ class FixedOrderedPacker extends Packer {
 		return packedBlocks;
 	}
 
-	private packNormal(blocks: Block[], allowRotation: boolean, stopWhenFull: boolean = false): Block[] {
+	private packNormal(blocks: Block[], allowRotation: boolean, stopWhenFull: boolean = false): Block[] | null {
 		let xPos = 0;
 		let yPos = 0;
 		let maxRowHeight = 0;

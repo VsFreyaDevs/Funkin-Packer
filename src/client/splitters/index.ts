@@ -26,8 +26,8 @@ function getDefaultSplitter():Splitter {
 }
 
 export class SplitterMaster {
-	currentSplitter: Splitter;
-	_storedSplitterOrder: string[];
+	currentSplitter: Splitter | null;
+	_storedSplitterOrder: string[] | null;
 
 	constructor() {
 		this.currentSplitter = null;
@@ -87,6 +87,7 @@ export class SplitterMaster {
 	}
 
 	finishSplit = () => {
+		if(this._storedSplitterOrder === null) return;
 		TypedObserver.storedOrderChanged.emit(this._storedSplitterOrder);
 		this._storedSplitterOrder = null;
 	}

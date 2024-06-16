@@ -273,9 +273,15 @@ class SheetSplitter extends React.Component<Props, State> {
 		}
 
 		const ctx = this.buffer.getContext('2d');
+		if(!ctx) {
+			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
+			TypedObserver.showMessage.emit(I18.f('ERROR_NO_CONTEXT'));
+
+			return;
+		}
 		const files:FileData[] = [];
 
-		const disableUntrim = this.disableUntrimRef.current.checked;
+		const disableUntrim = this.disableUntrimRef.current?.checked ?? false;
 
 		setMaxSizes(this.frames);
 		// dont fix offsets if we are exporting to a zip
@@ -285,8 +291,8 @@ class SheetSplitter extends React.Component<Props, State> {
 
 			//let prefix = cleanPrefix(item.originalFile || item.file || item.name);
 
-			const ssw = item.sourceSize.mw;
-			const ssh = item.sourceSize.mh;
+			const ssw = item.sourceSize.mw ?? item.sourceSize.w;
+			const ssh = item.sourceSize.mh ?? item.sourceSize.h;
 
 			this.buffer.width = (disableUntrim && trimmed) ? item.spriteSourceSize.w : ssw;
 			this.buffer.height = (disableUntrim && trimmed) ? item.spriteSourceSize.h : ssh;
@@ -439,6 +445,13 @@ class SheetSplitter extends React.Component<Props, State> {
 
 				const canvas = this.viewRef.current;
 				const ctx = canvas.getContext('2d');
+
+				if(!ctx) {
+					Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
+					TypedObserver.showMessage.emit(I18.f('ERROR_NO_CONTEXT'));
+
+					return;
+				}
 
 				const isSparrow = splitterMaster.currentSplitter.splitterName === 'Sparrow';
 

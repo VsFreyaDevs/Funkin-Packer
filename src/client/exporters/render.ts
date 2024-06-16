@@ -26,7 +26,7 @@ mustache.Formatters = {
 
 export default function finishExporter(exporter:Exporter, renderOptions:TemplateSettings, resolve:(value: string | PromiseLike<string>) => void, reject:(value: string | PromiseLike<string>) => void) {
 	try {
-		let ret = mustache.render(exporter.content, renderOptions);
+		let ret = mustache.render(exporter?.content ?? "", renderOptions);
 		resolve(ret);
 	}
 	catch(e: any) {

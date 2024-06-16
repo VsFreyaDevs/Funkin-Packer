@@ -11,7 +11,7 @@ import type { PackerCombo } from '../packers/Packer';
 
 export type StatsInfoEvent = {
 	packResults: PackResultsData[];
-	usedPacker: PackerCombo;
+	usedPacker: PackerCombo | null;
 }
 
 export type RepackInfoEvent = {
@@ -24,7 +24,7 @@ interface Props {}
 
 interface State {
 	info: StatsInfoEvent;
-	repackInfo: RepackInfoEvent;
+	repackInfo: RepackInfoEvent | null;
 	si: number;
 }
 

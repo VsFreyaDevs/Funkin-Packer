@@ -3,7 +3,7 @@ import TypedObserver from "TypedObserver";
 let INSTANCE:Globals;
 
 class Globals {
-	storedOrder: string[];
+	storedOrder: string[] | null;
 	constructor() {
 		INSTANCE = this;
 

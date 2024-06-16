@@ -128,6 +128,7 @@ SELECT_TEXTURE;Texture
 SELECT_DATA_FILE;Data file
 SPLITTER;Repack / Split sheet
 SPLITTER_ERROR_NO_FRAMES;Sprites not found. Probably, atlas format is incorrect.
+ERROR_NO_CONTEXT;No canvas context. Please, try again.
 DISABLE_UNTRIM;Disable Untrimming:
 REPACK;Repack
 CLEAR_STORED_ORDER_TITLE;Clears the order from the repack

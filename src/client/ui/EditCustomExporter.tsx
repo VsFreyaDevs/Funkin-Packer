@@ -35,10 +35,10 @@ class EditCustomExporter extends React.Component {
 	save = () => {
 		let exporter = getExporterByType("custom");
 
-		let content = (this.contentRef.current).value;
-		let allowTrim = (this.allowTrimRef.current).checked;
-		let allowRotation = (this.allowRotationRef.current).checked;
-		let fileExt = (this.fileExtRef.current).value;
+		let content = (this.contentRef.current)?.value ?? "";
+		let allowTrim = (this.allowTrimRef.current)?.checked ?? true;
+		let allowRotation = (this.allowRotationRef.current)?.checked ?? false;
+		let fileExt = (this.fileExtRef.current)?.value ?? ".custom";
 
 		try {
 			mustache.parse(content);

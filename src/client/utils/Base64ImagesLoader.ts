@@ -10,18 +10,18 @@ export type Base64LoaderData = {
 class Base64ImagesLoader {
 	data: Base64LoaderData[];
 	loaded: LoadedImages;
-	loadedCnt: number;
-	onProgress: (loaded: number) => void;
-	onEnd: (data: LoadedImages) => void;
+	onProgress: ((loaded: number) => void) | null;
+	onEnd: ((data: LoadedImages) => void) | null;
 
 	constructor() {
 		this.loaded = {};
+		this.data = [];
 
 		this.onProgress = null;
 		this.onEnd = null;
 	}
 
-	load = (data: Base64LoaderData[], onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) => {
+	load = (data: Base64LoaderData[], onProgress:(loaded: number) => void, onEnd:(data: LoadedImages) => void) => {
 		this.data = data.slice();
 
 		this.onProgress = onProgress;

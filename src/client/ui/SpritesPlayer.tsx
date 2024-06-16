@@ -4,6 +4,7 @@ import { smartSortImages} from '../utils/common';
 import type { PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 import type { TextureBack } from './SheetSplitter';
+import { GLOBAL_EVENT, Observer } from '../Observer';
 
 interface Props {
 	readonly start: boolean;
@@ -30,7 +31,7 @@ class SpritesPlayer extends React.Component<Props> {
 	height: number;
 	selectedImages: string[];
 
-	updateTimer: NodeJS.Timeout | number;
+	updateTimer: NodeJS.Timeout | number | null;
 
 	constructor(props: Props) {
 		super(props);
@@ -181,7 +182,7 @@ class SpritesPlayer extends React.Component<Props> {
 	}
 
 	update = (skipFrameUpdate:boolean) => {
-		clearTimeout(this.updateTimer);
+		if(this.updateTimer) clearTimeout(this.updateTimer);
 
 		if(!skipFrameUpdate) {
 			this.currentFrame++;
@@ -196,6 +197,12 @@ class SpritesPlayer extends React.Component<Props> {
 
 	renderTexture = () => {
 		const ctx = this.viewRef.current.getContext("2d");
+		if(!ctx) {
+			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
+			TypedObserver.showMessage.emit(I18.f('ERROR_NO_CONTEXT'));
+
+			return;
+		}
 
 		ctx.clearRect(0, 0, this.width, this.height);
 
@@ -215,6 +222,12 @@ class SpritesPlayer extends React.Component<Props> {
 		buffer.height = h;
 
 		const bufferCtx = buffer.getContext("2d");
+		if(!bufferCtx) {
+			Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
+			TypedObserver.showMessage.emit(I18.f('ERROR_NO_CONTEXT'));
+
+			return;
+		}
 		bufferCtx.clearRect(0, 0, w, h);
 
 		let frameX = texture.config.spriteSourceSize.x;
@@ -275,7 +288,7 @@ class SpritesPlayer extends React.Component<Props> {
 	}
 
 	stop = () => {
-		clearTimeout(this.updateTimer);
+		if(this.updateTimer) clearTimeout(this.updateTimer);
 	}
 
 	override render() {

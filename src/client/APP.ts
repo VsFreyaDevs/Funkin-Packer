@@ -109,6 +109,10 @@ class APP {
 
 		const files:FileData[] = [];
 
+		const textureFormat = this.packOptions.textureFormat ?? "png";
+		//TODO: move to options
+		const pixelFormat = textureFormat === "png" ? "RGBA8888" : "RGB888";
+
 		let ix = 0;
 		for (const item of this.packResult) {
 
@@ -118,39 +122,36 @@ class APP {
 
 			const buffer = item.renderer.getBuffer();
 
-			let imageData = filter.apply(buffer).toDataURL(this.packOptions.textureFormat === "png" ? "image/png" : "image/jpeg");
+			let imageData = filter.apply(buffer).toDataURL(textureFormat === "png" ? "image/png" : "image/jpeg");
 			const parts = imageData.split(",");
 			parts.shift();
 			imageData = parts.join(",");
 
 
 			files.push({
-				name: `${fName}.${this.packOptions.textureFormat}`,
+				name: `${fName}.${textureFormat}`,
 				content: imageData,
 				base64: true
 			});
 
-			//TODO: move to options
-			const pixelFormat = this.packOptions.textureFormat === "png" ? "RGBA8888" : "RGB888";
-
 			const options:RenderSettings = {
 				imageName: `${fName}`,
-				imageFile: `${fName}.${this.packOptions.textureFormat}`,
+				imageFile: `${fName}.${textureFormat}`,
 				imageData,
-				spritePadding: this.packOptions.spritePadding,
-				borderPadding: this.packOptions.borderPadding,
+				spritePadding: this.packOptions.spritePadding ?? 3,
+				borderPadding: this.packOptions.borderPadding ?? 1,
 				format: pixelFormat,
-				textureFormat: this.packOptions.textureFormat,
+				textureFormat: textureFormat,
 				imageWidth: buffer.width,
 				imageHeight: buffer.height,
-				removeFileExtension: this.packOptions.removeFileExtension,
-				prependFolderName: this.packOptions.prependFolderName,
-				base64Export: this.packOptions.base64Export,
-				scale: this.packOptions.scale,
+				removeFileExtension: this.packOptions.removeFileExtension ?? true,
+				prependFolderName: this.packOptions.prependFolderName ?? true,
+				base64Export: this.packOptions.base64Export ?? false,
+				scale: this.packOptions.scale ?? 1,
 				changedScale: this.packOptions.scale !== 1,
-				trimMode: this.packOptions.trimMode,
+				trimMode: this.packOptions.trimMode ?? "trim",
 
-				sortExportedRows: this.packOptions.sortExportedRows,
+				sortExportedRows: this.packOptions.sortExportedRows ?? true,
 			};
 
 			try {

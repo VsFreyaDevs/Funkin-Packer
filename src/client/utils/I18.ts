@@ -136,7 +136,7 @@ class I18 {
 		return values;
 	}*/
 
-	static getString(key: string, values?: string[]): string {
+	static getString(key: string, values?: string[] | null): string {
 		if (!values)
 			values = null;
 
@@ -146,7 +146,7 @@ class I18 {
 		return str;
 	}
 
-	private static getStringOrNull(key: string, args: string[]): string | null {
+	private static getStringOrNull(key: string, args: string[] | null): string | null {
 		if (!args) return null;
 
 		let value = this.config.strings[key];
@@ -193,13 +193,13 @@ class I18 {
 			return value;
 		};
 
-		const formatBaseX = (num: number, base: number, prefix: boolean, leftJustify: boolean, minWidth: number, precision: number, zeroPad: boolean, customPadChar: string): string => {
+		const formatBaseX = (num: number, base: number, prefix: boolean, leftJustify: boolean, minWidth: number, precision: number | null, zeroPad: boolean, customPadChar: string): string => {
 			const prefixStr = prefix && num && { '2': '0b', '8': '0', '16': '0x' }[base] || '';
 			const formattedValue = prefixStr + pad(num.toString(base), precision || 0, '0', false);
 			return justify(formattedValue, prefixStr, leftJustify, minWidth, zeroPad, customPadChar);
 		};
 
-		const formatString = (value: string, leftJustify: boolean, minWidth: number, precision: number, zeroPad: boolean, customPadChar: string): string => {
+		const formatString = (value: string, leftJustify: boolean, minWidth: number, precision: number | null, zeroPad: boolean, customPadChar: string): string => {
 			if (precision != null)
 				value = value.slice(0, precision);
 			return justify(value, '', leftJustify, minWidth, zeroPad, customPadChar);
@@ -253,12 +253,14 @@ class I18 {
 				throw new Error('sprintf: (minimum-)width must be finite');
 			}
 
-			let precision = 0;
+			let precision:number | null = 0;
 
-			if (!prec) precision = 'fFeE'.includes(type) ? 6 : type === 'd' ? 0 : undefined;
+			if (!prec) precision = 'fFeE'.includes(type) ? 6 : type === 'd' ? 0 : null;
 			else if (prec === '*') precision = +values[i++];
 			else if (prec.charAt(0) === '*') precision = +values[+prec.slice(1, -1)];
 			else precision = +prec;
+
+			if(precision === null) precision = 0;
 
 			let value = valueIndex ? values[+valueIndex.slice(0, -1) - 1] : values[i++];
 			let number = +value || 0;

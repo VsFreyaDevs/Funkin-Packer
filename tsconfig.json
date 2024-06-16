@@ -21,6 +21,8 @@
 		"noImplicitReturns": true,
 		"isolatedModules": true,
 		"allowUnusedLabels": false,
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
 		"alwaysStrict": true,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitThis": true,

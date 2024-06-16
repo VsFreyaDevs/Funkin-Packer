@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
+import { Observer, GLOBAL_EVENT } from '../Observer';
+import I18 from '../utils/I18';
 
 interface TextureViewProps {
 	readonly data: PackResultsData;
@@ -39,6 +41,12 @@ class TextureView extends React.Component<TextureViewProps> {
 			view.style.height = Math.floor(view.height * this.props.scale) + "px";
 
 			const ctx = view.getContext("2d");
+			if(!ctx) {
+				Observer.emit(GLOBAL_EVENT.HIDE_PROCESSING);
+				TypedObserver.showMessage.emit(I18.f('ERROR_NO_CONTEXT'));
+
+				return;
+			}
 
 			ctx.clearRect(0, 0, view.width, view.height);
 

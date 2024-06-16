@@ -4,7 +4,7 @@ import I18 from '../utils/I18';
 
 class ProcessingOverlay extends React.Component {
 	readonly overlayRef: React.RefObject<HTMLDivElement>;
-	showTimer: NodeJS.Timeout;
+	showTimer: NodeJS.Timeout | null;
 
 	constructor(props:any) {
 		super(props);
@@ -26,7 +26,7 @@ class ProcessingOverlay extends React.Component {
 	}
 
 	override componentWillUnmount = () => {
-		clearTimeout(this.showTimer);
+		if(this.showTimer) clearTimeout(this.showTimer);
 	}
 
 	override render() {

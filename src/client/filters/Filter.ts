@@ -13,6 +13,11 @@ class Filter {
 		retCanvas.height = buffer.height;
 
 		let bufferCtx = buffer.getContext("2d");
+
+		if(!bufferCtx || !retCtx) {
+			throw new Error("No canvas context");
+		}
+
 		let imageData = bufferCtx.getImageData(0, 0, buffer.width, buffer.height);
 
 		retCtx.putImageData(this.applyImageData(imageData), 0, 0);

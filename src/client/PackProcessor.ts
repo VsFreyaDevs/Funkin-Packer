@@ -37,6 +37,7 @@ class PackProcessor {
 
 	private static compareImages(rect1:Rect, rect2:Rect, didTrim:boolean) {
 		if(!didTrim) {
+			if(!rect1.image || !rect2.image) return false;
 			if(rect1.image.base64 === rect2.image.base64) {
 				return true;
 			}
@@ -45,6 +46,8 @@ class PackProcessor {
 
 		const i1 = rect1.trimmedImage;
 		const i2 = rect2.trimmedImage;
+
+		if(!i1 || !i2) return false;
 
 		//return i1 === i2;
 
@@ -96,7 +99,7 @@ class PackProcessor {
 		return rects;
 	}
 
-	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void = null, onError:(data:MessageBoxData) => void = null) {
+	static pack(images:LoadedImages, options: PackOptions = {}, onComplete:(data:Rect[][], usedPacker:PackerCombo) => void, onError:(data:MessageBoxData) => void) {
 		//debugger;
 		if(PROFILER)
 			console.time("pack");
@@ -185,7 +188,7 @@ class PackProcessor {
 		let identical:Rect[] = [];
 
 		if (options.detectIdentical) {
-			const res = PackProcessor.detectIdentical(rects, options.allowTrim);
+			const res = PackProcessor.detectIdentical(rects, options.allowTrim ?? true);
 
 			rects = res.rects;
 			identical = res.identical;

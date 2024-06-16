@@ -5,11 +5,11 @@ class LocalImagesLoader {
 	data: File[];
 	loaded: LoadedImages;
 	loadedCnt: number;
-	onProgress: (loaded: number) => void;
-	onEnd: (data: LoadedImages) => void;
+	onProgress: ((loaded: number) => void) | null;
+	onEnd: ((data: LoadedImages) => void) | null;
 
 	constructor() {
-		this.data = null;
+		this.data = [];
 		this.loaded = {};
 		this.loadedCnt = 0;
 
@@ -17,7 +17,7 @@ class LocalImagesLoader {
 		this.onEnd = null;
 	}
 
-	load = (data: FileList, onProgress:(loaded: number) => void = null, onEnd:(data: LoadedImages) => void = null) => {
+	load = (data: FileList, onProgress:(loaded: number) => void, onEnd:(data: LoadedImages) => void) => {
 		this.data = [];
 
 		for (let i = 0; i < data.length; i++) {
@@ -38,6 +38,11 @@ class LocalImagesLoader {
 
 		let types = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 		let item = this.data.shift();
+
+		if(!item) {
+			this.loadNext();
+			return;
+		}
 
 		if (types.indexOf(item.type) >= 0) {
 			let path = item.name;
