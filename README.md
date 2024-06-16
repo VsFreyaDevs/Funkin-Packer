@@ -1,17 +1,11 @@
-# Funkin Packer
+# Funkin Packer <img src="https://raw.githubusercontent.com/NeeEoo/funkin-packer/master/electron/build/icons/128x128.png" width="32" height="32">
 
-![logo](https://raw.githubusercontent.com/odrick/free-tex-packer/master/electron/build/icons/96x96.png)
-
-#
-
-Funkin packer creates sprite sheets for you game or site. Rotation, trimming, multipacking, various export formats (json, xml, css, pixi.js, godot, phaser, cocos2d). Zip support. Split sheet tool.
-
-![screenshot](https://free-tex-packer.com/wp-content/uploads/2019/01/screenshot.png)
+Funkin Packer is a tool for creating sprite sheets in various formats. With features including rotation, trimming, multipacking, exporting to various formats (sparrow, json, css, pixi.js, godot, phaser, cocos2d).
 
 Web version: [https://neeeoo.github.io/funkin-packer/](https://neeeoo.github.io/funkin-packer/)
 
 # Custom templates
-Free texture packer uses [mustache](http://mustache.github.io/) template engine.
+Funkin Packer even allows for custom templates using [mustache](http://mustache.github.io/).
 
 There are 3 objects passed to template:
 
