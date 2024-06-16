@@ -4,8 +4,8 @@ import I18 from '../utils/I18';
 import type { PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 
-import { formatBytes } from '../utils/common';
-import type { PackerCombo } from '../packers/Packer';
+import { formatBytes } from 'api/utils/common';
+import type { PackerCombo } from 'api/packers/Packer';
 
 (globalThis as any).formatBytes = formatBytes;
 

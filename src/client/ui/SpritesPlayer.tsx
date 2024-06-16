@@ -1,6 +1,6 @@
 import * as React from 'react';
 import I18 from '../utils/I18';
-import { smartSortImages} from '../utils/common';
+import { smartSortImages} from 'api/utils/common';
 import type { PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
 import type { TextureBack } from './SheetSplitter';

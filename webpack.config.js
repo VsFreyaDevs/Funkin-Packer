@@ -130,6 +130,7 @@ if (target === 'electron-renderer') {
 		alias: {'platform': path.resolve(__dirname, './src/client/platform/web')}
 	};
 }
+config.resolve.alias.api = path.resolve(__dirname, './src/api');
 config.resolve.alias.TypedObserver = path.resolve(__dirname, './src/client/TypedObserver');
 config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js'];
 

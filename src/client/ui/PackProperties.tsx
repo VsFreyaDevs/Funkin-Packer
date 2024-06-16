@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import Storage from '../utils/Storage';
 
-import exporters from '../exporters';
-import { getExporterByType } from '../exporters';
-import packers from '../packers';
-import { getPackerByType } from '../packers';
+import exporters from 'api/exporters';
+import { getExporterByType } from 'api/exporters';
+import packers from 'api/packers';
+import { getPackerByType } from 'api/packers';
 import filters from '../filters';
 import { getFilterByType } from '../filters';
 

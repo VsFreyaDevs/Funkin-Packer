@@ -1,10 +1,10 @@
 import MaxRectsBinPack from './packers/MaxRectsBin';
 import OptimalPacker from './packers/OptimalPacker';
 import allPackers, { getPackerByType } from './packers';
-import Trimmer from './utils/Trimmer';
-import TextureRenderer from './utils/TextureRenderer';
+import Trimmer from '../client/utils/Trimmer';
+import TextureRenderer from '../client/utils/TextureRenderer';
 
-import I18 from './utils/I18';
+import I18 from '../client/utils/I18';
 import type { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
 import type { PackerClass, PackerCombo } from './packers/Packer';
 

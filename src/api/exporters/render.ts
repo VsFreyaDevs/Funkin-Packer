@@ -1,6 +1,6 @@
 import mustache from 'mustache';
 import wax from '@jvitela/mustache-wax';
-import type { Exporter, TemplateSettings } from 'exporters';
+import type { Exporter, TemplateSettings } from 'api/exporters';
 
 wax(mustache);
 

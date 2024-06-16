@@ -1,7 +1,7 @@
 import CustomImage from "data/CustomImage";
-import { PackerClass } from "../packers/Packer";
+import { PackerClass } from "../../api/packers/Packer";
 import TextureRenderer from "../utils/TextureRenderer";
-import { Exporter } from "exporters";
+import { Exporter } from "api/exporters";
 
 declare type PackOptions = {
 	repackUpdateFileName?: boolean;

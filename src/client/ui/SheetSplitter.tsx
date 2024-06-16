@@ -4,16 +4,16 @@ import APP from '../APP';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
 
-import { SplitterMaster } from '../splitters';
+import { SplitterMaster } from 'api/splitters';
 import LocalImagesLoader from "../utils/LocalImagesLoader";
 import Downloader from "platform/Downloader";
 import ImagesList from "./ImagesList";
 import PackProperties from '../ui/PackProperties';
 import type { FileData, LoadedImages, Rect } from 'types';
-import Splitter from '../splitters/Splitter';
+import Splitter from 'api/splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
-import { fixManualOffsets, formatBytes, setMaxSizes } from '../utils/common';
+import { fixManualOffsets, formatBytes, setMaxSizes } from 'api/utils/common';
 
 const splitterMaster = new SplitterMaster();
 

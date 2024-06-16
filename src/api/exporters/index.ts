@@ -1,7 +1,7 @@
 import * as appInfo from '../../../package.json';
-import { sendGet } from '../utils/ajax';
+import { sendGet } from '../../client/utils/ajax';
 import { smartSortImages, removeFromArray } from '../utils/common';
-import Globals from '../utils/Globals';
+import Globals from '../../client/utils/Globals';
 import finishExporter from './render';
 
 import type { Rect } from 'types';

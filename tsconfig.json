@@ -11,7 +11,8 @@
 		"baseUrl": "./src",
 		"paths": {
 			"platform/*": ["client/platform/web/*"],
-			"*": ["client/*"]
+			"api/*": ["api/*"],
+			"*": ["client/*"],
 		},
 		"strict": true,
 		"strictNullChecks": false,

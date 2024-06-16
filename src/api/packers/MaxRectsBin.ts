@@ -1,5 +1,5 @@
 import Packer, { type MethodList } from "./Packer";
-import Rectangle from "../math/Rectangle";
+import Rectangle from "../../client/math/Rectangle";
 import type { Rect } from "types";
 
 const METHODS = {

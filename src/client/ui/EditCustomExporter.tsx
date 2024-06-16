@@ -2,7 +2,7 @@ import * as React from 'react';
 import Storage from '../utils/Storage';
 import { Observer, GLOBAL_EVENT } from '../Observer';
 import I18 from '../utils/I18';
-import { getExporterByType } from '../exporters';
+import { getExporterByType } from 'api/exporters';
 import mustache from 'mustache';
 import * as appInfo from '../../../package.json';
 import TypedObserver from 'TypedObserver';

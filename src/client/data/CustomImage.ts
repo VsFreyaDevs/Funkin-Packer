@@ -1,5 +1,5 @@
 import type { Rect } from "types";
-import { dataURItoBlob } from "../utils/common";
+import { dataURItoBlob } from "../../api/utils/common";
 
 export type FileSystemPath = {
 	name: string;

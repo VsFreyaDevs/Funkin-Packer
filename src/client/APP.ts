@@ -1,14 +1,14 @@
 import { Observer, GLOBAL_EVENT } from './Observer';
-import PackProcessor from './PackProcessor';
+import PackProcessor from 'api/PackProcessor';
 import TextureRenderer from './utils/TextureRenderer';
 import { getFilterByType } from './filters';
 import I18 from './utils/I18';
-import type { RenderSettings } from './exporters';
-import { startExporter } from './exporters';
+import type { RenderSettings } from 'api/exporters';
+import { startExporter } from 'api/exporters';
 import Downloader from 'platform/Downloader';
 import type { FileData, LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
 import TypedObserver from 'TypedObserver';
-import type { PackerCombo } from './packers/Packer';
+import type { PackerCombo } from 'api/packers/Packer';
 
 let INSTANCE:APP;
 
