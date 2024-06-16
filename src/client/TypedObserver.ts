@@ -1,6 +1,7 @@
-import type { LoadedImages, PackOptions, SelectedEvent } from "types";
+import type { SelectedEvent } from "types";
 import type { ButtonData } from "./ui/MessageBox";
 import type { RepackInfoEvent, StatsInfoEvent } from "./ui/StatsInfo";
+import type { LoadedImages, PackOptions } from "api/types";
 
 type Callback<T> = (...args: T[]) => void;
 

@@ -1,4 +1,4 @@
-import type { Rect } from "types";
+import type { Rect } from "api/types";
 
 export type MethodList = Readonly<Record<string, string>>;
 

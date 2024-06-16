@@ -6,9 +6,10 @@ import I18 from './utils/I18';
 import type { RenderSettings } from 'api/exporters';
 import { startExporter } from 'api/exporters';
 import Downloader from 'platform/Downloader';
-import type { FileData, LoadedImages, MessageBoxData, PackOptions, PackResultsData, Rect } from 'types';
+import type { FileData, MessageBoxData, PackResultsData } from 'types';
 import TypedObserver from 'TypedObserver';
 import type { PackerCombo } from 'api/packers/Packer';
+import type { LoadedImages, PackOptions, Rect } from 'api/types';
 
 let INSTANCE:APP;
 

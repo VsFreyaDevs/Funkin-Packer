@@ -6,7 +6,7 @@ import Controller from './Controller';
 import * as appInfo from '../../../../package.json';
 import I18 from '../../utils/I18';
 import TypedObserver from 'TypedObserver';
-import type { LoadedImages } from 'types';
+import type { LoadedImages } from 'api/types';
 
 const RECENT_PROJECTS_KEY = "recent-projects";
 

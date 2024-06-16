@@ -1,14 +1,14 @@
 import { ipcRenderer } from 'electron';
 
-import { Observer, GLOBAL_EVENT } from "../../Observer";
-import I18 from '../../utils/I18';
+import { Observer, GLOBAL_EVENT } from "client/Observer";
+import I18 from 'client/utils/I18';
 import * as appInfo from '../../../../package.json';
 import { languages} from '../../resources/static/localization/languages';
 
 import Project from './Project';
 
-import PackProperties from '../../ui/PackProperties';
-import ImagesList from "../../ui/ImagesList";
+import PackProperties from 'client/ui/PackProperties';
+import ImagesList from "client/ui/ImagesList";
 import TypedObserver from "TypedObserver";
 
 class Controller {

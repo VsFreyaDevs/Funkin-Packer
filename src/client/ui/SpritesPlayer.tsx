@@ -1,7 +1,8 @@
 import * as React from 'react';
 import I18 from '../utils/I18';
 import { smartSortImages} from 'api/utils/common';
-import type { PackResultsData, Rect } from 'types';
+import type { PackResultsData } from 'types';
+import type { Rect } from 'api/types';
 import TypedObserver from 'TypedObserver';
 import type { TextureBack } from './SheetSplitter';
 import { GLOBAL_EVENT, Observer } from '../Observer';

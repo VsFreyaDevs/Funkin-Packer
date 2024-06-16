@@ -6,7 +6,7 @@ import UIKit from './UIKit';
 import Spine from './Spine';
 import Sparrow from './Sparrow';
 import Splitter, { type SplitterOptions } from './Splitter';
-import type { Rect } from 'types';
+import type { Rect } from 'api/types';
 import TypedObserver from 'TypedObserver';
 
 const GridSplitter = new Grid();

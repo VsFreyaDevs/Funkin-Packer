@@ -1,4 +1,4 @@
-import type { Rect } from "types";
+import type { Rect } from "api/types";
 
 export function smartSortImages(f1: string, f2: string) {
 	let t1 = f1.split('/');

@@ -1,10 +1,10 @@
 import * as appInfo from '../../../package.json';
-import { sendGet } from '../../client/utils/ajax';
+import { sendGet } from 'client/utils/ajax';
 import { smartSortImages, removeFromArray } from '../utils/common';
-import Globals from '../../client/utils/Globals';
+import Globals from 'client/utils/Globals';
 import finishExporter from './render';
 
-import type { Rect } from 'types';
+import type { Rect } from 'api/types';
 
 export type Exporter = {
 	exporterName: string;

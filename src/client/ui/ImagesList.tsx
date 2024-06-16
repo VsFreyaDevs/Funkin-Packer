@@ -11,10 +11,11 @@ import ItemTreePart, { type TreeListItem } from './ItemTree';
 
 import Globals from '../utils/Globals';
 import {fixManualOffsets, getDummyRect, setMaxSizes, smartSortImages} from 'api/utils/common';
-import type { LoadedImages, SelectedEvent } from 'types';
+import type { SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
 import type { ButtonData } from './MessageBox';
+import type { LoadedImages } from 'api/types';
 
 // TODO: make this not use CustomImage.selected + CustomImage.current
 

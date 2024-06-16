@@ -12,6 +12,7 @@
 		"paths": {
 			"platform/*": ["client/platform/web/*"],
 			"api/*": ["api/*"],
+			"client/*": ["client/*"],
 			"*": ["client/*"],
 		},
 		"strict": true,

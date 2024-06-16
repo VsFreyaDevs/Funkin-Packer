@@ -1,4 +1,4 @@
-import type { Rect } from "types";
+import type { Rect } from "api/types";
 import Packer, { type MethodList } from "./Packer";
 
 // Based of https://github.com/jakesgordon/bin-packing/blob/master/js/packer.growing.js

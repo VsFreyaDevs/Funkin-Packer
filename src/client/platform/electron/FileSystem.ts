@@ -7,7 +7,7 @@ import Controller from './Controller';
 import I18 from '../../utils/I18';
 import Base64ImagesLoader, { type Base64LoaderData } from '../../utils/Base64ImagesLoader';
 import { Observer, GLOBAL_EVENT } from '../../Observer';
-import type { LoadedImages } from 'types';
+import type { LoadedImages } from 'api/types';
 import type { FileSystemPath } from 'data/CustomImage';
 import type { FileFilter, SaveDialogOptions } from 'electron';
 

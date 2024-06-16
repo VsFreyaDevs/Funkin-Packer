@@ -1,11 +1,12 @@
 import MaxRectsBinPack from './packers/MaxRectsBin';
 import OptimalPacker from './packers/OptimalPacker';
 import allPackers, { getPackerByType } from './packers';
-import Trimmer from '../client/utils/Trimmer';
-import TextureRenderer from '../client/utils/TextureRenderer';
+import Trimmer from './utils/Trimmer';
+import TextureRenderer from 'client/utils/TextureRenderer';
 
-import I18 from '../client/utils/I18';
-import type { LoadedImages, MessageBoxData, PackOptions, Rect } from 'types';
+import I18 from 'client/utils/I18';
+import type { LoadedImages, PackOptions, Rect } from 'api/types';
+import type { MessageBoxData } from 'client/types';
 import type { PackerClass, PackerCombo } from './packers/Packer';
 
 class PackProcessor {
@@ -202,11 +203,11 @@ class PackProcessor {
 						if(!Object.hasOwn(packerClass.methods, method)) continue;
 
 						if(options.allowRotation && packerClass.needsNonRotation() || !options.allowRotation) {
-							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false });
+							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: false } as const);
 						}
 
 						if (options.allowRotation) {
-							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: true });
+							methods.push({ packerClass, packerMethod: packerClass.methods[method], allowRotation: true } as const);
 						}
 					}
 				}
@@ -216,7 +217,7 @@ class PackProcessor {
 
 		const packerClass:PackerClass = getPackerByType(options.packer) || MaxRectsBinPack;
 		const packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
-		const packerCombos:PackerCombo[] = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation }];
+		const packerCombos:PackerCombo[] = (packerClass === OptimalPacker) ? getAllPackers() : [{ packerClass, packerMethod, allowRotation: options.allowRotation } as const];
 
 		let optimalRes:Rect[][];
 		let optimalSheets = Infinity;

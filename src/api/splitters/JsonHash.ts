@@ -1,4 +1,4 @@
-import type { Rect } from 'types';
+import type { Rect } from 'api/types';
 import Splitter from './Splitter';
 
 class JsonHash extends Splitter {

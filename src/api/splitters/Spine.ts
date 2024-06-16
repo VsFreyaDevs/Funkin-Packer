@@ -1,4 +1,4 @@
-import type { Rect, SplitterRect } from 'types';
+import type { Rect, SplitterRect } from 'api/types';
 import Splitter from './Splitter';
 
 /*class Point {

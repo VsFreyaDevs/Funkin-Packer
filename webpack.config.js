@@ -131,6 +131,7 @@ if (target === 'electron-renderer') {
 	};
 }
 config.resolve.alias.api = path.resolve(__dirname, './src/api');
+config.resolve.alias.client = path.resolve(__dirname, './src/client');
 config.resolve.alias.TypedObserver = path.resolve(__dirname, './src/client/TypedObserver');
 config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js'];
 

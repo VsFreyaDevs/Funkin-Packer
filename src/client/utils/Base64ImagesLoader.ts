@@ -1,5 +1,5 @@
 import CustomImage, { type FileSystemPath } from "data/CustomImage";
-import type { LoadedImages } from "types";
+import type { LoadedImages } from "api/types";
 
 export type Base64LoaderData = {
 	name: string;
