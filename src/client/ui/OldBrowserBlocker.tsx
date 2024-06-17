@@ -3,12 +3,10 @@ import * as React from 'react';
 import I18 from '../locale/I18';
 
 class OldBrowserBlocker extends React.Component {
-	private readonly overlayRef: React.RefObject<HTMLDivElement>;
+	private readonly overlayRef: React.RefObject<HTMLDivElement> = React.createRef();
 
 	constructor(props:any) {
 		super(props);
-
-		this.overlayRef = React.createRef();
 	}
 
 	static isSupported() {

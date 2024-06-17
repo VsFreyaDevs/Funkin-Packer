@@ -32,29 +32,29 @@ interface State {
 
 class PackProperties extends React.Component<Props, State> {
 	packOptions: PackOptions;
-	private readonly fileNameRef: React.RefObject<HTMLInputElement>;
-	private readonly textureFormatRef: React.RefObject<HTMLSelectElement>;
-	private readonly removeFileExtensionRef: React.RefObject<HTMLInputElement>;
-	private readonly prependFolderNameRef: React.RefObject<HTMLInputElement>;
-	private readonly scaleRef: React.RefObject<HTMLInputElement>;
-	private readonly filterRef: React.RefObject<HTMLSelectElement>;
-	private readonly exporterRef: React.RefObject<HTMLSelectElement>;
-	private readonly editCustomFormatRef: React.RefObject<HTMLInputElement>;
-	private readonly widthRef: React.RefObject<HTMLInputElement>;
-	private readonly heightRef: React.RefObject<HTMLInputElement>;
-	private readonly spritePaddingRef: React.RefObject<HTMLInputElement>;
-	private readonly borderPaddingRef: React.RefObject<HTMLInputElement>;
-	private readonly allowRotationRef: React.RefObject<HTMLInputElement>;
-	private readonly allowTrimRef: React.RefObject<HTMLInputElement>;
-	private readonly detectIdenticalRef: React.RefObject<HTMLInputElement>;
-	private readonly packerRef: React.RefObject<HTMLSelectElement>;
-	private readonly packerMethodRef: React.RefObject<PackerMethods>;
-	private readonly sortExportedRowsRef: React.RefObject<HTMLInputElement>;
-	private readonly fixedSizeRef: React.RefObject<HTMLInputElement>;
-	private readonly powerOfTwoRef: React.RefObject<HTMLInputElement>;
-	private readonly trimModeRef: React.RefObject<HTMLSelectElement>;
-	private readonly alphaThresholdRef: React.RefObject<HTMLInputElement>;
-	private readonly statsSIRef: React.RefObject<HTMLInputElement>;
+	private readonly fileNameRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly textureFormatRef: React.RefObject<HTMLSelectElement> = React.createRef();
+	private readonly removeFileExtensionRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly prependFolderNameRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly scaleRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly filterRef: React.RefObject<HTMLSelectElement> = React.createRef();
+	private readonly exporterRef: React.RefObject<HTMLSelectElement> = React.createRef();
+	private readonly editCustomFormatRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly widthRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly heightRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly spritePaddingRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly borderPaddingRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly allowRotationRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly allowTrimRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly detectIdenticalRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly packerRef: React.RefObject<HTMLSelectElement> = React.createRef();
+	private readonly packerMethodRef: React.RefObject<PackerMethods> = React.createRef();
+	private readonly sortExportedRowsRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly fixedSizeRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly powerOfTwoRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly trimModeRef: React.RefObject<HTMLSelectElement> = React.createRef();
+	private readonly alphaThresholdRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly statsSIRef: React.RefObject<HTMLInputElement> = React.createRef();
 
 	constructor(props: Props) {
 		super(props);
@@ -68,36 +68,6 @@ class PackProperties extends React.Component<Props, State> {
 			packer: this.packOptions.packer,
 			hasStoredOrder: APP.i.api.hasStoredOrder()
 		};
-
-		this.fileNameRef = React.createRef();
-		this.textureFormatRef = React.createRef();
-		this.removeFileExtensionRef = React.createRef();
-		this.prependFolderNameRef = React.createRef();
-		//this.base64ExportRef = React.createRef();
-		this.scaleRef = React.createRef();
-		this.filterRef = React.createRef();
-		this.exporterRef = React.createRef();
-		this.editCustomFormatRef = React.createRef();
-		//this.savePathRef = React.createRef();
-		this.widthRef = React.createRef();
-		this.heightRef = React.createRef();
-		this.spritePaddingRef = React.createRef();
-		this.borderPaddingRef = React.createRef();
-
-		this.allowRotationRef = React.createRef();
-		this.allowTrimRef = React.createRef();
-		this.detectIdenticalRef = React.createRef();
-
-		this.packerRef = React.createRef();
-		this.packerMethodRef = React.createRef();
-
-		this.sortExportedRowsRef = React.createRef();
-		this.fixedSizeRef = React.createRef();
-		this.powerOfTwoRef = React.createRef();
-		this.trimModeRef = React.createRef();
-		this.alphaThresholdRef = React.createRef();
-
-		this.statsSIRef = React.createRef();
 	}
 
 	override componentDidMount = () => {
@@ -180,7 +150,7 @@ class PackProperties extends React.Component<Props, State> {
 
 			if(!methodValid) data.packerMethod = packer.defaultMethod;
 
-			if(this.packerMethodRef != null) {
+			if(this.packerMethodRef?.current) {
 				this.packerMethodRef.current.setValue(data.packerMethod);
 			}
 		}
@@ -570,13 +540,11 @@ interface PackerMethodsProps {
 class PackerMethods extends React.Component<PackerMethodsProps, {
 	value: string;
 }> {
-	selectRef: React.RefObject<HTMLSelectElement>;
+	selectRef: React.RefObject<HTMLSelectElement> = React.createRef();
 	value: string;
 
 	constructor(props: PackerMethodsProps) {
 		super(props);
-
-		this.selectRef = React.createRef();
 
 		this.value = this.props.defaultMethod;
 		this.state = {value: this.value};

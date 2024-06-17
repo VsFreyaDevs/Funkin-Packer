@@ -3,13 +3,11 @@ import * as React from 'react';
 import I18 from '../locale/I18';
 
 class ProcessingOverlay extends React.Component {
-	private readonly overlayRef: React.RefObject<HTMLDivElement>;
+	private readonly overlayRef: React.RefObject<HTMLDivElement> = React.createRef();
 	private showTimer: NodeJS.Timeout | null = null;
 
 	constructor(props:any) {
 		super(props);
-
-		this.overlayRef = React.createRef();
 	}
 
 	override componentDidMount = () => {

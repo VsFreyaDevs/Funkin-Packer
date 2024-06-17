@@ -19,12 +19,12 @@ type Texture = {
 }
 
 class SpritesPlayer extends React.Component<Props> {
-	private readonly fpsRef: React.RefObject<HTMLInputElement>;
-	private readonly speedRef: React.RefObject<HTMLInputElement>;
-	private readonly bufferRef: React.RefObject<HTMLCanvasElement>;
-	private readonly viewRef: React.RefObject<HTMLCanvasElement>;
-	private readonly playerContainerRef: React.RefObject<HTMLDivElement>;
-	private readonly containerRef: React.RefObject<HTMLDivElement>;
+	private readonly fpsRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly speedRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly bufferRef: React.RefObject<HTMLCanvasElement> = React.createRef();
+	private readonly viewRef: React.RefObject<HTMLCanvasElement> = React.createRef();
+	private readonly playerContainerRef: React.RefObject<HTMLDivElement> = React.createRef();
+	private readonly containerRef: React.RefObject<HTMLDivElement> = React.createRef();
 	private textures: Texture[];
 	private currentTextures: Texture[];
 	private currentFrame: number = 0;
@@ -37,17 +37,8 @@ class SpritesPlayer extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props);
 
-		this.fpsRef = React.createRef();
-		this.speedRef = React.createRef();
-		this.bufferRef = React.createRef();
-		this.viewRef = React.createRef();
-		this.playerContainerRef = React.createRef();
-		this.containerRef = React.createRef();
-
 		this.textures = [];
-
 		this.currentTextures = [];
-
 		this.selectedImages = [];
 	}
 

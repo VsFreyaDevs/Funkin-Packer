@@ -29,11 +29,11 @@ interface State {
 };
 
 class ImagesList extends React.Component<Props, State> {
-	private readonly imagesTreeRef: React.RefObject<HTMLDivElement>;
-	private readonly imagesTreePartRef: React.RefObject<ItemTreePart>;
-	private readonly dropHelpRef: React.RefObject<HTMLDivElement>;
-	private readonly addImagesInputRef: React.RefObject<HTMLInputElement>;
-	private readonly addZipInputRef: React.RefObject<HTMLInputElement>;
+	private readonly imagesTreeRef: React.RefObject<HTMLDivElement> = React.createRef();
+	private readonly imagesTreePartRef: React.RefObject<ItemTreePart> = React.createRef();
+	private readonly dropHelpRef: React.RefObject<HTMLDivElement> = React.createRef();
+	private readonly addImagesInputRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly addZipInputRef: React.RefObject<HTMLInputElement> = React.createRef();
 
 	override state:State = {
 		images: {},
@@ -43,12 +43,6 @@ class ImagesList extends React.Component<Props, State> {
 		super(props);
 
 		INSTANCE = this;
-
-		this.imagesTreeRef = React.createRef();
-		this.imagesTreePartRef = React.createRef();
-		this.dropHelpRef = React.createRef();
-		this.addImagesInputRef = React.createRef();
-		this.addZipInputRef = React.createRef();
 
 		this.state = {images: {}};
 	}

@@ -14,14 +14,11 @@ interface TextureViewProps {
 }
 
 class TextureView extends React.Component<TextureViewProps> {
-	private readonly backRef: React.RefObject<HTMLDivElement>;
-	private readonly viewRef: React.RefObject<HTMLCanvasElement>;
+	private readonly backRef: React.RefObject<HTMLDivElement> = React.createRef();
+	private readonly viewRef: React.RefObject<HTMLCanvasElement> = React.createRef();
 
 	constructor(props: TextureViewProps) {
 		super(props);
-
-		this.backRef = React.createRef();
-		this.viewRef = React.createRef();
 	}
 
 	override componentDidMount = () => {

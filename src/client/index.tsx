@@ -13,7 +13,7 @@ import Controller from 'platform/Controller';
 import TypedObserver from 'TypedObserver';
 
 let app:APP;
-let layoutRef: React.RefObject<MainLayout>;
+let layoutRef: React.RefObject<MainLayout> = React.createRef();
 
 const STORAGE_LANGUAGE_KEY = "language";
 
@@ -59,8 +59,6 @@ function loadLocalization() {
 function renderLayout() {
 	Controller.updateLocale();
 	const root = createRoot(document.getElementById("root"));
-	if(!layoutRef)
-		layoutRef = React.createRef();
 	root.render(
 		<React.StrictMode>
 			<MainLayout ref={layoutRef}></MainLayout>
@@ -77,7 +75,7 @@ function injectCss(path: string) {
 }
 
 function setLocale(locale: Language) {
-	if(!layoutRef) return;
+	if(!layoutRef || !layoutRef.current) return;
 
 	I18.currentLanguage = locale;
 	//I18.init(locale);

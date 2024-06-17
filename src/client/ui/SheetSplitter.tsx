@@ -35,20 +35,20 @@ const valTextureBackColors = ["grid-back", "white-back", "pink-back", "black-bac
 export type TextureBack = typeof valTextureBackColors;
 
 class SheetSplitter extends React.Component<Props, State> {
-	private readonly disableUntrimRef: React.RefObject<HTMLInputElement>;
-	private readonly updateFileNameRef: React.RefObject<HTMLInputElement>;
-	private readonly dataFormatRef: React.RefObject<HTMLSelectElement>;
-	private readonly selectTextureInputRef: React.RefObject<HTMLInputElement>;
-	private readonly dataFileNameRef: React.RefObject<HTMLInputElement>;
-	private readonly fileNameRef: React.RefObject<HTMLInputElement>;
-	private readonly viewRef: React.RefObject<HTMLCanvasElement>;
-	private readonly paddingRef: React.RefObject<HTMLInputElement>;
-	private readonly widthRef: React.RefObject<HTMLInputElement>;
-	private readonly heightRef: React.RefObject<HTMLInputElement>;
+	private readonly disableUntrimRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly updateFileNameRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly dataFormatRef: React.RefObject<HTMLSelectElement> = React.createRef();
+	private readonly selectTextureInputRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly dataFileNameRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly fileNameRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly viewRef: React.RefObject<HTMLCanvasElement> = React.createRef();
+	private readonly paddingRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly widthRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly heightRef: React.RefObject<HTMLInputElement> = React.createRef();
 	private readonly textureBackColors: TextureBack;
 	private step: number;
-	private readonly rangeRef: React.RefObject<HTMLInputElement>;
-	private readonly wheelRef: React.RefObject<HTMLInputElement>;
+	private readonly rangeRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly wheelRef: React.RefObject<HTMLInputElement> = React.createRef();
 	private texture: CustomImage;
 	private data: string;
 	private frames: Rect[];
@@ -58,17 +58,6 @@ class SheetSplitter extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props);
-
-		this.disableUntrimRef = React.createRef();
-		this.updateFileNameRef = React.createRef();
-		this.dataFormatRef = React.createRef();
-		this.selectTextureInputRef = React.createRef();
-		this.dataFileNameRef = React.createRef();
-		this.fileNameRef = React.createRef();
-		this.viewRef = React.createRef();
-		this.paddingRef = React.createRef();
-		this.widthRef = React.createRef();
-		this.heightRef = React.createRef();
 
 		this.textureBackColors = valTextureBackColors;
 		this.step = 0.01;
@@ -81,9 +70,6 @@ class SheetSplitter extends React.Component<Props, State> {
 			message: null,
 			detectedPacker: ''
 		};
-
-		this.rangeRef = React.createRef();
-		this.wheelRef = React.createRef();
 
 		this.texture = null;
 		this.data = null;

@@ -22,18 +22,14 @@ interface State {
 }
 
 class PackResults extends React.Component<Props, State> {
-	private readonly spritesPlayerRef: React.RefObject<SpritesPlayer>;
-	private readonly rangeRef: React.RefObject<HTMLInputElement>;
-	private readonly wheelRef: React.RefObject<HTMLInputElement>;
+	private readonly spritesPlayerRef: React.RefObject<SpritesPlayer> = React.createRef();
+	private readonly rangeRef: React.RefObject<HTMLInputElement> = React.createRef();
+	private readonly wheelRef: React.RefObject<HTMLInputElement> = React.createRef();
 	private readonly textureBackColors: TextureBack;
 	step: number;
 
 	constructor(props: Props) {
 		super(props);
-
-		this.spritesPlayerRef = React.createRef();
-		this.rangeRef = React.createRef();
-		this.wheelRef = React.createRef();
 
 		this.textureBackColors = valTextureBackColors;
 		this.step = 0.01;

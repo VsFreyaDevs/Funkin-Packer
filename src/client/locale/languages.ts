@@ -18,11 +18,11 @@ export function getLanguageByCode(code: string): Language {
 }
 
 export const languages: Language[] = [
-	{ "lang": "en", "name": "english", "mapping": en },
-	{ "lang": "de", "name": "deutsch", "mapping": de },
-	{ "lang": "es", "name": "español", "mapping": es },
-	{ "lang": "ru", "name": "русский", "mapping": ru },
-	{ "lang": "zh-cn", "name": "简体中文", "mapping": zh },
+	{ lang: "en", name: "english", mapping: en },
+	{ lang: "de", name: "deutsch", mapping: de },
+	{ lang: "es", name: "español", mapping: es },
+	{ lang: "ru", name: "русский", mapping: ru },
+	{ lang: "zh-cn", name: "简体中文", mapping: zh },
 ] as const;
 
 const ALL_KEYS = Object.keys(languages[0].mapping);

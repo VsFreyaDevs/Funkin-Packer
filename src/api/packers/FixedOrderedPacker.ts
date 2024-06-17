@@ -143,10 +143,12 @@ class FixedOrderedPacker extends Packer {
 		const originalHeight = this.height;
 		let blocks:Block[] | null = null;
 		let currentBest:number = -1;
+		let currentLength = Number.NEGATIVE_INFINITY;
 		function setBest(bb:Block[] | null) {
 			if(bb != null) {
 				blocks = bb;
 				currentBest = calculateArea(bb);
+				currentLength = bb.length;
 				//console.log("setBest", calculateWidth(bb), calculateHeight(bb), currentBest);
 			}
 		}
@@ -179,8 +181,18 @@ class FixedOrderedPacker extends Packer {
 		this.height = originalHeight;
 
 		if(blocks == null) {
-			let newBlocks = this._pack(sortedData, true, true);
+			let newBlocks = this._pack(sortedData, false, true);
 			setBest(newBlocks);
+			if(this.allowRotate) {
+				let new_blocks = this._pack(sortedData, true, true);
+				if(new_blocks != null && calculateArea(new_blocks) <= currentBest && new_blocks.length > currentLength) {
+					// fits more blocks in the same or less size
+					blocks = new_blocks;
+				}
+			}
+			if(blocks == null) {
+				throw new Error("No blocks found");
+			}
 		}
 
 		if(blocks == null) {
