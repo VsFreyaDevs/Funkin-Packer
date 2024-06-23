@@ -105,23 +105,22 @@ class SpritesPlayer extends React.Component<Props> {
 		let w = config.sourceSize.mw;
 		let h = config.sourceSize.mh;
 
-		if(config.frameSize !== null) {
-			let width = config.frameSize.w;
-			let height = config.frameSize.h;
-			let x = config.frameSize.x;
-			let y = config.frameSize.y;
-			if(x < 0) {
-				width -= x;
-				x = 0;
-			}
-			if(y < 0) {
-				height -= y;
-				y = 0;
-			}
-
-			w = Math.max(width, w);
-			h = Math.max(height, h);
+		let width = config.frameSize.w;
+		let height = config.frameSize.h;
+		let x = config.frameSize.x;
+		let y = config.frameSize.y;
+		if(x < 0) {
+			width -= x;
+			x = 0;
 		}
+		if(y < 0) {
+			height -= y;
+			y = 0;
+		}
+
+		w = Math.max(width, w);
+		h = Math.max(height, h);
+
 		return {w, h};
 	}
 
@@ -223,10 +222,9 @@ class SpritesPlayer extends React.Component<Props> {
 		let frameOffsetX = 0;
 		let frameOffsetY = 0;
 
-		if(texture.config.frameSize !== null && texture.config.manualOffset) {
+		if(texture.config.manualOffset) {
 			frameX += texture.config.frameSize.x;
 			frameY += texture.config.frameSize.y;
-			//console.log(texture.config.spriteSourceSize, texture.config.frameSize);
 		}
 
 		if(frameX < 0) {

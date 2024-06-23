@@ -1,5 +1,5 @@
 import * as appInfo from '../../../package.json';
-import { smartSortImages, removeFromArray } from '../utils/common';
+import { smartSortImages, removeFromArray, cleanPrefix, getMaxSizesForSpriteSourceSize, getMaxSizesForSourceSize } from '../utils/common';
 import finishExporter from './render';
 import type { Rect, SplitterRect } from 'api/types';
 import FunkinPackerApi from 'api/FunkinPackerApi';
@@ -36,7 +36,7 @@ export type TemplateSettings = {
 	appInfo: typeof appInfo
 };
 
-type ExporterRect = SplitterRect & {
+type ExporterRect = Omit<SplitterRect, 'manualOffset'> & {
 	origName: string;
 
 	first: boolean;
@@ -350,6 +350,67 @@ function prepareData(data: Rect[], options: RenderSettings): {
 	return {rects: ret, config: opt};
 }
 
+function correctOrder(api:FunkinPackerApi, exporter: Exporter, rects:ExporterRect[], config:RenderSettings) {
+	let storedOrder = api.getStoredOrder();
+	if(storedOrder !== null) {
+		storedOrder = [...storedOrder];
+		/* if(config.removeFileExtension) {
+			for(let i = 0; i < storedOrder.length; i++) {
+				let name = storedOrder[i];
+				let parts = name.split(".");
+				if(parts.length > 1) parts.pop();
+				storedOrder[i] = parts.join(".");
+			}
+		} */
+
+		let oldRects:ExporterRect[] = [...rects];
+		let nameMap:Record<string, ExporterRect> = {};
+		for (const v of rects) {
+			nameMap[v.origName] = v;
+		}
+
+		// filter for frames which exist
+		let array = storedOrder.filter((v) => !!nameMap[v]).map(name => {
+			const item = nameMap[name];
+			removeFromArray(oldRects, item);
+			return item;
+		}) as ExporterRect[];
+		rects = array.concat(oldRects);
+	}
+
+	return {rects, config};
+}
+
+function offsetFrames(api:FunkinPackerApi, exporter: Exporter, rects:ExporterRect[], config:RenderSettings) {
+	for(const rect of rects) {
+		//const frameAnim = cleanPrefix(rect.name);
+
+		let frameX = rect.spriteSourceSize.x;
+		let frameY = rect.spriteSourceSize.y;
+		let frameW = rect.spriteSourceSize.w;
+		let frameH = rect.spriteSourceSize.h;
+		let frameOffsetX = 0;
+		let frameOffsetY = 0;
+
+		frameX += rect.frameSize.x;
+		frameY += rect.frameSize.y;
+
+		rect.spriteSourceSize.x = frameX + frameOffsetX;
+		rect.spriteSourceSize.y = frameY + frameOffsetY;
+	}
+
+	const maxSizes = getMaxSizesForSourceSize(rects);
+
+	for(const rect of rects) {
+		const frameAnim = cleanPrefix(rect.name);
+
+		rect.sourceSize.w = Math.max(rect.sourceSize.w, maxSizes[frameAnim].mw);
+		rect.sourceSize.h = Math.max(rect.sourceSize.h, maxSizes[frameAnim].mh);
+	}
+
+	return {rects, config};
+}
+
 function startExporter(api:FunkinPackerApi, exporter: Exporter, data: Rect[], options: RenderSettings): Promise<string> {
 	return new Promise((resolve, reject) => {
 		let {rects, config} = prepareData(data, options);
@@ -364,53 +425,8 @@ function startExporter(api:FunkinPackerApi, exporter: Exporter, data: Rect[], op
 			rects = rects.sort((a, b) => smartSortImages(a.name, b.name));
 		}
 
-		let sparrowOrder = api.getStoredOrder();
-
-		// Make order the same as before
-		if(sparrowOrder !== null) {
-			sparrowOrder = [...sparrowOrder];
-			/* if(config.removeFileExtension) {
-				for(let i = 0; i < sparrowOrder.length; i++) {
-					let name = sparrowOrder[i];
-					let parts = name.split(".");
-					if(parts.length > 1) parts.pop();
-					sparrowOrder[i] = parts.join(".");
-				}
-			} */
-
-			let oldRects:ExporterRect[] = [...rects];
-			let nameMap:Record<string, ExporterRect> = {};
-			for (const v of rects) {
-				nameMap[v.origName] = v;
-			}
-
-			// filter for frames which exist
-			let array = sparrowOrder.filter((v) => !!nameMap[v]).map(name => {
-				const item = nameMap[name];
-				removeFromArray(oldRects, item);
-				return item;
-			}) as ExporterRect[];
-			rects = array.concat(oldRects);
-		}
-
-		// Fix sourceSize
-		/*if(sparrowOrigMap != null) {
-			for(var i = 0; i < rects.length; i++) {
-				if(!sparrowOrigMap.hasOwnProperty(rects[i].name)) {
-					continue;
-				}
-				var orig = sparrowOrigMap[rects[i].name];
-				if(orig != null) {
-					// sorry for this horrendus code
-					rects[i] = JSON.parse(JSON.stringify(rects[i]));
-
-					//console.log(orig);
-
-					rects[i].sourceSize.w = orig.frameWidth;
-					rects[i].sourceSize.h = orig.frameHeight;
-				}
-			}
-		}*/
+		({ rects, config } = correctOrder(api, exporter, rects, config));
+		({ rects, config } = offsetFrames(api, exporter, rects, config));
 
 		//console.log(rects.map((v)=>v.name));
 

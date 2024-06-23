@@ -5,7 +5,7 @@
 	"description": "Funkin Packer",
 	"url": "https://neeeoo.github.io/funkin-packer/",
 	"webApp": "https://neeeoo.github.io/funkin-packer/",
-	"main": "src/index.js",
+	"main": "src/api/FunkinPackerApi.ts",
 	"private": true,
 	"localizations": [
 		"en",
@@ -17,7 +17,8 @@
 	"contributors": [
 		{
 			"name": "Ne_Eo",
-			"homepage": "https://github.com/NeeEoo"
+			"homepage": "https://github.com/NeeEoo",
+			"role": "Developer"
 		}
 	],
 	"originalContributors": [

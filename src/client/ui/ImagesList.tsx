@@ -9,7 +9,7 @@ import ItemTreePart, { type TreeListItem } from './ItemTree';
 
 //import * as FileSystem from './platform/FileSystem';
 
-import {fixManualOffsets, getDummyRect, setMaxSizes, smartSortImages} from 'api/utils/common';
+import {fixManualOffsets, getDummyRect, setMaxSizesForSourceSize, smartSortImages} from 'api/utils/common';
 import type { SelectedEvent } from 'types';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
@@ -238,7 +238,7 @@ class ImagesList extends React.Component<Props, State> {
 				}*/
 			}
 
-			setMaxSizes(rects);
+			setMaxSizesForSourceSize(rects);
 			fixManualOffsets(rects);
 
 			images = this.sortImages(images);

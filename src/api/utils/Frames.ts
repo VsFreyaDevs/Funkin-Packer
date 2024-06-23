@@ -1,4 +1,4 @@
-import type { PackOptions, Rect } from "api/types";
+import type { PackOptions, Rect } from "../types";
 
 export function getSheetSize(data:Rect[], options:PackOptions={}) {
 	let width = options.width || 0;

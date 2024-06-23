@@ -136,13 +136,33 @@ export function getDummyRect(name:string, width: number, height: number):Rect {
 	}
 }
 
-export function setMaxSizes(rects:Rect[]) {
-	let maxSizes:Record<string, {
-		mw: number,
-		mh: number,
-	}> = {};
-	for(let item of rects) {
-		let prefix = cleanPrefix(item.name);
+type MaxSizes = Record<string, {
+	mw: number,
+	mh: number,
+}>
+
+export function calculateMaxSizesFromRects(rects:Rect[]) {
+	const maxSizes: MaxSizes = {};
+	for(const item of rects) {
+		const prefix = cleanPrefix(item.name);
+		if(!maxSizes[prefix]) {
+			maxSizes[prefix] = {
+				mw: -Infinity,
+				mh: -Infinity,
+			};
+		}
+
+		maxSizes[prefix].mw = Math.max(item.spriteSourceSize.x + item.sourceSize.w, maxSizes[prefix].mw);
+		maxSizes[prefix].mh = Math.max(item.spriteSourceSize.y + item.sourceSize.h, maxSizes[prefix].mh);
+	}
+
+	return maxSizes;
+}
+
+export function getMaxSizesForSourceSize(rects:Rect[]) {
+	const maxSizes: MaxSizes = {};
+	for(const item of rects) {
+		const prefix = cleanPrefix(item.name);
 		if(!maxSizes[prefix]) {
 			maxSizes[prefix] = {
 				mw: -Infinity,
@@ -154,16 +174,40 @@ export function setMaxSizes(rects:Rect[]) {
 		maxSizes[prefix].mh = Math.max(item.sourceSize.h, maxSizes[prefix].mh);
 	}
 
-	for(let item of rects) {
-		let prefix = cleanPrefix(item.name);
+	return maxSizes;
+}
+
+export function setMaxSizesForSourceSize(rects:Rect[]) {
+	const maxSizes: MaxSizes = getMaxSizesForSourceSize(rects);
+
+	for(const item of rects) {
+		const prefix = cleanPrefix(item.name);
 
 		item.sourceSize.mw = maxSizes[prefix].mw;
 		item.sourceSize.mh = maxSizes[prefix].mh;
 	}
 }
 
+export function getMaxSizesForSpriteSourceSize(rects:Rect[]) {
+	const maxSizes: MaxSizes = {};
+	for(const item of rects) {
+		const prefix = cleanPrefix(item.name);
+		if(!maxSizes[prefix]) {
+			maxSizes[prefix] = {
+				mw: -Infinity,
+				mh: -Infinity,
+			};
+		}
+
+		maxSizes[prefix].mw = Math.max(item.spriteSourceSize.w, maxSizes[prefix].mw);
+		maxSizes[prefix].mh = Math.max(item.spriteSourceSize.h, maxSizes[prefix].mh);
+	}
+
+	return maxSizes;
+}
+
 export function isManuallyOffset(rects:Rect[]) {
-	for(let item of rects) {
+	for(const item of rects) {
 		if(item.frameSize.x < 0 || item.frameSize.y < 0) {
 			return true;
 		} else if(item.frameSize.w + item.frameSize.x > item.sourceSize.w) {
@@ -176,13 +220,13 @@ export function isManuallyOffset(rects:Rect[]) {
 }
 
 export function fixManualOffsetOnRect(rect:Rect) {
-	let dummy = getDummyRect(rect.name, rect.frame.w, rect.frame.h);
+	const dummy = getDummyRect(rect.name, rect.frame.w, rect.frame.h);
 	rect.spriteSourceSize.x = dummy.spriteSourceSize.x;
 	rect.spriteSourceSize.y = dummy.spriteSourceSize.y;
 	rect.spriteSourceSize.w = dummy.spriteSourceSize.w;
 	rect.spriteSourceSize.h = dummy.spriteSourceSize.h;
 	rect.sourceSize.w = dummy.sourceSize.w;
-	rect.sourceSize.h = dummy.sourceSize.h
+	rect.sourceSize.h = dummy.sourceSize.h;
 	rect.manualOffset = true;
 }
 

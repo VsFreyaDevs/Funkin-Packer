@@ -14,7 +14,7 @@ import type { LoadedImages, Rect } from 'api/types';
 import Splitter from 'api/splitters/Splitter';
 import TypedObserver from 'TypedObserver';
 import CustomImage from '../data/CustomImage';
-import { fixManualOffsets, formatBytes, setMaxSizes } from 'api/utils/common';
+import { fixManualOffsets, formatBytes, setMaxSizesForSourceSize } from 'api/utils/common';
 
 const splitterMaster = new SplitterMaster();
 
@@ -146,7 +146,7 @@ class SheetSplitter extends React.Component<Props, State> {
 		}
 
 		fixManualOffsets(this.frames);
-		setMaxSizes(this.frames);
+		setMaxSizesForSourceSize(this.frames);
 
 		for(const item of this.frames) {
 			const trimmed = item.trimmed ? disableUntrim : false;
@@ -267,7 +267,7 @@ class SheetSplitter extends React.Component<Props, State> {
 
 		const disableUntrim = this.disableUntrimRef.current?.checked ?? false;
 
-		setMaxSizes(this.frames);
+		setMaxSizesForSourceSize(this.frames);
 		// dont fix offsets if we are exporting to a zip
 
 		for(let item of this.frames) {
@@ -461,18 +461,18 @@ class SheetSplitter extends React.Component<Props, State> {
 					}
 
 					if(isSparrow) {
-						if(item.spriteSourceSize.x < 0 || item.spriteSourceSize.y < 0) {
+						if(item.frameSize.x < 0 || item.frameSize.y < 0) {
 							manualOffsets++;
 							frameHasManualOffsets = true;
 							//console.log('manual offsets', item);
-						} else if(item.spriteSourceSize.w + item.spriteSourceSize.x > item.frameSize.w) {
+						} else if(item.spriteSourceSize.w + item.frameSize.x > item.frameSize.w) {
 							weirdSize++;
 							frameHasWeirdSize = true;
-							//console.log('weird size', item, item.spriteSourceSize.w + item.spriteSourceSize.x, item.sourceSize.frameWidth);
-						} else if(item.spriteSourceSize.h + item.spriteSourceSize.y > item.frameSize.h) {
+							//console.log('weird size', item, item.spriteSourceSize.w + item.frameSize.x, item.sourceSize.frameWidth);
+						} else if(item.spriteSourceSize.h + item.frameSize.y > item.frameSize.h) {
 							weirdSize++;
 							frameHasWeirdSize = true;
-							//console.log('weird size', item, item.spriteSourceSize.h + item.spriteSourceSize.y, item.sourceSize.frameHeight);
+							//console.log('weird size', item, item.spriteSourceSize.h + item.frameSize.y, item.sourceSize.frameHeight);
 						}
 					}
 
